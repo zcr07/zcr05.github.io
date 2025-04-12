@@ -27,38 +27,41 @@
   --hover-transition-speed: 0.3s;
 }
 
-/* 重置所有标签样式，确保正确横排显示 */
+/* 重置所有标签样式 */
 .listLabels, .flexLabels, .Label, .LabelName {
-  all: revert;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-/* 完善的全局背景设置 */
-body, html {
+/* 背景设置 */
+html, body {
   margin: 0;
   padding: 0;
   width: 100%;
-  height: 100%;
+  height: auto;
   min-height: 100vh;
 }
 
 html {
-  background-color: var(--global-bg) !important;
+  background-color: var(--global-bg);
 }
 
 body {
-  background: transparent !important;
   position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 /* 全站背景元素 */
 #fixed-background {
-  position: fixed !important;
-  z-index: -999 !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-  background: var(--global-bg) !important;
+  position: fixed;
+  z-index: -999;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--global-bg);
 }
 
 /* 背景渐变效果 */
@@ -97,7 +100,7 @@ html[data-color-mode="light"] #fixed-background::before {
     repeating-linear-gradient(45deg, rgba(200, 210, 255, 0.4) 0%, rgba(220, 230, 255, 0.4) 10%);
 }
 
-/* 标签容器样式 */
+/* 标签容器样式 - 修复横向排列 */
 .listLabels, .flexLabels, #taglabel {
   display: flex !important;
   flex-direction: row !important;
@@ -105,6 +108,7 @@ html[data-color-mode="light"] #fixed-background::before {
   gap: 6px !important;
   margin: 5px 0 !important;
   padding: 0 !important;
+  list-style: none !important;
   width: auto !important;
   height: auto !important;
   visibility: visible !important;
@@ -122,9 +126,12 @@ html[data-color-mode="light"] #fixed-background::before {
   overflow: hidden !important;
   cursor: pointer !important;
   position: relative !important;
-  z-index: 10 !important;
+  z-index: 1 !important;
   border: none !important;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2) !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
 }
 
 /* 标签链接样式 */
@@ -139,7 +146,7 @@ html[data-color-mode="light"] #fixed-background::before {
   font-weight: 500 !important;
   line-height: 1.5 !important;
   position: relative !important;
-  z-index: 20 !important;
+  z-index: 2 !important;
   pointer-events: auto !important;
 }
 
@@ -150,56 +157,11 @@ html[data-color-mode="light"] #fixed-background::before {
   transition: all 0.3s ease !important;
 }
 
-/* 修复标签页的额外样式 */
-#taglabel {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  gap: 8px !important;
-}
-
-#taglabel .Label {
-  display: inline-flex !important;
-  margin: 0 !important;
-}
-
-/* 亮色模式下的背景处理 */
-html[data-color-mode="light"] body::before {
-  background: 
-    radial-gradient(circle at 80% 10%, rgba(126, 87, 255, 0.2), transparent 30%),
-    radial-gradient(circle at 20% 30%, rgba(0, 220, 220, 0.2), transparent 25%),
-    radial-gradient(circle at 70% 65%, rgba(255, 79, 154, 0.2), transparent 35%),
-    radial-gradient(circle at 10% 85%, rgba(126, 87, 255, 0.2), transparent 25%),
-    repeating-linear-gradient(45deg, rgba(200, 210, 255, 0.4) 0%, rgba(220, 230, 255, 0.4) 10%),
-    linear-gradient(135deg, #d0e0ff 0%, #e8edff 100%) !important;
-  animation: backgroundShimmerLight 30s ease-in-out infinite alternate;
-  background-attachment: fixed !important;
-}
-
-/* 添加兼容性和响应式处理 */
+/* 添加媒体查询以确保在移动设备上正常显示 */
 @media all and (max-width: 768px) {
-  body {
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow-x: hidden !important;
-  }
-  
-  body::after {
-    content: "";
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    background: var(--global-bg) !important;
-    z-index: -15 !important;
-    pointer-events: none !important;
-  }
-  
   .listLabels, 
-  .flexLabels {
+  .flexLabels,
+  #taglabel {
     display: flex !important;
     flex-wrap: wrap !important;
     gap: 4px !important;
@@ -207,7 +169,7 @@ html[data-color-mode="light"] body::before {
   
   .Label, 
   .LabelName {
-    margin: 0 3px 3px 0 !important;
+    margin: 0 !important;
   }
 }
 
@@ -223,6 +185,7 @@ body {
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.15);
   padding: 0;
   overflow-x: hidden;
+  overflow-y: auto;
   border-radius: 0 0 12px 12px;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -297,44 +260,6 @@ a:not(.LabelName a):not(.btn):hover:after {
   width: 100%;
 }
 
-/* 标签相关统一样式 - 修复水平排列 */
-.Label, .LabelName {
-  position: relative;
-  display: inline-block !important;
-  margin: 0 6px 6px 0;
-  padding: 0;
-  border-radius: 20px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  z-index: 10 !important;
-  border: 2px solid transparent;
-  font-size: 14px;
-  vertical-align: middle;
-}
-
-.Label, .LabelName a, .Label a {
-  color: #fff !important;
-  text-decoration: none !important;
-  display: block !important;
-  padding: 2px 12px !important;
-  width: 100% !important;
-  height: 100% !important;
-  position: relative !important;
-  font-weight: 500;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-  z-index: 20;
-  pointer-events: auto;
-}
-
-.Label:hover, .LabelName:hover {
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 5px 15px rgba(126, 87, 255, 0.4);
-  border-color: rgba(255, 255, 255, 0.3);
-}
-
 /* 首页标签和列表页标签特化样式 - 修复为水平排列 */
 .listLabels, .flexLabels {
   display: flex !important;
@@ -351,7 +276,7 @@ a:not(.LabelName a):not(.btn):hover:after {
 .flexLabels .Label,
 .flexLabels .LabelName {
   margin: 0;
-  display: inline-block !important;
+  display: inline-flex !important;
   vertical-align: middle;
 }
 
@@ -365,54 +290,7 @@ a:not(.LabelName a):not(.btn):hover:after {
   width: 100%;
   height: 100%;
   position: relative;
-  z-index: 20;
-}
-
-/* 标签链接点击修复 */
-.LabelName {
-  position: relative;
-  cursor: pointer;
-}
-
-.LabelName a {
-  pointer-events: auto !important;
-  z-index: 20 !important;
-  position: relative !important;
-  width: 100% !important;
-  height: 100% !important;
-  display: block !important;
-}
-
-/* 主页上的标签颜色丰富化 */
-.Label[style*="background-color:#5d4fff"] {
-  background: linear-gradient(45deg, #5d4fff, #6a5bf9);
-}
-
-.Label[style*="background-color:#0075ca"] {
-  background: linear-gradient(45deg, #0075ca, #00a0e9);
-}
-
-.Label[style*="background-color:#7057ff"] {
-  background: linear-gradient(45deg, #7057ff, #9966ff);
-}
-
-.Label[style*="background-color:#ff4f9a"] {
-  background: linear-gradient(45deg, #ff4f9a, #ff6b6b);
-}
-
-/* 特殊标签 - 日期类 */
-.LabelTime {
-  background: linear-gradient(45deg, var(--secondary-color), #ff6b6b) !important;
-}
-
-/* 特殊标签 - 计数类 */
-.Counter {
-  background-color: var(--secondary-color) !important;
-  color: white !important;
-  border-radius: 10px !important;
-  padding: 2px 8px !important;
-  font-size: 12px;
-  font-weight: bold;
+  z-index: 2;
 }
 
 /* 标签页专用样式 - 修改为水平排列 */
@@ -428,7 +306,7 @@ a:not(.LabelName a):not(.btn):hover:after {
   margin: 0;
   font-size: 14px;
   padding: 0;
-  display: inline-block !important;
+  display: inline-flex !important;
   vertical-align: middle;
   cursor: pointer !important;
 }
@@ -439,7 +317,7 @@ a:not(.LabelName a):not(.btn):hover:after {
   padding: 4px 12px !important;
   width: 100%;
   height: 100%;
-  z-index: 20;
+  z-index: 2;
   position: relative;
 }
 
@@ -641,15 +519,6 @@ html[data-color-mode="dark"] body {
   color: var(--text-color);
 }
 
-html[data-color-mode="dark"] body::before {
-  background: 
-    radial-gradient(circle at 80% 10%, rgba(126, 87, 255, 0.2), transparent 25%),
-    radial-gradient(circle at 20% 30%, rgba(0, 220, 220, 0.2), transparent 20%),
-    radial-gradient(circle at 70% 65%, rgba(255, 79, 154, 0.2), transparent 30%),
-    radial-gradient(circle at 10% 85%, rgba(126, 87, 255, 0.2), transparent 20%),
-    var(--global-bg);
-}
-
 html[data-color-mode="dark"] #header {
   background: linear-gradient(to right, rgba(18, 18, 42, 0.9), rgba(10, 10, 32, 0.8));
 }
@@ -673,136 +542,56 @@ html[data-color-mode="dark"] .btn-invisible:hover {
   background-color: rgba(255, 255, 255, 0.05) !important;
 }
 
-/* 亮色模式特定样式 - 更炫酷的背景 */
+/* 亮色模式特定样式 */
 html[data-color-mode="light"] {
-  --global-bg: #e0e8ff; /* 更炫酷的淡蓝色背景 */
+  --global-bg: #e0e8ff; /* 淡蓝色背景 */
   --light-global-bg: #e0e8ff;
   --text-color: #333;
 }
 
 html[data-color-mode="light"] body {
-  background-color: rgba(236, 240, 255, 0.75); /* 更透明的淡蓝色 */
+  background-color: rgba(236, 240, 255, 0.75); /* 淡蓝色 */
   color: var(--text-color);
   backdrop-filter: blur(12px);
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
-/* 为亮色模式添加光晕效果 */
-html[data-color-mode="light"] body::after {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: 
-    radial-gradient(circle at 30% 40%, rgba(126, 87, 255, 0.05) 0%, transparent 45%),
-    radial-gradient(circle at 70% 60%, rgba(0, 220, 220, 0.05) 0%, transparent 45%);
-  z-index: -1;
-  animation: rotateGlow 25s linear infinite;
-  pointer-events: none;
+html[data-color-mode="light"] #header {
+  background: linear-gradient(135deg, rgba(210, 220, 255, 0.9), rgba(220, 230, 255, 0.8));
+  border-bottom: 1px solid rgba(180, 190, 255, 0.2);
+  box-shadow: 0 2px 15px rgba(100, 100, 200, 0.1);
 }
 
-@keyframes rotateGlow {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-html[data-color-mode="light"] body::before {
-  background: 
-    radial-gradient(circle at 80% 10%, rgba(126, 87, 255, 0.2), transparent 30%),
-    radial-gradient(circle at 20% 30%, rgba(0, 220, 220, 0.2), transparent 25%),
-    radial-gradient(circle at 70% 65%, rgba(255, 79, 154, 0.2), transparent 35%),
-    radial-gradient(circle at 10% 85%, rgba(126, 87, 255, 0.2), transparent 25%),
-    repeating-linear-gradient(45deg, rgba(200, 210, 255, 0.4) 0%, rgba(220, 230, 255, 0.4) 10%),
-    linear-gradient(135deg, #d0e0ff 0%, #e8edff 100%);
-  animation: backgroundShimmerLight 30s ease-in-out infinite alternate;
-  background-attachment: fixed;
-}
-
-@keyframes backgroundShimmerLight {
-  0% {
-    background-position: 0% 0%;
-    background-size: 100% 100%;
-  }
-  50% {
-    background-position: 100% 100%;
-    background-size: 120% 120%;
-  }
-  100% {
-    background-position: 0% 0%;
-    background-size: 100% 100%;
-  }
-}
-
-/* 为元素添加炫光边框 */
 html[data-color-mode="light"] .Box, 
 html[data-color-mode="light"] .Box-body {
   background-color: rgba(236, 245, 255, 0.7) !important;
   border: 1px solid rgba(180, 190, 255, 0.3) !important;
   box-shadow: 0 5px 20px rgba(100, 120, 220, 0.1);
-  position: relative;
-  overflow: hidden;
 }
 
-html[data-color-mode="light"] .Box::before, 
-html[data-color-mode="light"] .Box-body::before {
+html[data-color-mode="light"] .blogTitle {
+  color: var(--text-color) !important;
+  position: relative;
+  text-shadow: 0 1px 2px rgba(70, 100, 200, 0.2);
+}
+
+html[data-color-mode="light"] .blogTitle::after {
   content: "";
   position: absolute;
-  top: 0;
-  left: -150%;
+  bottom: -2px;
+  left: 0;
   width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, 
-    transparent, 
-    rgba(255, 255, 255, 0.2), 
-    transparent
-  );
-  transform: skewX(-20deg);
-  animation: shimmerEffect 4s infinite;
-  z-index: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
 }
 
-@keyframes shimmerEffect {
-  0% { left: -150%; }
-  70% { left: 150%; }
-  100% { left: 150%; }
-}
-
-/* 炫酷的标题栏 */
-html[data-color-mode="light"] #header {
-  background: linear-gradient(135deg, rgba(210, 220, 255, 0.9), rgba(220, 230, 255, 0.8));
-  border-bottom: 1px solid rgba(180, 190, 255, 0.2);
-  box-shadow: 0 2px 15px rgba(100, 100, 200, 0.1);
-  position: relative;
-  overflow: hidden;
-}
-
-html[data-color-mode="light"] #header::before {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
-  animation: pulseHeader 5s ease-in-out infinite alternate;
-}
-
-@keyframes pulseHeader {
-  0% {
-    transform: scale(1);
-    opacity: 0.3;
-  }
-  100% {
-    transform: scale(1.2);
-    opacity: 0.5;
-  }
+html[data-color-mode="light"] .blogTitle:hover::after {
+  transform: scaleX(1);
 }
 
 /* 访问计数器样式 */
@@ -841,91 +630,14 @@ html[data-color-mode="light"] #header::before {
 
 /* 标签容器通用样式 */
 .flexLabels {
-  display: flex;
-  flex-wrap: wrap;
+  display: flex !important;
+  flex-wrap: wrap !important;
   align-items: center;
   gap: 6px;
   margin-top: 6px;
 }
 
-html[data-color-mode="light"] .blogTitle {
-  color: var(--text-color) !important;
-  position: relative;
-  text-shadow: 0 1px 2px rgba(70, 100, 200, 0.2);
-}
-
-html[data-color-mode="light"] .blogTitle::after {
-  content: "";
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.3s ease;
-}
-
-html[data-color-mode="light"] .blogTitle:hover::after {
-  transform: scaleX(1);
-}
-
-/* 卡片悬停效果增强 */
-html[data-color-mode="light"] .SideNav-item {
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  position: relative;
-  overflow: hidden;
-  border-left: 3px solid transparent;
-  background: rgba(236, 245, 255, 0.7);
-}
-
-html[data-color-mode="light"] .SideNav-item:hover {
-  transform: translateX(5px);
-  background: rgba(226, 235, 255, 0.9);
-  border-left: 3px solid var(--primary-color);
-  box-shadow: 0 5px 15px rgba(100, 120, 220, 0.1);
-}
-
-html[data-color-mode="light"] .SideNav-item::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, 
-    transparent, 
-    rgba(255, 255, 255, 0.3), 
-    transparent
-  );
-  transition: all 0.5s ease;
-}
-
-html[data-color-mode="light"] .SideNav-item:hover::before {
-  left: 100%;
-}
-
-/* 亮色模式下的图片背景样式优化 */
-html[data-color-mode="light"] .avatar {
-  border: 3px solid rgba(126, 87, 255, 0.7);
-  box-shadow: 0 0 15px rgba(126, 87, 255, 0.5);
-}
-
-html[data-color-mode="light"] .avatar:hover {
-  border-color: var(--secondary-color);
-  box-shadow: 0 0 20px rgba(255, 79, 154, 0.6);
-}
-
-/* 修复标签问题 */
-.Label, .LabelName {
-  opacity: 1 !important;
-  display: inline-block !important;
-  visibility: visible !important;
-  pointer-events: auto !important;
-}
-
-/* 修复标签容器样式 */
+/* 修复SideNav-item中的标签容器 */
 .SideNav-item .listLabels {
   display: flex !important;
   flex-wrap: wrap !important;
@@ -936,29 +648,7 @@ html[data-color-mode="light"] .avatar:hover {
   gap: 6px;
 }
 
-/* 为SideNav-item添加更有层次感的背景 */
-html[data-color-mode="light"] .SideNav-item {
-  background: linear-gradient(135deg, rgba(236, 245, 255, 0.8), rgba(240, 248, 255, 0.9));
-  border-radius: 8px;
-  margin-bottom: 8px;
-  border: 1px solid rgba(180, 200, 255, 0.3);
-}
-
-/* 增强可视化对比 */
-html[data-color-mode="light"] .Box, 
-html[data-color-mode="light"] .Box-body,
-html[data-color-mode="light"] .SideNav {
-  background-color: rgba(246, 250, 255, 0.85) !important;
-  border: 1px solid rgba(180, 190, 255, 0.4) !important;
-}
-
-/* 添加更明显的边框和阴影 */
-html[data-color-mode="light"] .SideNav {
-  border-radius: 12px;
-  box-shadow: 0 5px 20px rgba(126, 87, 255, 0.1);
-}
-
-/* 为整个页面添加全屏固定背景 */
+/* 为整个页面添加全屏固定背景，确保内容可滚动 */
 #page-background {
   position: fixed;
   top: 0;
@@ -970,8 +660,35 @@ html[data-color-mode="light"] .SideNav {
   pointer-events: none;
 }
 
-/* 确保背景元素覆盖整个页面，即使在滚动时 */
-html, body {
+/* 确保内容可滚动 */
+html {
+  height: 100%;
+  overflow-y: auto;
+}
+
+body {
   min-height: 100vh;
-  background-attachment: fixed;
+  overflow-y: auto;
+}
+
+/* 主要内容区域确保可滚动 */
+#content-wrapper {
+  overflow-y: auto;
+  height: auto;
+}
+
+/* 确保所有内容区域可滚动 */
+html, body, #content, #content-container {
+  overflow-y: auto !important;
+}
+
+/* 修复标签在DOM中的位置不受干扰 */
+.listLabels *, .flexLabels *, #taglabel * {
+  position: static !important;
+  float: none !important;
+}
+
+/* 确保特定类型的标签样式一致 */
+.Label[style*="background-color"], .LabelName[style*="background-color"] {
+  background: linear-gradient(45deg, var(--primary-color), var(--accent-color)) !important;
 }

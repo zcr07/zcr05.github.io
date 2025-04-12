@@ -449,9 +449,6 @@ function modeSwitch() {
     var currentTheme = html.getAttribute('data-color-mode');
     var newTheme = currentTheme === 'light' ? 'dark' : 'light';
     
-    // 添加过渡动画类
-    document.body.classList.add('theme-transition');
-    
     // 设置新主题
     html.setAttribute('data-color-mode', newTheme);
     localStorage.setItem('theme', newTheme);
@@ -466,23 +463,14 @@ function modeSwitch() {
         }
     }
     
-    // 移除过渡动画类
-    setTimeout(function() {
-        document.body.classList.remove('theme-transition');
-    }, 500);
-    
-    // 确保背景元素正确显示
-    ensureBackgroundElement();
-    
-    // 增强背景动画
-    enhanceBackgroundAnimation();
+    // 强制重新应用样式和背景
+    injectRootStyles();
+    replaceBackground();
+    injectGmeekSpecificStyles();
+    forceApplyListStyles();
     
     // 触发主题变更事件
     window.dispatchEvent(new Event('theme-changed'));
-    
-    // 强制重新应用列表样式
-    forceApplyListStyles();
-    setTimeout(forceApplyListStyles, 300);
 }
 
 // 增强背景动画效果
@@ -661,100 +649,43 @@ function applyTechStyleToElement(element, index) {
     
     // 标记元素为已处理
     element.setAttribute('data-tech-styled', 'true');
-    
-    // 添加类以便CSS选择器能找到
     element.classList.add('tech-box-row');
     
-    // 计算样式值
-    const isDarkMode = document.documentElement.getAttribute('data-color-mode') === 'dark';
-    const baseColor = isDarkMode ? 'rgba(18, 18, 42, 0.7)' : 'rgba(246, 250, 255, 0.8)';
-    const borderColor = isDarkMode ? 'rgba(126, 87, 255, 0.3)' : 'rgba(126, 87, 255, 0.2)';
-    
-    // 根据索引选择边框颜色
-    let sideColor = 'var(--primary-color, #7e57ff)';
-    if (index % 3 === 1) {
-        sideColor = 'var(--secondary-color, #00dcdc)';
-    } else if (index % 3 === 2) {
-        sideColor = 'var(--accent-color, #ff4f9a)';
-    }
-    
-    // 创建内部内容容器，解决模糊问题
+    // 提取原有内容，并包装在内容容器中
     if (!element.querySelector('.tech-box-content')) {
-        // 保存现有内容
         const originalContent = element.innerHTML;
+        element.innerHTML = `<div class="tech-box-content">${originalContent}</div>`;
         
-        // 创建内容容器
-        const contentContainer = document.createElement('div');
-        contentContainer.className = 'tech-box-content';
-        contentContainer.style.cssText = `
-            position: relative;
-            z-index: 2;
+        // 添加左侧装饰边框
+        const leftBar = document.createElement('div');
+        leftBar.style.cssText = `
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary-color, #7e57ff), var(--secondary-color, #00dcdc));
+            opacity: 0;
+            transition: opacity 0.3s ease;
         `;
+        element.appendChild(leftBar);
         
-        // 将原有内容移入容器
-        contentContainer.innerHTML = originalContent;
+        // 使用简单的JavaScript处理悬停效果，而不是CSS变换
+        element.onmouseenter = function() {
+            // 直接修改DOM元素样式，不使用transform
+            this.style.marginTop = '9px';
+            this.style.marginBottom = '21px';
+            this.style.boxShadow = '0 8px 15px rgba(0, 0, 0, 0.1)';
+            leftBar.style.opacity = '1';
+        };
         
-        // 清空元素并添加内容容器
-        element.innerHTML = '';
-        element.appendChild(contentContainer);
-        
-        // 添加装饰元素
-        addDecorativeElementTo(element);
+        element.onmouseleave = function() {
+            this.style.marginTop = '15px';
+            this.style.marginBottom = '15px';
+            this.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.05)';
+            leftBar.style.opacity = '0';
+        };
     }
-    
-    // 直接使用完整的cssText，完全覆盖原有样式
-    element.style.cssText = `
-        display: block !important;
-        position: relative !important;
-        overflow: hidden !important;
-        border-radius: 12px !important;
-        margin: 15px 0 !important;
-        background-color: ${baseColor} !important;
-        border: 1px solid ${borderColor} !important;
-        border-left: 3px solid ${sideColor} !important;
-        padding: 16px !important;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
-        z-index: 1 !important;
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
-        transform: translateY(0) scale(1) !important;
-        width: auto !important;
-        max-width: 100% !important;
-        /* 移除可能导致模糊的效果 */
-        will-change: transform !important;
-    `;
-    
-    // 直接设置鼠标悬停效果处理函数
-    element.onmouseenter = function() {
-        this.style.transform = 'translateY(-6px) scale(1.01)';
-        this.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.1)';
-        this.style.backgroundColor = isDarkMode ? 
-            'rgba(25, 25, 55, 0.85)' : 
-            'rgba(246, 250, 255, 0.95)';
-        this.style.borderColor = isDarkMode ? 
-            'rgba(126, 87, 255, 0.5)' : 
-            'rgba(126, 87, 255, 0.4)';
-        this.style.zIndex = '2';
-        
-        // 查找装饰元素并激活它们
-        const glow = this.querySelector('.border-glow');
-        const leftBar = this.querySelector('.left-decoration-bar');
-        if (glow) glow.style.opacity = '1';
-        if (leftBar) leftBar.style.opacity = '1';
-    };
-    
-    element.onmouseleave = function() {
-        this.style.transform = 'translateY(0) scale(1)';
-        this.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.05)';
-        this.style.backgroundColor = baseColor;
-        this.style.borderColor = borderColor;
-        this.style.zIndex = '1';
-        
-        // 重置装饰元素
-        const glow = this.querySelector('.border-glow');
-        const leftBar = this.querySelector('.left-decoration-bar');
-        if (glow) glow.style.opacity = '0.8';
-        if (leftBar) leftBar.style.opacity = '0';
-    };
 }
 
 // 注入强制的列表样式表
@@ -895,7 +826,7 @@ function addDecorativeElementTo(element) {
 function injectGmeekSpecificStyles() {
     // 检查是否已存在
     if (document.getElementById('gmeek-specific-styles')) {
-        return;
+        document.getElementById('gmeek-specific-styles').remove();
     }
     
     const styleEl = document.createElement('style');
@@ -907,77 +838,35 @@ function injectGmeekSpecificStyles() {
         body > div.container-lg > div.container-lg > div.Box,
         body > div.container-lg > div.container-lg > div > div,
         #blog-container > div,
-        main > div > div {
+        main > div > div,
+        .Box-row, 
+        .d-flex, 
+        #indexPostsList > div {
             border-radius: 12px !important;
-            overflow: hidden !important;
+            overflow: visible !important;
             margin-bottom: 16px !important;
-            background-color: rgba(255, 255, 255, 0.7) !important;
+            background-color: rgba(255, 255, 255, 0.8) !important;
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
             border: 1px solid rgba(126, 87, 255, 0.2) !important;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
-            transition: all 0.4s ease-out !important;
-            transform-style: preserve-3d !important;
-            backface-visibility: hidden !important;
+            padding: 16px !important;
+            transition: none !important;
+            transform: none !important;
+            will-change: auto !important;
+            filter: none !important;
         }
         
         /* 暗色模式下的样式 */
         html[data-color-mode="dark"] body > div.container-lg > div.container-lg > div.Box,
         html[data-color-mode="dark"] body > div.container-lg > div.container-lg > div > div,
         html[data-color-mode="dark"] #blog-container > div,
-        html[data-color-mode="dark"] main > div > div {
-            background-color: rgba(18, 18, 42, 0.7) !important;
-            border: 1px solid rgba(126, 87, 255, 0.3) !important;
-        }
-        
-        /* 悬停效果 */
-        body > div.container-lg > div.container-lg > div.Box:hover,
-        body > div.container-lg > div.container-lg > div > div:hover,
-        #blog-container > div:hover,
-        main > div > div:hover {
-            transform: translateY(-5px) !important;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1) !important;
-        }
-        
-        /* 特定针对文章表格和列表 */
-        table, .Box {
-            border-radius: 12px !important;
-            overflow: hidden !important;
-            border: 1px solid rgba(126, 87, 255, 0.2) !important;
-            backdrop-filter: none !important;
-            -webkit-backdrop-filter: none !important;
-        }
-        
-        /* 表格行样式 */
-        tr {
-            transition: all 0.3s ease !important;
-        }
-        
-        tr:hover {
-            background-color: rgba(126, 87, 255, 0.1) !important;
-        }
-        
-        /* 确保所有文章项目都有正确样式 */
-        .d-flex, #indexPostsList > div, .Box-row {
-            border-radius: 12px !important;
-            padding: 16px !important;
-            margin-bottom: 12px !important;
-            background-color: rgba(246, 250, 255, 0.7) !important;
-            border: 1px solid rgba(126, 87, 255, 0.2) !important;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
-            transition: all 0.4s ease-out !important;
-            backface-visibility: hidden !important;
-        }
-        
+        html[data-color-mode="dark"] main > div > div,
+        html[data-color-mode="dark"] .Box-row,
         html[data-color-mode="dark"] .d-flex,
-        html[data-color-mode="dark"] #indexPostsList > div,
-        html[data-color-mode="dark"] .Box-row {
-            background-color: rgba(18, 18, 42, 0.7) !important;
-        }
-        
-        .d-flex:hover, #indexPostsList > div:hover, .Box-row:hover {
-            transform: translateY(-5px) !important;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1) !important;
+        html[data-color-mode="dark"] #indexPostsList > div {
+            background-color: rgba(18, 18, 42, 0.8) !important;
+            border: 1px solid rgba(126, 87, 255, 0.3) !important;
         }
         
         /* 修复标签样式 */
@@ -988,10 +877,40 @@ function injectGmeekSpecificStyles() {
             display: inline-block !important;
         }
         
-        /* 修复内容模糊问题 */
+        /* 全局文字清晰度增强 */
         * {
             -webkit-font-smoothing: antialiased !important;
             -moz-osx-font-smoothing: grayscale !important;
+            text-rendering: optimizeLegibility !important;
+        }
+        
+        /* 背景元素强制样式 */
+        #fixed-background, 
+        #page-background, 
+        #background-container {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            background-color: #070720 !important;
+            z-index: -1000 !important;
+            animation: none !important;
+            transition: none !important;
+            transform: none !important;
+        }
+        
+        /* 确保HTML和BODY有正确背景 */
+        html, body {
+            background-color: #070720 !important;
+            min-height: 100vh !important;
+        }
+        
+        /* 技术盒子内容样式 */
+        .tech-box-content {
+            position: relative !important;
+            z-index: 5 !important;
+            pointer-events: auto !important;
         }
     `;
     
@@ -1050,5 +969,177 @@ function injectGmeekSpecificStyles() {
                 subtree: true
             });
         }
+    });
+})();
+
+// 直接修改页面样式，强制应用我们想要的效果
+function injectRootStyles() {
+    if (document.getElementById('root-force-styles')) {
+        return;
+    }
+
+    const styleEl = document.createElement('style');
+    styleEl.id = 'root-force-styles';
+    styleEl.textContent = `
+        /* 重置可能导致问题的CSS属性 */
+        html, body {
+            background-color: #070720 !important;
+            min-height: 100vh !important;
+            height: auto !important;
+            overflow-x: hidden !important;
+        }
+        
+        /* 固定背景，不受滚动影响 */
+        #background-container {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: -1000 !important;
+            pointer-events: none !important;
+            overflow: hidden !important;
+        }
+        
+        /* 全局禁用模糊滤镜 */
+        * {
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            filter: none !important;
+            backface-visibility: hidden !important;
+            -webkit-font-smoothing: antialiased !important;
+            transform-style: flat !important;
+        }
+        
+        /* 重写列表项样式，不使用CSS动画 */
+        .d-flex, .Box-row, #indexPostsList > div, tr.post-item, .post-item, .tech-box-row {
+            position: relative !important;
+            display: block !important;
+            background-color: rgba(246, 250, 255, 0.8) !important;
+            border-radius: 12px !important;
+            border: 1px solid rgba(126, 87, 255, 0.2) !important;
+            padding: 16px !important;
+            margin: 15px 0 !important;
+            transition: none !important;
+            transform: none !important;
+            z-index: 1 !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+            overflow: visible !important;
+        }
+        
+        /* 暗色模式列表项 */
+        html[data-color-mode="dark"] .d-flex, 
+        html[data-color-mode="dark"] .Box-row, 
+        html[data-color-mode="dark"] #indexPostsList > div, 
+        html[data-color-mode="dark"] tr.post-item,
+        html[data-color-mode="dark"] .post-item,
+        html[data-color-mode="dark"] .tech-box-row {
+            background-color: rgba(18, 18, 42, 0.8) !important;
+            border: 1px solid rgba(126, 87, 255, 0.3) !important;
+        }
+        
+        /* 技术盒子内容区域，确保清晰 */
+        .tech-box-content {
+            position: relative !important;
+            z-index: 5 !important;
+            transform: none !important;
+            filter: none !important;
+        }
+    `;
+    
+    document.head.appendChild(styleEl);
+}
+
+// 创建新的背景容器替换原有背景
+function replaceBackground() {
+    // 移除现有背景元素
+    const existingBgs = document.querySelectorAll('#background-container, #fixed-background, #page-background, #stars-container');
+    existingBgs.forEach(bg => bg && bg.parentNode && bg.parentNode.removeChild(bg));
+    
+    // 创建新的背景容器
+    const bgContainer = document.createElement('div');
+    bgContainer.id = 'background-container';
+    document.body.parentNode.insertBefore(bgContainer, document.body);
+    
+    // 设置基础背景层，使用简单的颜色而不是动画
+    const baseLayer = document.createElement('div');
+    baseLayer.style.cssText = `
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #070720;
+        z-index: -10;
+    `;
+    bgContainer.appendChild(baseLayer);
+    
+    // 添加简单的渐变背景，不使用动画
+    const gradientLayer = document.createElement('div');
+    gradientLayer.style.cssText = `
+        position: absolute;
+        top: -10%;
+        left: -10%;
+        width: 120%;
+        height: 120%;
+        background: 
+            radial-gradient(circle at 80% 10%, rgba(126, 87, 255, 0.15), transparent 40%),
+            radial-gradient(circle at 20% 30%, rgba(0, 220, 220, 0.15), transparent 40%),
+            radial-gradient(circle at 70% 65%, rgba(255, 79, 154, 0.15), transparent 50%),
+            radial-gradient(circle at 10% 85%, rgba(126, 87, 255, 0.15), transparent 30%);
+        z-index: -9;
+    `;
+    bgContainer.appendChild(gradientLayer);
+    
+    // 设置HTML和BODY的背景颜色，确保滚动时一致
+    document.documentElement.style.cssText += 'background-color: #070720 !important;';
+    document.body.style.cssText += 'background-color: #070720 !important;';
+}
+
+// 立即执行初始化
+(function() {
+    // 直接强制应用根样式
+    injectRootStyles();
+    
+    // 替换背景元素，使用简单不会产生滚动问题的实现
+    replaceBackground();
+    
+    // 延迟注入Gmeek特定样式，以确保优先级
+    setTimeout(injectGmeekSpecificStyles, 0);
+    
+    // 等待DOMContentLoaded事件
+    document.addEventListener('DOMContentLoaded', function() {
+        // 再次注入样式和替换背景
+        injectRootStyles();
+        replaceBackground();
+        injectGmeekSpecificStyles();
+        forceApplyListStyles();
+        
+        // 延迟再次应用，以防DOM动态更新
+        setTimeout(function() {
+            injectRootStyles();
+            forceApplyListStyles();
+        }, 500);
+        
+        // 设置DOM变化观察器以处理动态内容
+        if (typeof MutationObserver !== 'undefined') {
+            const observer = new MutationObserver(function() {
+                injectRootStyles();
+                forceApplyListStyles();
+            });
+            
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        }
+    });
+    
+    // 监听window加载完成事件
+    window.addEventListener('load', function() {
+        // 再次强制应用样式和替换背景
+        injectRootStyles();
+        replaceBackground();
+        forceApplyListStyles();
     });
 })();

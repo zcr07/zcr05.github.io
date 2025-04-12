@@ -666,12 +666,46 @@ html[data-color-mode="light"] #content .Box-row:hover {
   box-shadow: 0 8px 20px rgba(100, 120, 220, 0.15) !important;
 }
 
-/* 访问计数器样式 */
-#vercount, #postVercount {
+/* 访问计数器基本样式 */
+#vercount, #postVercount, [id*="vercount"], .mr-3.text-gray, 
+#busuanzi_value_page_pv, #busuanzi_value_site_pv {
   display: inline-block;
   color: var(--accent-color);
-  font-weight: bold;
+  font-weight: normal;
   margin: 0 3px;
+  transition: all 0.3s ease;
+}
+
+/* 确保计数器容器显示 */
+#busuanzi_container_page_pv, #busuanzi_container_site_pv {
+  display: inline-block !important;
+  font-size: small;
+  margin-right: 8px;
+}
+
+/* 访问计数器样式 - 列表项悬停时的特效 */
+.Box-row:hover #vercount, 
+.Box-row:hover #postVercount, 
+.Box-row:hover [id*="vercount"],
+.Box-row:hover .mr-3.text-gray,
+.Box-row:hover #busuanzi_value_page_pv,
+.Box-row:hover #busuanzi_value_site_pv,
+.d-flex:hover #vercount,
+.d-flex:hover #postVercount,
+.d-flex:hover [id*="vercount"],
+.d-flex:hover .mr-3.text-gray,
+.d-flex:hover #busuanzi_value_page_pv,
+.d-flex:hover #busuanzi_value_site_pv,
+#indexPostsList > div:hover #vercount,
+#indexPostsList > div:hover #postVercount,
+#indexPostsList > div:hover [id*="vercount"],
+#indexPostsList > div:hover .mr-3.text-gray,
+#indexPostsList > div:hover #busuanzi_value_page_pv,
+#indexPostsList > div:hover #busuanzi_value_site_pv {
+  color: var(--secondary-color) !important;
+  font-weight: bold !important;
+  transform: scale(1.1) !important;
+  text-shadow: 0 0 5px rgba(255, 79, 154, 0.3) !important;
 }
 
 /* 动画效果 */

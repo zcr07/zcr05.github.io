@@ -3,62 +3,38 @@
     "subTitle":"一个等着裁员的java程序猿，每天无所事事，只想搞钱，喜欢钻研各种使用的技能，讨厌天天做工作上的项目，对自己毫无实用价值。",
     "avatarUrl":"https://avatars.githubusercontent.com/u/41733240?v=4",
     "GMEEK_VERSION":"last",
-    "description": "探索未来科技、设计与数字创新的交汇，带你进入数字化与科幻的未来。",
-      "keywords": ["未来感", "科技", "数字化", "设计", "创新", "人工智能"],
-      "url": "https://meekdai.com",  // 你的博客主域名
-      "theme": "future",  // 使用未来感主题
-      "backgroundImage": "https://www.pexels.com/photo/abstract-digital-artwork-1714206/",  // 未来感风格的背景图
-      "headerColor": "#121212",  // 深色背景，适合未来感的设计
-      "primaryColor": "#00FFEF",  // 亮眼的青绿色，突出未来感
-      "accentColor": "#FF006F",  // 鲜艳的紫红色，提升视觉冲击感
-      "textColor": "#F0F0F0",  // 浅灰色，避免过于刺眼
-      "font": "Roboto, sans-serif",  // 现代感的无衬线字体
-      "showArchive": true,  // 启用文章归档
-      "showSearch": true,  // 启用站内搜索
-      "showTags": true,  // 启用标签
-      "showCategories": true,  // 启用分类
-      "social": {
-        "twitter": "https://twitter.com/Gmeek",  // 你的 Twitter 链接
-        "github": "https://github.com/gmeek",  // 你的 GitHub 链接
-        "linkedin": "https://www.linkedin.com/in/gmeek",  // 你的 LinkedIn 链接
-        "rss": "https://meekdai.com/rss"  // 可用的 RSS 链接
-      },
-      "analytics": {
-        "googleAnalytics": "UA-XXXXXXXX-X",  // 用你实际的 Google Analytics ID 替换
-        "baiduAnalytics": "XXXXXXXXX"  // 用你实际的百度统计 ID 替换
-      },
-      "disqus": {
-        "shortname": "meekdai-blog"
-      },
-      "comment": {
-        "enabled": true,
-        "type": "disqus"  // 使用 Disqus 评论系统
-      },
-      "footer": {
-        "text": "© 2025 Meekdai - All rights reserved.",
-        "background": "#121212",  // 底部背景色，保持深色调
-        "textColor": "#ffffff"  // 底部文字颜色，使用白色以增强对比度
-      },
-      "extraCSS": "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css",  // 使用现代的 CSS 库（如 Bootstrap）
-      "extraJS": "https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js",  // 使用外部 JS 库提升交互性
-      "favicon": "https://meekdai.com/images/favicon.ico",  // 这里你需要放置自己的图标文件
-      "heroImage": "https://www.pexels.com/photo/space-photo-of-northern-lights-1162089/",  // 使用 Pexels 上的未来感图像作为封面图
-      "buttonStyle": {
-        "borderRadius": "15px",  // 按钮圆角
-        "backgroundColor": "#00FFEF",  // 使用未来感的青绿色
-        "textColor": "#121212",  // 按钮文本颜色为深色
-        "hoverColor": "#FF006F"  // 鼠标悬停时，按钮变为鲜艳的紫红色
-      },
-      "cardStyle": {
-        "borderRadius": "20px",  // 卡片的圆角设计
-        "backgroundColor": "#1E1E2F",  // 深色卡片背景，搭配未来感风格
-        "textColor": "#F0F0F0",  // 卡片文字颜色使用浅灰色
-        "boxShadow": "0 4px 10px rgba(0, 255, 239, 0.5)"  // 卡片阴影，增强立体感
-      },
-      "transitionEffect": {
-        "duration": "0.3s",  // 页面加载过渡动画时长
-        "timingFunction": "ease-in-out"  // 平滑的过渡效果
-      }
+    "homeUrl": "https://yourusername.github.io",
+    "faviconUrl": "https://cdn.jsdelivr.net/npm/simple-icons@v7/icons/github.svg",
+    "email": "your_email@example.com",
+    "startSite": "2025/04/12",
+    "filingNum": "浙ICP备20250412号",
+    "onePageListNum": 6,
+    "singlePage": ["about", "contact"],
+    "iconList": {
+        "about": "M12 10.586l-4.293 4.293a1 1 0 01-1.414-1.414L10.586 9H3a1 1 0 010-2h9.586l-4.293-4.293a1 1 0 011.414-1.414l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414 0z",
+        "contact": "M12 12a5 5 0 100-10 5 5 0 000 10zm0 1a6 6 0 100-12 6 6 0 000 12z"
     },
+    "exlink": {
+        "music": "https://music.163.com"
+    },
+    "commentLabelColor": "#00bcd4",
+    "yearColorList": ["#f44336", "#e91e63", "#9c27b0", "#673ab7"],
+    "i18n": "CN",
+    "UTC": 8,
+    "themeMode": "auto",
+    "dayTheme": "light",
+    "nightTheme": "dark",
+    "urlMode": "pinyin",
+    "style": "<style>\n  body {\n    font-family: 'Arial', sans-serif;\n    background: #f0f4f8;\n    color: #333;\n    transition: background-color 0.3s ease;\n  }\n  .container {\n    max-width: 1200px;\n    margin: 0 auto;\n    padding: 20px;\n  }\n  .post {\n    background-color: #fff;\n    border-radius: 16px;\n    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);\n    padding: 32px;\n    margin-bottom: 32px;\n    transition: transform 0.3s ease;\n  }\n  .post:hover {\n    transform: translateY(-8px);\n  }\n  .post-title {\n    color: #333;\n    font-size: 28px;\n    font-weight: bold;\n    margin-bottom: 16px;\n  }\n  .post-content {\n    font-size: 18px;\n    line-height: 1.6;\n    color: #555;\n  }\n  .post-meta {\n    color: #999;\n    font-size: 14px;\n    margin-top: 16px;\n  }\n  .post-footer {\n    background-color: #e9ecef;\n    border-radius: 16px;\n    padding: 16px;\n    margin-top: 24px;\n    text-align: right;\n  }\n  .post-footer a {\n    color: #007bff;\n    text-decoration: none;\n    transition: color 0.3s ease;\n  }\n  .post-footer a:hover {\n    color: #0056b3;\n  }\n  .button {\n    display: inline-block;\n    padding: 10px 20px;\n    background-color: #007bff;\n    color: #fff;\n    border-radius: 12px;\n    text-decoration: none;\n    transition: background-color 0.3s ease;\n  }\n  .button:hover {\n    background-color: #0056b3;\n  }\n  @media (prefers-color-scheme: dark) {\n    body {\n      background-color: #1e2124;\n      color: #fff;\n    }\n    .post {\n      background-color: #24292e;\n    }\n    .post-title {\n      color: #fff;\n    }\n    .post-content {\n      color: #c9d1d9;\n    }\n    .post-meta {\n      color: #8b949e;\n    }\n    .post-footer {\n      background-color: #30363d;\n    }\n    .post-footer a {\n      color: #4285f4;\n    }\n  }\n</style>",
+    "script": "",
+    "head": "<meta name='viewport' content='width=device-width, initial-scale=1.0'/>",
+    "allHead": "",
+    "indexStyle": "<style>\n  .index {\n    background-color: #f0f4f8;\n    padding: 20px;\n  }\n  .index-title {\n    color: #333;\n    font-size: 36px;\n    font-weight: bold;\n    margin-bottom: 20px;\n  }\n  .index-post {\n    background-color: #fff;\n    border-radius: 16px;\n    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);\n    padding: 20px;\n    margin-bottom: 20px;\n  }\n  .index-post-title {\n    color: #007bff;\n    font-size: 20px;\n    font-weight: bold;\n    margin-bottom: 10px;\n  }\n  .index-post-content {\n    font-size: 14px;\n    line-height: 1.4;\n    color: #555;\n  }\n  .index-post-meta {\n    color: #999;\n    font-size: 12px;\n    margin-top: 10px;\n  }\n  @media (prefers-color-scheme: dark) {\n    .index {\n      background-color: #1e1e2f;\n    }\n    .index-title {\n      color: #f5f5f5;\n    }\n    .index-post {\n      background-color: #2b2b3c;\n    }\n    .index-post-title {\n      color: #4285f4;\n    }\n    .index-post-content {\n      color: #c0c0c0;\n    }\n    .index-post-meta {\n      color: #a0a0a0;\n    }\n  }\n</style>",
+    "indexScript": "",
+    "showPostSource": 1,
+    "rssSplit": "sentence",
+    "bottomText": "© 2025 爱捣鼓的小水木的博客. 浙ICP备20250412号",
+    "ogImage": "https://cdn.jsdelivr.net/npm/simple-icons@v7/icons/github.svg",
+    "primerCSS": "<link href='https://cdn.jsdelivr.net/npm/primer-css@21.0.7/primer.css' rel='stylesheet' />",
     "needComment": 1
 }

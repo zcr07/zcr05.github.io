@@ -11,7 +11,7 @@
 <meta property="og:title" content="我的博客测试01">
 <meta property="og:description" content="我的博客测试01。">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://MyMaskKing.github.io/post/wo-de-bo-ke-ce-shi-01.html">
+<meta property="og:url" content="https://yourusername.github.io/post/wo-de-bo-ke-ce-shi-01.html">
 <meta property="og:image" content="https://cdn.jsdelivr.net/npm/simple-icons@v7/icons/github.svg">
 <title>我的博客测试01</title>
 
@@ -99,7 +99,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     padding: 10px 20px;
     background-color: #007bff;
     color: #fff;
-    border-radius: 8px;
+    border-radius: 12px;
     text-decoration: none;
     transition: background-color 0.3s ease;
   }
@@ -138,7 +138,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     <div id="header">
 <h1 class="postTitle">我的博客测试01</h1>
 <div class="title-right">
-    <a href="https://MyMaskKing.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+    <a href="https://yourusername.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
         <svg class="octicon" width="16" height="16">
             <path id="pathHome" fill-rule="evenodd"></path>
         </svg>
@@ -167,7 +167,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <div class="comments" id="comments"></div>
 
 </div>
-    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://MyMaskKing.github.io">爱捣鼓的小水木的博客</a></div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://yourusername.github.io">爱捣鼓的小水木的博客</a></div>
 <div id="footer2"><span id="filingNum"><a href="https://beian.miit.gov.cn/" target="_blank">浙ICP备20250412号</a> • </span>
     <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
 </div>
@@ -194,7 +194,11 @@ console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 
 <script>
 document.getElementById("pathHome").setAttribute("d",IconList["home"]);
 document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
-
+cmButton=document.getElementById("cmButton");
+    span=document.createElement("span");
+    span.setAttribute("class","Counter");
+    span.innerHTML="1";
+    cmButton.appendChild(span);
 
 
 function openComments(){

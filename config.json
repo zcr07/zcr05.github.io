@@ -3,9 +3,8 @@
     "subTitle":"一个等着裁员的java程序猿，每天无所事事，只想搞钱，喜欢钻研各种使用的技能，讨厌天天做工作上的项目，对自己毫无实用价值。",
     "avatarUrl":"https://avatars.githubusercontent.com/u/41733240?v=4",
     "GMEEK_VERSION":"last"
-    "displayTitle": "未来视界",
-    "homeUrl": "http://yourcustomdomain.com",
-    "faviconUrl": "https://cdn.jsdelivr.net/gh/Meekdai/meekdai.github.io/future_favicon.ico",
+    "homeUrl": "https://yourusername.github.io",
+    "faviconUrl": "https://cdn.jsdelivr.net/gh/Meekdai/meekdai.github.io/logo64.jpg",
     "email": "your_email@example.com",
     "startSite": "2025/04/12",
     "filingNum": "浙ICP备20250412号",
@@ -16,7 +15,7 @@
         "contact": "M12 12a5 5 0 100-10 5 5 0 000 10zm0 1a6 6 0 100-12 6 6 0 000 12z"
     },
     "exlink": {
-        "music": "https://music.yourdomain.com"
+        "music": "https://music.163.com"
     },
     "commentLabelColor": "#007bff",
     "yearColorList": ["#ff4d4f", "#ff7e13", "#ffbd2e", "#00c48c"],
@@ -35,7 +34,7 @@
     "showPostSource": 1,
     "rssSplit": "sentence",
     "bottomText": "转载请注明出处",
-    "ogImage": "https://cdn.jsdelivr.net/gh/Meekdai/meekdai.github.io/future_logo.jpg",
+    "ogImage": "https://cdn.jsdelivr.net/gh/Meekdai/meekdai.github.io/logo64.jpg",
     "primerCSS": "<link href='https://cdn.jsdelivr.net/npm/primer-css@21.0.7/primer.css' rel='stylesheet' />",
     "needComment": 1
 }

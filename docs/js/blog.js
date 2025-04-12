@@ -73,38 +73,43 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.opacity = 1;
     }, 100);
     
-    // 统一标签样式处理并强制生效
-    fixTagStyles();
-    forceFixAllLabels();
-
-    // 修复标签显示问题
-    setTimeout(function() {
-        fixLabelsDisplay();
-        // 增加多次尝试，确保修复成功
-        setTimeout(forceFixAllLabels, 500);
-        setTimeout(forceFixAllLabels, 1000);
-    }, 300);
+    // 只确保标签可见，不设置任何样式
+    fixTagsVisibility();
+    
+    // 使用MutationObserver监听DOM变化
+    var observer = new MutationObserver(function(mutations) {
+        fixTagsVisibility();
+    });
+    
+    // 监听DOM变化，当内容发生变化时确保标签可见
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
 });
 
-// 强制修复所有标签显示
+// 强制修复所有标签显示 - 修改为只确保可见性
 function forceFixAllLabels() {
     // 强制处理所有标签容器
     var allLabelContainers = document.querySelectorAll('.listLabels, .flexLabels, #taglabel');
     allLabelContainers.forEach(function(container) {
-        container.style.cssText = 'display: flex !important; flex-wrap: wrap !important; gap: 6px !important; visibility: visible !important; opacity: 1 !important;';
+        container.style.display = 'flex';
+        container.style.flexWrap = 'wrap';
+        container.style.visibility = 'visible';
+        container.style.opacity = '1';
     });
     
-    // 强制处理所有标签 - 只修复可见性相关属性
+    // 强制处理所有标签 - 只确保可见性
     var allLabels = document.querySelectorAll('.Label, .LabelName');
     allLabels.forEach(function(label) {
-        // 只设置可见性属性，不设置大小和样式
+        // 只设置可见性属性
         label.style.visibility = 'visible';
         label.style.opacity = '1';
         
         // 处理标签中的链接
         var links = label.querySelectorAll('a');
         links.forEach(function(link) {
-            // 只设置点击相关属性
+            // 只确保可点击
             link.style.pointerEvents = 'auto';
             
             // 强制处理点击事件，确保链接可点击
@@ -197,85 +202,37 @@ function setupBackgroundEvents() {
     });
 }
 
-// 统一标签样式处理
-function fixTagStyles() {
-    // 添加flexLabels类到标签容器并确保它们使用flex布局
-    var labelContainers = document.querySelectorAll('.listLabels');
-    labelContainers.forEach(container => {
-        container.classList.add('flexLabels');
-        container.style.cssText = 'display: flex !important; flex-wrap: wrap !important; gap: 6px !important; visibility: visible !important; opacity: 1 !important;';
+// 修改为只确保标签可见和可点击，不设置任何样式
+function fixTagsVisibility() {
+    // 强制标签容器使用flex布局
+    var labelContainers = document.querySelectorAll('.listLabels, .flexLabels, #taglabel');
+    labelContainers.forEach(function(container) {
+        container.style.display = 'flex';
+        container.style.flexWrap = 'wrap';
+        container.style.visibility = 'visible';
+        container.style.opacity = '1';
     });
     
-    // 处理所有标签元素 - 只修复可见性相关属性
+    // 强制标签可见 - 只设置可见性
     var labels = document.querySelectorAll('.Label, .LabelName');
-    labels.forEach(label => {
-        // 只设置可见性属性
+    labels.forEach(function(label) {
         label.style.visibility = 'visible';
         label.style.opacity = '1';
         
-        // 处理标签中的链接 - 只修复点击相关属性
-        var labelLinks = label.querySelectorAll('a');
-        labelLinks.forEach(link => {
+        // 处理标签中的链接 - 只保留点击相关设置
+        var links = label.querySelectorAll('a');
+        links.forEach(function(link) {
             link.style.pointerEvents = 'auto';
             
-            // 强制添加点击事件处理
-            if (!link.hasAttribute('data-event-fixed')) {
-                link.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    if (this.getAttribute('href')) {
-                        window.location.href = this.getAttribute('href');
-                    }
-                }, true);
-                link.setAttribute('data-event-fixed', 'true');
-            }
+            // 确保链接可点击
+            link.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (this.getAttribute('href')) {
+                    window.location.href = this.getAttribute('href');
+                }
+            }, true);
         });
     });
-    
-    // 修复标签页中的标签布局 - 只修复容器相关属性
-    var tagLabelContainer = document.getElementById('taglabel');
-    if (tagLabelContainer) {
-        tagLabelContainer.style.cssText = 'display: flex !important; flex-wrap: wrap !important; gap: 8px !important; visibility: visible !important; opacity: 1 !important;';
-    }
-}
-
-// 修复标签显示问题
-function fixLabelsDisplay() {
-    // 确保所有标签容器显示正常
-    var labelContainers = document.querySelectorAll('.listLabels');
-    for (var i = 0; i < labelContainers.length; i++) {
-        labelContainers[i].style.display = 'flex';
-        labelContainers[i].style.flexWrap = 'wrap';
-        labelContainers[i].style.gap = '6px';
-        labelContainers[i].style.visibility = 'visible';
-        labelContainers[i].style.opacity = '1';
-    }
-    
-    // 确保所有标签显示正常
-    var labels = document.querySelectorAll('.Label, .LabelName');
-    for (var j = 0; j < labels.length; j++) {
-        labels[j].style.display = 'inline-block';
-        labels[j].style.visibility = 'visible';
-        labels[j].style.opacity = '1';
-    }
-    
-    // 移除任何可能导致标签隐藏的内联样式
-    var items = document.querySelectorAll('.SideNav-item');
-    for (var k = 0; k < items.length; k++) {
-        var itemLabels = items[k].querySelectorAll('.listLabels');
-        for (var l = 0; l < itemLabels.length; l++) {
-            itemLabels[l].style.overflow = 'visible';
-            itemLabels[l].style.whiteSpace = 'normal';
-            itemLabels[l].style.display = 'flex';
-            itemLabels[l].style.flexWrap = 'wrap';
-            itemLabels[l].style.gap = '6px';
-        }
-    }
-    
-    // 修复特定页面的标签显示
-    setTimeout(function() {
-        // 延迟执行以确保DOM已完全加载
-        fixTagClicks();
-    }, 500);
 }
 
 // 主题切换功能
@@ -309,24 +266,15 @@ function modeSwitch() {
     // 确保背景元素正确显示
     ensureBackgroundElement();
     
-    // 强制修复标签显示
-    setTimeout(forceFixAllLabels, 100);
-}
-
-// 修复标签点击功能
-function fixTagClicks() {
-    var labelLinks = document.querySelectorAll('.LabelName a, .Label a');
-    labelLinks.forEach(link => {
-        if (!link.getAttribute('data-fixed')) {
-            link.addEventListener('click', function(e) {
-                e.stopPropagation(); // 阻止事件冒泡
-                if (this.getAttribute('href')) {
-                    window.location.href = this.getAttribute('href');
-                }
-            }, true);
-            link.setAttribute('data-fixed', 'true');
-        }
-    });
+    // 确保标签可见，但不修改样式
+    setTimeout(function() {
+        // 只确保标签可见
+        var labels = document.querySelectorAll('.Label, .LabelName');
+        labels.forEach(function(label) {
+            label.style.visibility = 'visible';
+            label.style.opacity = '1';
+        });
+    }, 100);
 }
 
 // 添加立即执行的初始化函数
@@ -354,12 +302,15 @@ function addGlobalBackground() {
     document.body.parentNode.insertBefore(background, document.body);
 }
 
-// 立即修复标签样式
+// 立即修复标签样式 - 修改为只确保可见性
 function fixTagsImmediately() {
     // 强制标签容器使用flex布局
     var labelContainers = document.querySelectorAll('.listLabels, .flexLabels, #taglabel');
     labelContainers.forEach(function(container) {
-        container.style.cssText = 'display: flex !important; flex-wrap: wrap !important; flex-direction: row !important; gap: 6px !important; visibility: visible !important; opacity: 1 !important;';
+        container.style.display = 'flex';
+        container.style.flexWrap = 'wrap';
+        container.style.visibility = 'visible';
+        container.style.opacity = '1';
     });
     
     // 强制标签可见 - 只设置可见性
@@ -368,7 +319,7 @@ function fixTagsImmediately() {
         label.style.visibility = 'visible';
         label.style.opacity = '1';
         
-        // 处理标签中的链接 - 只保留点击相关设置
+        // 处理标签中的链接 - 只确保可点击
         var links = label.querySelectorAll('a');
         links.forEach(function(link) {
             link.style.pointerEvents = 'auto';
@@ -458,20 +409,15 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.opacity = 1;
     }, 100);
     
-    // 再次修复标签
-    fixTagsImmediately();
-    
-    // 添加延时执行的多次标签修复
-    setTimeout(fixTagsImmediately, 300);
-    setTimeout(fixTagsImmediately, 600);
-    setTimeout(fixTagsImmediately, 1000);
+    // 只确保标签可见，不设置任何样式
+    fixTagsVisibility();
     
     // 使用MutationObserver监听DOM变化
     var observer = new MutationObserver(function(mutations) {
-        fixTagsImmediately();
+        fixTagsVisibility();
     });
     
-    // 监听DOM变化，当内容发生变化时修复标签
+    // 监听DOM变化，当内容发生变化时确保标签可见
     observer.observe(document.body, {
         childList: true,
         subtree: true

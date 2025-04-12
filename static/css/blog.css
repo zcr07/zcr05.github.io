@@ -3,7 +3,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --primary-color: #7e57ff;
+  --primary-color: #6a5bf9;
   --secondary-color: #ff4f9a;
   --accent-color: #00dcdc;
   --bg-primary: #0a0a20;
@@ -20,7 +20,7 @@
   --footer-text-dark-color: #d3d3f9;
   --text-color: #333;
   --text-secondary-color: #c4c4c4;
-  --light-global-bg: #e0e5ff;
+  --light-global-bg: #f0f4ff;
   
   /* 动画相关变量 */
   --gradient-animation-speed: 15s;
@@ -149,62 +149,139 @@ a:not(.LabelName a):not(.btn):hover:after {
   width: 100%;
 }
 
-/* 标签样式 - 增强可点击性 */
-.LabelName {
+/* 标签相关统一样式 */
+.Label, .LabelName {
   position: relative;
   display: inline-block;
-  margin: 0 8px 8px 0;
+  margin: 0 6px 6px 0;
   padding: 0;
   border-radius: 20px;
   overflow: hidden;
   cursor: pointer;
   transition: all 0.3s ease;
-  background-color: var(--primary-color);
+  background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   z-index: 10 !important;
   border: 2px solid transparent;
+  font-size: 14px;
 }
 
-.LabelName:hover {
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-  border-color: rgba(255, 255, 255, 0.3);
-}
-
-.LabelName a {
+.Label, .LabelName a, .Label a {
   color: #fff !important;
   text-decoration: none !important;
   display: block !important;
   padding: 2px 12px !important;
   width: 100% !important;
   height: 100% !important;
-  z-index: 20 !important;
   position: relative !important;
   font-weight: 500;
-  transition: all 0.3s ease;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-/* 标签页面特殊样式 */
-#taglabel .Label {
-  cursor: pointer !important;
-  background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
-  padding: 5px 15px;
-  margin: 8px;
-  border-radius: 20px;
-  display: inline-block;
-  color: white;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  border: 2px solid transparent;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-#taglabel .Label:hover {
+.Label:hover, .LabelName:hover {
   transform: translateY(-3px) scale(1.05);
   box-shadow: 0 5px 15px rgba(126, 87, 255, 0.4);
   border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* 首页标签和列表页标签特化样式 */
+.listLabels, .flexLabels {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 4px;
+  gap: 6px;
+}
+
+.listLabels .Label, 
+.listLabels .LabelName,
+.flexLabels .Label,
+.flexLabels .LabelName {
+  margin: 0;
+}
+
+.listLabels .Label a, 
+.listLabels .LabelName a,
+.flexLabels .Label a,
+.flexLabels .LabelName a {
+  padding: 1px 10px !important;
+  font-size: 13px;
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 20;
+}
+
+/* 标签链接点击修复 */
+.LabelName object {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.LabelName a {
+  pointer-events: auto;
+  z-index: 20;
+  position: relative;
+}
+
+/* 主页上的标签颜色丰富化 */
+.Label[style*="background-color:#5d4fff"] {
+  background: linear-gradient(45deg, #5d4fff, #6a5bf9);
+}
+
+.Label[style*="background-color:#0075ca"] {
+  background: linear-gradient(45deg, #0075ca, #00a0e9);
+}
+
+.Label[style*="background-color:#7057ff"] {
+  background: linear-gradient(45deg, #7057ff, #9966ff);
+}
+
+.Label[style*="background-color:#ff4f9a"] {
+  background: linear-gradient(45deg, #ff4f9a, #ff6b6b);
+}
+
+/* 特殊标签 - 日期类 */
+.LabelTime {
+  background: linear-gradient(45deg, var(--secondary-color), #ff6b6b) !important;
+}
+
+/* 特殊标签 - 计数类 */
+.Counter {
+  background-color: var(--secondary-color) !important;
+  color: white !important;
+  border-radius: 10px !important;
+  padding: 2px 8px !important;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* 标签页专用样式 */
+#taglabel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 -4px 15px;
+  padding: 5px;
+}
+
+#taglabel .Label {
+  margin: 0;
+  font-size: 14px;
+  padding: 4px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#taglabel .Label .Counter {
+  margin-left: 5px;
 }
 
 /* 按钮样式 */
@@ -266,6 +343,34 @@ a:not(.LabelName a):not(.btn):hover:after {
   transition: all 0.3s ease;
 }
 
+/* 全局字体和头像区域样式 */
+.blogTitle {
+  color: var(--text-color) !important;
+  font-weight: 600;
+  font-size: 1.6rem;
+  margin-left: 12px;
+  text-decoration: none;
+  position: relative;
+  display: inline-block;
+  font-family: "PingFang SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* 增强头像样式 */
+.avatar {
+  border: 2px solid var(--primary-color);
+  box-shadow: 0 0 10px rgba(106, 91, 249, 0.5);
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+
+.avatar:hover {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 0 15px rgba(106, 91, 249, 0.8);
+}
+
 /* 博客标题栏 */
 #header {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
@@ -276,11 +381,12 @@ a:not(.LabelName a):not(.btn):hover:after {
   align-items: center;
   width: 100%;
   box-sizing: border-box;
-  background: linear-gradient(to right, rgba(255, 255, 255, 0.9), rgba(240, 240, 240, 0.8));
+  background: linear-gradient(to right, rgba(250, 250, 255, 0.9), rgba(240, 244, 255, 0.8));
   border-radius: 0 0 15px 15px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
+/* 博客标题样式优化 */
 .postTitle {
   background: linear-gradient(to right, var(--primary-color), var(--secondary-color), var(--accent-color));
   background-size: 200% auto;
@@ -288,9 +394,11 @@ a:not(.LabelName a):not(.btn):hover:after {
   background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: 800;
-  animation: gradient 5s linear infinite;
-  text-shadow: 0 0 2px rgba(255, 255, 255, 0.3);
+  animation: gradient 5s ease infinite;
   letter-spacing: 0.5px;
+  padding: 0.5rem 0;
+  text-shadow: none;
+  font-family: "PingFang SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
 }
 
 @keyframes gradient {
@@ -340,14 +448,40 @@ a:not(.LabelName a):not(.btn):hover:after {
   opacity: 1;
 }
 
+/* 主题切换相关样式 */
+.theme-transition {
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+/* 按钮样式优化 */
+.btn-invisible {
+  color: var(--primary-color) !important;
+  background-color: transparent !important;
+  opacity: 0.8;
+  transition: all 0.3s ease;
+}
+
+.btn-invisible:hover {
+  opacity: 1;
+  transform: scale(1.1);
+  color: var(--secondary-color) !important;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.btn-invisible svg {
+  fill: currentColor;
+}
+
 /* 暗色模式特定样式 */
 html[data-color-mode="dark"] {
   --global-bg: #070718; /* 暗色模式下的背景颜色 */
+  --text-color: #f0f0f0;
 }
 
 html[data-color-mode="dark"] body {
   background-color: rgba(18, 18, 42, 0.9);
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+  color: var(--text-color);
 }
 
 html[data-color-mode="dark"] body::before {
@@ -369,9 +503,28 @@ html[data-color-mode="dark"] .Box-body {
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
+html[data-color-mode="dark"] .blogTitle {
+  color: var(--text-primary) !important;
+}
+
+html[data-color-mode="dark"] .btn-invisible {
+  color: var(--text-primary) !important;
+}
+
+html[data-color-mode="dark"] .btn-invisible:hover {
+  color: var(--secondary-color) !important;
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
 /* 亮色模式特定样式 */
 html[data-color-mode="light"] {
   --global-bg: var(--light-global-bg); /* 亮色模式下的背景颜色 */
+  --text-color: #333;
+}
+
+html[data-color-mode="light"] body {
+  background-color: rgba(255, 255, 255, 0.95);
+  color: var(--text-color);
 }
 
 html[data-color-mode="light"] body::before {
@@ -383,31 +536,21 @@ html[data-color-mode="light"] body::before {
     var(--light-global-bg);
 }
 
-/* 闪烁动画效果 */
-@keyframes glowing {
-  0% { box-shadow: 0 0 5px rgba(126, 87, 255, 0.5); }
-  50% { box-shadow: 0 0 20px rgba(126, 87, 255, 0.8); }
-  100% { box-shadow: 0 0 5px rgba(126, 87, 255, 0.5); }
+html[data-color-mode="light"] #header {
+  background: linear-gradient(to right, rgba(250, 250, 255, 0.9), rgba(240, 244, 255, 0.8));
 }
 
-/* 添加浮动效果 */
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-5px); }
-  100% { transform: translateY(0px); }
+html[data-color-mode="light"] .Box, 
+html[data-color-mode="light"] .Box-body {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid rgba(230, 230, 250, 0.5) !important;
 }
 
-/* 给特定元素添加动态效果 */
-.title-left {
-  animation: float 3s ease-in-out infinite;
+html[data-color-mode="light"] .blogTitle {
+  color: var(--text-color) !important;
 }
 
-/* 自定义动画缓动函数 */
-.custom-ease {
-  transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-/* 响应式调整 */
+/* 响应式样式优化 */
 @media (max-width: 768px) {
   body {
     padding: 0;
@@ -415,38 +558,40 @@ html[data-color-mode="light"] body::before {
     border-radius: 0;
   }
   
-  .body {
-    padding: 0 16px;
+  .listLabels, .flexLabels {
+    flex-wrap: wrap;
+    margin-top: 4px;
+    gap: 4px;
+  }
+  
+  #taglabel .Label {
+    margin: 3px;
+    padding: 2px 10px;
+  }
+  
+  .blogTitle {
+    font-size: 1.2rem;
+    margin-left: 8px;
+  }
+  
+  .avatar {
+    width: 40px;
+    height: 40px;
   }
   
   #header {
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
     padding: 1rem;
   }
   
   .title-right {
-    margin: 1rem 0 0 0;
-    width: 100%;
-    display: flex;
-    justify-content: center;
+    margin: 0.5rem 0 0 0;
   }
   
   .postTitle {
     font-size: 1.8rem;
     text-align: center;
-  }
-  
-  .home-title {
-    font-size: 2rem;
-  }
-  
-  .Box, .Box-body {
-    border-radius: 8px !important;
-  }
-  
-  #taglabel .Label {
-    margin: 5px;
-    padding: 3px 10px;
   }
 }
 
@@ -476,17 +621,19 @@ html[data-color-mode="light"] body::before {
   margin-top: 2rem;
 }
 
-/* Counter样式 */
-.Counter {
-  background-color: var(--secondary-color) !important;
-  color: white !important;
-  border-radius: 10px !important;
-}
-
 /* 评论按钮改进 */
 #cmButton {
   width: 100%;
   text-align: center;
   margin: 2rem auto;
   display: block;
+}
+
+/* 标签容器通用样式 */
+.flexLabels {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
 }

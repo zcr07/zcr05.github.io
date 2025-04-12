@@ -128,16 +128,26 @@ document.addEventListener('DOMContentLoaded', function() {
     const themeSwitch = document.querySelector('#themeSwitch');
     if (themeSwitch) {
         themeSwitch.parentElement.addEventListener('click', function() {
+            // 添加过渡动画类
             document.body.classList.add('theme-transition');
             setTimeout(() => {
                 document.body.classList.remove('theme-transition');
             }, 500);
             
-            // 切换图标
-            if (document.documentElement.dataset.colorMode === 'light') {
-                themeSwitch.setAttribute('d', IconList['sun']);
-            } else {
+            // 获取当前主题
+            const currentTheme = document.documentElement.getAttribute('data-color-mode');
+            // 设置新主题
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-color-mode', newTheme);
+            
+            // 保存到 localStorage
+            localStorage.setItem('theme', newTheme);
+            
+            // 切换图标 - 正确设置图标
+            if (newTheme === 'light') {
                 themeSwitch.setAttribute('d', IconList['moon']);
+            } else {
+                themeSwitch.setAttribute('d', IconList['sun']);
             }
         });
     }
@@ -503,10 +513,24 @@ function loadBackupVercountScript() {
 
 // 页面加载完成后初始化SVG图标
 document.addEventListener('DOMContentLoaded', function() {
+    // 从 localStorage 获取主题设置或使用默认值
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-color-mode', savedTheme);
+    
+    // 根据当前主题设置正确的图标
+    const themeSwitch = document.getElementById('themeSwitch');
+    if (themeSwitch) {
+        if (savedTheme === 'light') {
+            themeSwitch.setAttribute('d', IconList['moon']);
+        } else {
+            themeSwitch.setAttribute('d', IconList['sun']);
+        }
+    }
+    
     // 确保所有SVG图标都正确加载
     initializeIcons();
     
-    // ... 其他代码
+    // ... 其他已有代码
 });
 
 // 初始化所有SVG图标
@@ -518,9 +542,12 @@ function initializeIcons() {
         'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z',
         'search': 'M15.7 13.3l-3.81-3.83A5.93 5.93 0 0 0 13 6c0-3.31-2.69-6-6-6S1 2.69 1 6s2.69 6 6 6c1.3 0 2.48-.41 3.47-1.11l3.83 3.81c.19.2.45.3.7.3.25 0 .52-.09.7-.3a.996.996 0 0 0 0-1.41v.01zM7 10.7c-2.59 0-4.7-2.11-4.7-4.7 0-2.59 2.11-4.7 4.7-4.7 2.59 0 4.7 2.11 4.7 4.7 0 2.59-2.11 4.7-4.7 4.7z',
         'rss': 'M2.002 2.725a.75.75 0 0 1 .797-.699C8.79 2.42 13.58 7.21 13.974 13.201a.75.75 0 0 1-1.497.098 10.502 10.502 0 0 0-9.776-9.776.747.747 0 0 1-.7-.798ZM2.84 7.05h-.002a7.002 7.002 0 0 1 6.113 6.111.75.75 0 0 1-1.49.178 5.503 5.503 0 0 0-4.8-4.8.75.75 0 0 1 .179-1.489ZM2 13a1 1 0 1 1 2 0 1 1 0 0 1-2 0Z',
-        'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z',
         'music': 'M8 14.25A3.25 3.25 0 0 1 4.75 11V4.56l9.5-1.54v5.73a1.75 1.75 0 1 0 1-1.58V2a.75.75 0 0 0-.88-.74l-11 1.79A.75.75 0 0 0 2.5 3.8v5.7a3.25 3.25 0 1 0 1.5 2.75.05.05 0 0 0 0-.01v-4.6l9-1.46v4.52A3.25 3.25 0 0 1 8 14.25Z',
-        'post': 'M0 3.75C0 2.784.784 2 1.75 2h12.5c.966 0 1.75.784 1.75 1.75v8.5A1.75 1.75 0 0 1 14.25 14H1.75A1.75 1.75 0 0 1 0 12.25Zm1.75-.25a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25v-8.5a.25.25 0 0 0-.25-.25ZM3.5 6.25a.75.75 0 0 1 .75-.75h7a.75.75 0 0 1 0 1.5h-7a.75.75 0 0 1-.75-.75Zm.75 2.25h4a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1 0-1.5Z'
+        'post': 'M0 3.75C0 2.784.784 2 1.75 2h12.5c.966 0 1.75.784 1.75 1.75v8.5A1.75 1.75 0 0 1 14.25 14H1.75A1.75 1.75 0 0 1 0 12.25Zm1.75-.25a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25v-8.5a.25.25 0 0 0-.25-.25ZM3.5 6.25a.75.75 0 0 1 .75-.75h7a.75.75 0 0 1 0 1.5h-7a.75.75 0 0 1-.75-.75Zm.75 2.25h4a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1 0-1.5Z',
+        'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z',
+        'about': 'M8 0C3.58 0 0 3.58 0 8C0 11.54 2.29 14.53 5.47 15.59C5.87 15.66 6.02 15.42 6.02 15.21C6.02 15.02 6.01 14.39 6.01 13.72C4 14.09 3.48 13.23 3.32 12.78C3.23 12.55 2.84 11.84 2.5 11.65C2.22 11.5 1.82 11.13 2.49 11.12C3.12 11.11 3.57 11.7 3.72 11.94C4.44 13.15 5.59 12.81 6.05 12.6C6.12 12.08 6.33 11.73 6.56 11.53C4.78 11.33 2.92 10.64 2.92 7.58C2.92 6.71 3.23 5.99 3.74 5.43C3.66 5.23 3.38 4.41 3.82 3.31C3.82 3.31 4.49 3.1 6.02 4.13C6.66 3.95 7.34 3.86 8.02 3.86C8.7 3.86 9.38 3.95 10.02 4.13C11.55 3.09 12.22 3.31 12.22 3.31C12.66 4.41 12.38 5.23 12.3 5.43C12.81 5.99 13.12 6.7 13.12 7.58C13.12 10.65 11.25 11.33 9.47 11.53C9.76 11.78 10.01 12.26 10.01 13.01C10.01 14.08 10 14.94 10 15.21C10 15.42 10.15 15.67 10.55 15.59C13.71 14.53 16 11.53 16 8C16 3.58 12.42 0 8 0Z',
+        'contact': 'M0 4C0 1.79086 1.79086 0 4 0H12C14.2091 0 16 1.79086 16 4V8C16 10.2091 14.2091 12 12 12H8L4 16V12H4C1.79086 12 0 10.2091 0 8V4ZM4 3C4 3.55228 4.44772 4 5 4H11C11.5523 4 12 3.55228 12 3C12 2.44772 11.5523 2 11 2H5C4.44772 2 4 2.44772 4 3ZM5 7C4.44772 7 4 7.44772 4 8C4 8.55228 4.44772 9 5 9H9C9.55228 9 10 8.55228 10 8C10 7.44772 9.55228 7 9 7H5Z',
+        'friends': 'M7.84 1.804A.75.75 0 018.25 1.5h5.5a.75.75 0 01.75.75v7.5a.75.75 0 01-.75.75h-1.5a.75.75 0 110-1.5h.75v-6h-4.5v3a.75.75 0 01-.75.75h-3v.75h.75a.75.75 0 110 1.5h-1.5a.75.75 0 01-.75-.75v-5.5a.75.75 0 01.225-.53l2.5-2.25z M1.5 8.5a3 3 0 116 0 3 3 0 01-6 0zm3-2a2 2 0 100 4 2 2 0 000-4zm8.634-3.635a.75.75 0 00-1.06 0l-.97.97-.97-.97a.75.75 0 00-1.06 1.06l.97.97-.97.97a.75.75 0 101.06 1.06l.97-.97.97.97a.75.75 0 101.06-1.06l-.97-.97.97-.97a.75.75 0 000-1.06z'
     };
 
     // 设置所有SVG路径
@@ -538,6 +565,7 @@ function initializeIcons() {
             } else if (id === 'pathRSS' || parentSvg.classList.contains('rss-icon')) {
                 path.setAttribute('d', IconList['rss']);
             } else if (id === 'themeSwitch' || parentSvg.classList.contains('theme-icon')) {
+                // 正确设置主题切换图标
                 const currentTheme = document.documentElement.getAttribute('data-color-mode') || 'light';
                 path.setAttribute('d', currentTheme === 'light' ? IconList['moon'] : IconList['sun']);
             } else if (id === 'music' || parentSvg.classList.contains('music-icon')) {
@@ -557,5 +585,132 @@ function initializeIcons() {
     const postIcons = document.getElementsByClassName('svgTop0');
     for (let i = 0; i < postIcons.length; i++) {
         postIcons[i].setAttribute('d', IconList['post']);
+    }
+}
+
+// 主题切换功能
+function modeSwitch() {
+    const html = document.documentElement;
+    const currentTheme = html.getAttribute('data-color-mode');
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    
+    // 添加过渡动画类
+    document.body.classList.add('theme-transition');
+    
+    // 设置新主题
+    html.setAttribute('data-color-mode', newTheme);
+    localStorage.setItem('theme', newTheme);
+    
+    // 更新主题图标
+    const themeSwitch = document.getElementById('themeSwitch');
+    if (themeSwitch) {
+        if (newTheme === 'light') {
+            themeSwitch.setAttribute('d', IconList['moon']);
+        } else {
+            themeSwitch.setAttribute('d', IconList['sun']);
+        }
+    }
+    
+    // 移除过渡动画类
+    setTimeout(() => {
+        document.body.classList.remove('theme-transition');
+    }, 500);
+}
+
+// 初始化动画图标
+document.addEventListener('DOMContentLoaded', function() {
+    // 从 localStorage 获取主题设置或使用默认值
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-color-mode', savedTheme);
+    
+    // 设置主题切换图标
+    const themeSwitchBtn = document.querySelector('#themeSwitch');
+    if (themeSwitchBtn) {
+        // 设置正确的图标
+        themeSwitchBtn.setAttribute('d', savedTheme === 'light' ? IconList['moon'] : IconList['sun']);
+        
+        // 添加点击事件处理
+        themeSwitchBtn.parentElement.addEventListener('click', function() {
+            // 调用主题切换函数
+            modeSwitch();
+        });
+    }
+    
+    // 设置所有SVG图标
+    const svgPaths = document.querySelectorAll('.btn svg path');
+    svgPaths.forEach(path => {
+        path.setAttribute('fill', 'currentColor');
+    });
+    
+    // 设置预定义的SVG图标路径
+    if (document.getElementById('pathSearch')) {
+        document.getElementById('pathSearch').setAttribute('d', IconList['search']);
+    }
+    if (document.getElementById('pathHome')) {
+        document.getElementById('pathHome').setAttribute('d', IconList['home']);
+    }
+    if (document.getElementById('pathRSS')) {
+        document.getElementById('pathRSS').setAttribute('d', IconList['rss']);
+    }
+    if (document.getElementById('music')) {
+        document.getElementById('music').setAttribute('d', IconList['music']);
+    }
+    if (document.getElementById('github')) {
+        document.getElementById('github').setAttribute('d', IconList['github']);
+    }
+    
+    // 设置帖子图标
+    const iconPost = document.getElementsByClassName('svgTop0');
+    for (let i = 0; i < iconPost.length; i++) {
+        iconPost[i].setAttribute('d', IconList['post']);
+    }
+    
+    // 统一标签样式处理
+    initializeLabels();
+    
+    // 页面加载完成后增加淡入效果
+    document.body.style.opacity = 0;
+    setTimeout(() => {
+        document.body.style.transition = 'opacity 0.8s ease';
+        document.body.style.opacity = 1;
+    }, 100);
+});
+
+// 统一标签样式处理
+function initializeLabels() {
+    // 确保所有标签容器有统一的类
+    const labelContainers = document.querySelectorAll('.listLabels');
+    labelContainers.forEach(container => {
+        if (!container.classList.contains('flexLabels')) {
+            container.classList.add('flexLabels');
+        }
+    });
+    
+    // 处理标签样式
+    const allLabels = document.querySelectorAll('.Label, .LabelName');
+    allLabels.forEach(label => {
+        // 确保标签有基本样式
+        if (label.classList.contains('LabelTime') && !label.hasAttribute('data-styled')) {
+            // 日期标签特殊样式
+            label.style.background = 'linear-gradient(45deg, var(--secondary-color), #ff6b6b)';
+            label.setAttribute('data-styled', 'true');
+        } 
+        
+        // 为包含链接的标签添加点击处理
+        const labelLinks = label.querySelectorAll('a');
+        labelLinks.forEach(link => {
+            if (!link.hasAttribute('data-event-added')) {
+                link.setAttribute('data-event-added', 'true');
+                link.addEventListener('click', function(e) {
+                    e.stopPropagation(); // 阻止事件冒泡
+                });
+            }
+        });
+    });
+    
+    // 修复标签页的标签布局
+    const tagLabel = document.getElementById('taglabel');
+    if (tagLabel && !tagLabel.classList.contains('flexLabels')) {
+        tagLabel.classList.add('flexLabels');
     }
 }

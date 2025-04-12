@@ -2,7 +2,7 @@
 window.addEventListener('load', function() {
     // 确保背景元素存在并且正确覆盖整个页面
     ensureBackgroundElement();
-    
+
     // 增强背景动画
     enhanceBackgroundAnimation();
     

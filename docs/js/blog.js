@@ -1,4 +1,15 @@
 // main.js
+window.addEventListener('load', function() {
+    // 确保背景元素存在并且正确覆盖整个页面
+    ensureBackgroundElement();
+    
+    // 强制修复所有标签显示
+    forceFixAllLabels();
+    
+    // 监听滚动事件，确保滚动时背景正常显示
+    window.addEventListener('scroll', handleScrollForBackground, { passive: true });
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     // SVG图标定义
     var IconList = {
@@ -62,93 +73,125 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.opacity = 1;
     }, 100);
     
-    // 统一标签样式处理
+    // 统一标签样式处理并强制生效
     fixTagStyles();
+    forceFixAllLabels();
 
     // 修复标签显示问题
     setTimeout(function() {
         fixLabelsDisplay();
+        // 增加多次尝试，确保修复成功
+        setTimeout(forceFixAllLabels, 500);
+        setTimeout(forceFixAllLabels, 1000);
     }, 300);
 });
 
+// 强制修复所有标签显示
+function forceFixAllLabels() {
+    // 强制处理所有标签容器
+    var allLabelContainers = document.querySelectorAll('.listLabels, .flexLabels, #taglabel');
+    allLabelContainers.forEach(function(container) {
+        container.style.cssText = 'display: flex !important; flex-wrap: wrap !important; gap: 6px !important; visibility: visible !important; opacity: 1 !important;';
+    });
+    
+    // 强制处理所有标签
+    var allLabels = document.querySelectorAll('.Label, .LabelName');
+    allLabels.forEach(function(label) {
+        label.style.cssText = 'display: inline-block !important; margin: 0 4px 4px 0 !important; visibility: visible !important; opacity: 1 !important; position: relative !important; z-index: 10 !important;';
+        
+        // 处理标签中的链接
+        var links = label.querySelectorAll('a');
+        links.forEach(function(link) {
+            link.style.cssText = 'display: block !important; width: 100% !important; height: 100% !important; position: relative !important; z-index: 20 !important; pointer-events: auto !important;';
+            
+            // 强制处理点击事件，确保链接可点击
+            if (!link.hasAttribute('data-force-fixed')) {
+                link.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    if (this.getAttribute('href')) {
+                        window.location.href = this.getAttribute('href');
+                    }
+                }, true);
+                link.setAttribute('data-force-fixed', 'true');
+            }
+        });
+    });
+}
+
+// 处理滚动时确保背景正常显示
+function handleScrollForBackground() {
+    // 确保页面底部背景覆盖
+    document.documentElement.style.minHeight = '100vh';
+    document.body.style.minHeight = '100vh';
+    
+    // 重新检查并确保背景元素存在
+    ensureBackgroundElement();
+    
+    // 强制处理所有标签
+    forceFixAllLabels();
+}
+
+// 确保背景元素存在并正确配置
+function ensureBackgroundElement() {
+    // 检查现有背景元素
+    var bgElement = document.getElementById('page-background');
+    
+    // 如果不存在，创建一个新的
+    if (!bgElement) {
+        bgElement = document.createElement('div');
+        bgElement.id = 'page-background';
+        document.body.parentNode.insertBefore(bgElement, document.body);
+    }
+    
+    // 强制设置背景元素样式
+    bgElement.style.cssText = 'position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important; width: 100vw !important; height: 100vh !important; z-index: -20 !important; background: var(--global-bg) !important; pointer-events: none !important;';
+}
+
 // 创建全屏背景元素
 function createBackgroundElement() {
+    // 创建背景元素
     var bgElement = document.createElement('div');
     bgElement.id = 'page-background';
     document.body.parentNode.insertBefore(bgElement, document.body);
     
-    // 设置为全屏固定背景
-    bgElement.style.position = 'fixed';
-    bgElement.style.top = '0';
-    bgElement.style.left = '0';
-    bgElement.style.width = '100%';
-    bgElement.style.height = '100%';
-    bgElement.style.zIndex = '-2';
+    // 设置强制全屏样式
+    bgElement.style.cssText = 'position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important; width: 100vw !important; height: 100vh !important; z-index: -20 !important; background: var(--global-bg) !important; pointer-events: none !important;';
     
     // 确保页面的最小高度为视口高度
     document.documentElement.style.minHeight = '100vh';
     document.body.style.minHeight = '100vh';
     
-    // 确保页面内容滚动后背景依然覆盖
+    // 设置背景处理事件
+    setupBackgroundEvents();
+}
+
+// 设置背景相关事件
+function setupBackgroundEvents() {
+    // 页面完全加载后确保背景正确
     window.addEventListener('load', function() {
-        adjustBackgroundSize();
+        ensureBackgroundElement();
+        forceFixAllLabels();
     });
     
-    // 监听窗口大小变化，调整背景尺寸
+    // 监听滚动事件
+    window.addEventListener('scroll', handleScrollForBackground, { passive: true });
+    
+    // 监听窗口大小变化
     window.addEventListener('resize', function() {
-        adjustBackgroundSize();
+        ensureBackgroundElement();
+        forceFixAllLabels();
     });
     
-    // 监听页面滚动，确保背景覆盖全部内容
-    window.addEventListener('scroll', function() {
-        adjustBackgroundSize();
+    // 处理内容变化
+    var observer = new MutationObserver(function(mutations) {
+        forceFixAllLabels();
     });
-}
-
-// 调整背景尺寸和标签显示
-function adjustBackgroundSize() {
-    var contentHeight = Math.max(
-        document.body.scrollHeight,
-        document.body.offsetHeight,
-        document.documentElement.clientHeight,
-        document.documentElement.scrollHeight,
-        document.documentElement.offsetHeight
-    );
     
-    // 确保body至少和视口一样高
-    document.body.style.minHeight = window.innerHeight + 'px';
-    
-    // 修复标签显示，确保它们水平排列
-    fixTagStyles();
-}
-
-// 主题切换功能
-function modeSwitch() {
-    var html = document.documentElement;
-    var currentTheme = html.getAttribute('data-color-mode');
-    var newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    
-    // 添加过渡动画类
-    document.body.classList.add('theme-transition');
-    
-    // 设置新主题
-    html.setAttribute('data-color-mode', newTheme);
-    localStorage.setItem('theme', newTheme);
-    
-    // 更新主题图标
-    var themeSwitch = document.getElementById('themeSwitch');
-    if (themeSwitch) {
-        if (newTheme === 'light') {
-            themeSwitch.setAttribute('d', IconList['moon']);
-        } else {
-            themeSwitch.setAttribute('d', IconList['sun']);
-        }
-    }
-    
-    // 移除过渡动画类
-    setTimeout(function() {
-        document.body.classList.remove('theme-transition');
-    }, 500);
+    // 监听DOM变化，当内容发生变化时修复标签
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
 }
 
 // 统一标签样式处理
@@ -157,73 +200,48 @@ function fixTagStyles() {
     var labelContainers = document.querySelectorAll('.listLabels');
     labelContainers.forEach(container => {
         container.classList.add('flexLabels');
-        container.style.display = 'flex';
-        container.style.flexWrap = 'wrap';
-        container.style.gap = '6px';
+        container.style.cssText = 'display: flex !important; flex-wrap: wrap !important; gap: 6px !important; visibility: visible !important; opacity: 1 !important;';
     });
     
     // 处理所有标签元素
     var labels = document.querySelectorAll('.Label, .LabelName');
     labels.forEach(label => {
-        // 设置标签基本样式
-        label.style.display = 'inline-block';
-        label.style.margin = '0';
-        label.style.visibility = 'visible';
-        label.style.opacity = '1';
+        // 设置标签强制样式
+        label.style.cssText = 'display: inline-block !important; margin: 0 4px 4px 0 !important; visibility: visible !important; opacity: 1 !important; position: relative !important; z-index: 10 !important;';
         
         // 处理标签中的链接
         var labelLinks = label.querySelectorAll('a');
         labelLinks.forEach(link => {
-            link.style.color = '#fff';
-            link.style.textDecoration = 'none';
-            link.style.display = 'block';
-            link.style.padding = '2px 12px';
-            link.style.width = '100%';
-            link.style.height = '100%';
-            link.style.position = 'relative';
-            link.style.zIndex = '20';
+            link.style.cssText = 'color: #fff !important; text-decoration: none !important; display: block !important; padding: 2px 12px !important; width: 100% !important; height: 100% !important; position: relative !important; z-index: 20 !important; pointer-events: auto !important;';
             
-            // 防止事件冒泡
+            // 强制添加点击事件处理
             if (!link.hasAttribute('data-event-fixed')) {
                 link.addEventListener('click', function(e) {
                     e.stopPropagation();
-                });
+                    if (this.getAttribute('href')) {
+                        window.location.href = this.getAttribute('href');
+                    }
+                }, true);
                 link.setAttribute('data-event-fixed', 'true');
             }
         });
         
         // 修复日期标签
         if (label.classList.contains('LabelTime')) {
-            label.style.background = 'linear-gradient(45deg, var(--secondary-color), #ff6b6b)';
+            label.style.background = 'linear-gradient(45deg, var(--secondary-color), #ff6b6b) !important';
         }
     });
     
     // 修复标签页中的标签布局
     var tagLabelContainer = document.getElementById('taglabel');
     if (tagLabelContainer) {
-        tagLabelContainer.style.display = 'flex';
-        tagLabelContainer.style.flexWrap = 'wrap';
-        tagLabelContainer.style.gap = '8px';
+        tagLabelContainer.style.cssText = 'display: flex !important; flex-wrap: wrap !important; gap: 8px !important; margin: 0 0 15px !important; padding: 5px !important;';
         
         var tagLabels = tagLabelContainer.querySelectorAll('.Label');
         tagLabels.forEach(tagLabel => {
-            tagLabel.style.margin = '0';
-            tagLabel.style.cursor = 'pointer';
+            tagLabel.style.cssText = 'margin: 0 !important; cursor: pointer !important; display: inline-block !important;';
         });
     }
-}
-
-// 修复标签点击功能
-function fixTagClicks() {
-    var labelLinks = document.querySelectorAll('.LabelName a, .Label a');
-    labelLinks.forEach(link => {
-        if (!link.getAttribute('data-fixed')) {
-            link.addEventListener('click', function(e) {
-                e.stopPropagation(); // 阻止事件冒泡
-            });
-            link.setAttribute('data-fixed', 'true');
-        }
-    });
 }
 
 // 修复标签显示问题
@@ -264,4 +282,55 @@ function fixLabelsDisplay() {
         // 延迟执行以确保DOM已完全加载
         fixTagClicks();
     }, 500);
+}
+
+// 主题切换功能
+function modeSwitch() {
+    var html = document.documentElement;
+    var currentTheme = html.getAttribute('data-color-mode');
+    var newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    
+    // 添加过渡动画类
+    document.body.classList.add('theme-transition');
+    
+    // 设置新主题
+    html.setAttribute('data-color-mode', newTheme);
+    localStorage.setItem('theme', newTheme);
+    
+    // 更新主题图标
+    var themeSwitch = document.getElementById('themeSwitch');
+    if (themeSwitch) {
+        if (newTheme === 'light') {
+            themeSwitch.setAttribute('d', IconList['moon']);
+        } else {
+            themeSwitch.setAttribute('d', IconList['sun']);
+        }
+    }
+    
+    // 移除过渡动画类
+    setTimeout(function() {
+        document.body.classList.remove('theme-transition');
+    }, 500);
+    
+    // 确保背景元素正确显示
+    ensureBackgroundElement();
+    
+    // 强制修复标签显示
+    setTimeout(forceFixAllLabels, 100);
+}
+
+// 修复标签点击功能
+function fixTagClicks() {
+    var labelLinks = document.querySelectorAll('.LabelName a, .Label a');
+    labelLinks.forEach(link => {
+        if (!link.getAttribute('data-fixed')) {
+            link.addEventListener('click', function(e) {
+                e.stopPropagation(); // 阻止事件冒泡
+                if (this.getAttribute('href')) {
+                    window.location.href = this.getAttribute('href');
+                }
+            }, true);
+            link.setAttribute('data-fixed', 'true');
+        }
+    });
 }

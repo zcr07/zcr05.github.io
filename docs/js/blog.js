@@ -3,6 +3,9 @@ window.addEventListener('load', function() {
     // 确保背景元素存在并且正确覆盖整个页面
     ensureBackgroundElement();
     
+    // 增强背景动画
+    enhanceBackgroundAnimation();
+    
     // 监听滚动事件，确保滚动时背景正常显示
     window.addEventListener('scroll', handleScrollForBackground, { passive: true });
 });
@@ -30,6 +33,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 创建全屏背景元素
     createBackgroundElement();
+    
+    // 增强背景动画效果
+    enhanceBackgroundAnimation();
     
     // 确保SVG图标正确填充颜色
     var svgPaths = document.querySelectorAll('svg path');
@@ -79,6 +85,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // 设置定时器，确保样式完全应用
     setTimeout(forceApplyListStyles, 500);
     setTimeout(forceApplyListStyles, 1000);
+    
+    // 设置定时器，确保背景动画效果完成应用
+    setTimeout(enhanceBackgroundAnimation, 800);
+    setTimeout(enhanceBackgroundAnimation, 1500);
 });
 
 // 处理标签链接点击
@@ -99,37 +109,84 @@ function setupTagClickHandlers() {
 
 // 处理滚动时确保背景正常显示
 function handleScrollForBackground() {
-    // 确保页面底部背景覆盖
+    const scrollY = window.scrollY || document.documentElement.scrollTop;
+    const pageHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const scrollPercent = Math.min(scrollY / pageHeight, 1);
+    
+    // 基于滚动位置调整背景效果
+    const fixedBg = document.getElementById('fixed-background');
+    if (fixedBg) {
+        // 随滚动轻微改变背景色调
+        const hue = 240 + (scrollPercent * 20); // 蓝色调范围
+        fixedBg.style.filter = `hue-rotate(${scrollPercent * 15}deg)`;
+        
+        // 背景微小位移效果
+        fixedBg.style.transform = `translateY(${scrollPercent * -10}px)`;
+    }
+    
+    // 星星随滚动位置微调
+    const stars = document.querySelectorAll('.star');
+    stars.forEach((star, index) => {
+        const factor = (index % 5 + 1) / 5; // 不同星星有不同的移动因子
+        star.style.transform = `translateY(${scrollPercent * -20 * factor}px)`;
+    });
+}
+
+// 确保背景元素存在
+function ensureBackgroundElement() {
+    // 检查固定背景是否存在
+    if (!document.getElementById('fixed-background')) {
+        const fixedBg = document.createElement('div');
+        fixedBg.id = 'fixed-background';
+        fixedBg.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -999;
+            background-color: var(--global-bg, #070720);
+            transition: background-color 0.5s ease;
+            pointer-events: none;
+        `;
+        document.body.parentNode.insertBefore(fixedBg, document.body);
+        
+        // 应用高级背景动画
+        enhanceBackgroundAnimation();
+    }
+    
+    // 检查页面背景是否存在
+    if (!document.getElementById('page-background')) {
+        const pageBg = document.createElement('div');
+        pageBg.id = 'page-background';
+        pageBg.style.cssText = `
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            min-height: 100%;
+            height: auto;
+            z-index: -998;
+            background-color: var(--global-bg, #070720);
+            transition: background-color 0.5s ease;
+            pointer-events: none;
+        `;
+        document.body.parentNode.insertBefore(pageBg, document.body);
+    }
+    
+    // 确保背景动画效果
+    enhanceBackgroundAnimation();
+    
+    // 确保最小高度设置，防止背景不足
     document.documentElement.style.minHeight = '100vh';
     document.body.style.minHeight = '100vh';
     
-    // 重新检查并确保背景元素存在
-    ensureBackgroundElement();
-}
-
-// 确保背景元素存在并正确配置
-function ensureBackgroundElement() {
-    // 检查固定背景元素
-    var fixedBg = document.getElementById('fixed-background');
-    if (!fixedBg) {
-        fixedBg = document.createElement('div');
-        fixedBg.id = 'fixed-background';
-        document.body.parentNode.insertBefore(fixedBg, document.body);
-    }
-
-    // 强制设置固定背景元素样式，确保动画能够正常工作
-    fixedBg.style.cssText = 'position: fixed !important; z-index: -999 !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; background: var(--global-bg) !important; animation: backgroundColorShift 20s ease-in-out infinite alternate !important;';
-
-    // 检查页面背景元素
-    var pageBg = document.getElementById('page-background');
-    if (!pageBg) {
-        pageBg = document.createElement('div');
-        pageBg.id = 'page-background';
-        document.body.parentNode.insertBefore(pageBg, document.body);
-    }
-
-    // 设置页面背景样式
-    pageBg.style.cssText = 'position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important; width: 100vw !important; height: 100vh !important; z-index: -20 !important; background: var(--global-bg) !important; pointer-events: none !important; animation: backgroundColorShift 20s ease-in-out infinite alternate !important;';
+    // 添加并优化滚动事件处理
+    window.removeEventListener('scroll', handleScrollForBackground);
+    window.addEventListener('scroll', handleScrollForBackground);
+    
+    // 立即处理一次滚动效果
+    handleScrollForBackground();
 }
 
 // 创建全屏背景元素
@@ -163,20 +220,43 @@ function setupBackgroundEvents() {
     // 页面完全加载后确保背景正确
     window.addEventListener('load', function() {
         ensureBackgroundElement();
+        enhanceBackgroundAnimation();
+    });
+    
+    // DOMContentLoaded事件
+    document.addEventListener('DOMContentLoaded', function() {
+        ensureBackgroundElement();
+        enhanceBackgroundAnimation();
     });
     
     // 监听滚动事件
-    window.addEventListener('scroll', handleScrollForBackground, { passive: true });
+    window.addEventListener('scroll', function() {
+        handleScrollForBackground();
+        // 确保动画一直存在
+        if (!document.getElementById('dynamic-background-animations')) {
+            enhanceBackgroundAnimation();
+        }
+    }, { passive: true });
     
     // 监听窗口大小变化
     window.addEventListener('resize', function() {
         ensureBackgroundElement();
+        enhanceBackgroundAnimation();
     });
     
     // 确保主题切换时背景保持
     window.addEventListener('theme-changed', function() {
-        setTimeout(ensureBackgroundElement, 100);
+        setTimeout(function() {
+            ensureBackgroundElement();
+            enhanceBackgroundAnimation();
+        }, 100);
     });
+    
+    // 定期检查背景动画是否存在
+    setInterval(function() {
+        ensureBackgroundElement();
+        enhanceBackgroundAnimation();
+    }, 2000);
 }
 
 // 主题切换功能
@@ -210,6 +290,9 @@ function modeSwitch() {
     // 确保背景元素正确显示
     ensureBackgroundElement();
     
+    // 增强背景动画
+    enhanceBackgroundAnimation();
+    
     // 触发主题变更事件
     window.dispatchEvent(new Event('theme-changed'));
     
@@ -218,34 +301,109 @@ function modeSwitch() {
     setTimeout(forceApplyListStyles, 300);
 }
 
-// 添加立即执行的初始化函数
-(function() {
-    // 立即添加全局背景
-    addGlobalBackground();
-})();
+// 增强背景动画效果
+function enhanceBackgroundAnimation() {
+    // 检查是否已存在动态动画样式
+    if (document.getElementById('dynamic-background-animations')) {
+        return;
+    }
 
-// 立即添加全局背景
-function addGlobalBackground() {
-    var html = document.documentElement;
-    var body = document.body;
+    // 创建动态背景动画样式
+    const dynamicStyles = document.createElement('style');
+    dynamicStyles.id = 'dynamic-background-animations';
     
-    // 确保HTML和BODY有正确的最小高度和背景色
-    html.style.cssText += 'min-height: 100vh !important; background-color: var(--global-bg) !important; height: 100% !important;';
-    body.style.cssText += 'min-height: 100vh !important; background-color: var(--global-bg) !important; height: 100% !important;';
-    
-    // 添加固定的背景元素
-    var background = document.createElement('div');
-    background.id = 'fixed-background';
-    background.style.cssText = 'position: fixed !important; z-index: -999 !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; background-color: var(--global-bg) !important; animation: backgroundColorShift 20s ease-in-out infinite alternate !important;';
-    document.body.parentNode.insertBefore(background, document.body);
-    
-    // 立即激活动画效果
-    setTimeout(function() {
-        var fixedBg = document.getElementById('fixed-background');
-        if (fixedBg) {
-            fixedBg.style.animation = 'backgroundColorShift 20s ease-in-out infinite alternate';
+    // 定义多种动画效果
+    const animations = `
+        /* 微粒子效果 */
+        @keyframes floatingParticles {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0.8; }
+            50% { transform: translateY(-20px) rotate(180deg); opacity: 0.2; }
+            100% { transform: translateY(0) rotate(360deg); opacity: 0.8; }
         }
-    }, 100);
+        
+        /* 流动效果 */
+        @keyframes flowingEffect {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        /* 星光闪烁效果 */
+        @keyframes starTwinkle {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 0.2; }
+        }
+        
+        /* 为背景元素添加复合动画 */
+        #fixed-background::before,
+        #page-background::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, transparent 70%, rgba(10, 10, 40, 0.2) 100%);
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        /* 添加星星效果 */
+        .star {
+            position: fixed;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: starTwinkle var(--twinkle-duration, 3s) infinite ease-in-out;
+            z-index: -10;
+            pointer-events: none;
+        }
+    `;
+    
+    dynamicStyles.textContent = animations;
+    document.head.appendChild(dynamicStyles);
+    
+    // 创建星星背景
+    createStars();
+}
+
+// 创建星星效果
+function createStars() {
+    // 如果已存在星星容器，则不重新创建
+    if (document.getElementById('stars-container')) {
+        return;
+    }
+    
+    const starsContainer = document.createElement('div');
+    starsContainer.id = 'stars-container';
+    starsContainer.style.cssText = 'position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -10; pointer-events: none;';
+    document.body.appendChild(starsContainer);
+    
+    // 创建多个星星
+    const starCount = Math.min(Math.floor(window.innerWidth * window.innerHeight / 20000), 100);
+    
+    for (let i = 0; i < starCount; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        
+        // 随机位置
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.top = `${Math.random() * 100}%`;
+        
+        // 随机大小
+        const size = Math.random() * 2 + 1;
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        
+        // 随机透明度
+        star.style.opacity = (Math.random() * 0.7 + 0.3).toString();
+        
+        // 随机动画延迟和持续时间
+        star.style.setProperty('--twinkle-duration', `${Math.random() * 3 + 2}s`);
+        star.style.animationDelay = `${Math.random() * 5}s`;
+        
+        starsContainer.appendChild(star);
+    }
 }
 
 // 确保列表元素应用了正确的样式
@@ -261,30 +419,169 @@ function forceApplyListStyles() {
         // 添加一个特殊的类，以便我们可以通过类选择器设置样式
         row.classList.add('tech-box-row');
         
-        // 确保元素有正确的样式
-        row.style.cssText += 'transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important; position: relative !important; overflow: hidden !important; border-radius: 12px !important; margin-bottom: 10px !important; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03) !important; backdrop-filter: blur(10px) !important; -webkit-backdrop-filter: blur(10px) !important; z-index: 1 !important;';
-        
-        // 根据索引添加不同的左侧边框颜色
-        if (index % 3 === 0) {
-            row.style.borderLeft = '2px solid var(--primary-color)';
-        } else if (index % 3 === 1) {
-            row.style.borderLeft = '2px solid var(--secondary-color)';
-        } else {
-            row.style.borderLeft = '2px solid var(--accent-color)';
+        // 检测行的父元素以确定是列表
+        const isInList = row.parentElement && 
+            (row.parentElement.classList.contains('Box') || 
+             row.parentElement.tagName === 'UL' || 
+             row.parentElement.tagName === 'OL' ||
+             row.parentElement.id === 'indexPostsList');
+             
+        if (!isInList) {
+            return; // 如果不是列表项，则跳过
         }
         
-        // 确保亮/暗模式的背景色正确
+        // 确保元素有正确的样式 - 完全覆盖，不要追加
         const isDarkMode = document.documentElement.getAttribute('data-color-mode') === 'dark';
-        if (isDarkMode) {
-            row.style.backgroundColor = 'rgba(18, 18, 42, 0.5)';
-            row.style.border = '1px solid rgba(126, 87, 255, 0.2)';
-        } else {
-            row.style.backgroundColor = 'rgba(246, 250, 255, 0.6)';
-            row.style.border = '1px solid rgba(126, 87, 255, 0.15)';
+        const baseColor = isDarkMode ? 'rgba(18, 18, 42, 0.5)' : 'rgba(246, 250, 255, 0.6)';
+        const borderColor = isDarkMode ? 'rgba(126, 87, 255, 0.2)' : 'rgba(126, 87, 255, 0.15)';
+        
+        // 根据索引选择边框颜色
+        let sideColor = 'var(--primary-color)';
+        if (index % 3 === 1) {
+            sideColor = 'var(--secondary-color)';
+        } else if (index % 3 === 2) {
+            sideColor = 'var(--accent-color)';
         }
+        
+        // 直接使用完整的cssText，不追加
+        row.style.cssText = `
+            display: block !important;
+            position: relative !important;
+            overflow: hidden !important;
+            border-radius: 12px !important;
+            margin-bottom: 10px !important;
+            background-color: ${baseColor} !important;
+            border: 1px solid ${borderColor} !important;
+            border-left: 2px solid ${sideColor} !important;
+            padding: 16px !important;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            z-index: 1 !important;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+            transform: translateY(0) scale(1) !important;
+        `;
+        
+        // 清除任何可能覆盖我们设置的样式的属性
+        row.removeAttribute('class');
+        row.classList.add('tech-box-row');
         
         // 增强元素，添加伪元素装饰
         addDecorativeElementTo(row);
+        
+        // 添加鼠标悬停和离开事件
+        row.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-6px) scale(1.01) !important';
+            this.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.08) !important';
+            this.style.backgroundColor = isDarkMode ? 
+                'rgba(25, 25, 55, 0.7) !important' : 
+                'rgba(246, 250, 255, 0.9) !important';
+            this.style.borderColor = isDarkMode ? 
+                'rgba(126, 87, 255, 0.4) !important' : 
+                'rgba(126, 87, 255, 0.3) !important';
+            this.style.zIndex = '2 !important';
+        });
+        
+        row.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1) !important';
+            this.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.03) !important';
+            this.style.backgroundColor = baseColor + ' !important';
+            this.style.borderColor = borderColor + ' !important';
+            this.style.zIndex = '1 !important';
+        });
+        
+        // 处理列表项中的链接
+        const links = row.querySelectorAll('a');
+        links.forEach(link => {
+            link.style.cssText = `
+                position: relative !important;
+                display: inline-block !important;
+                z-index: 2 !important;
+                color: var(--primary-color) !important;
+                text-decoration: none !important;
+                transition: all 0.3s ease !important;
+            `;
+            
+            link.addEventListener('mouseenter', function() {
+                this.style.color = 'var(--secondary-color) !important';
+                this.style.transform = 'translateX(3px) !important';
+            });
+            
+            link.addEventListener('mouseleave', function() {
+                this.style.color = 'var(--primary-color) !important';
+                this.style.transform = 'translateX(0) !important';
+            });
+        });
+    });
+    
+    // 添加专门的元素查找
+    const additionalBoxRows = document.querySelectorAll('#indexPostsList > .d-flex');
+    additionalBoxRows.forEach(function(row, index) {
+        // 直接应用样式
+        row.classList.add('tech-box-row');
+        const isDarkMode = document.documentElement.getAttribute('data-color-mode') === 'dark';
+        const baseColor = isDarkMode ? 'rgba(18, 18, 42, 0.5)' : 'rgba(246, 250, 255, 0.6)';
+        
+        // 为非标准列表项应用样式
+        row.style.cssText = `
+            display: block !important;
+            position: relative !important;
+            overflow: hidden !important;
+            border-radius: 12px !important;
+            margin-bottom: 10px !important;
+            background-color: ${baseColor} !important;
+            border: 1px solid rgba(126, 87, 255, 0.15) !important;
+            padding: 16px !important;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            z-index: 1 !important;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+        `;
+        
+        // 添加装饰元素
+        addDecorativeElementTo(row);
+    });
+    
+    // 处理Gmeek特定的博客列表项
+    const postItems = document.querySelectorAll('.post-item, .post, .post-card, [id^="post-"]');
+    postItems.forEach(function(item, index) {
+        // 添加特殊类
+        item.classList.add('tech-box-row');
+        
+        // 应用样式
+        const isDarkMode = document.documentElement.getAttribute('data-color-mode') === 'dark';
+        const baseColor = isDarkMode ? 'rgba(18, 18, 42, 0.5)' : 'rgba(246, 250, 255, 0.6)';
+        
+        item.style.cssText = `
+            display: block !important;
+            position: relative !important;
+            overflow: hidden !important;
+            border-radius: 12px !important;
+            margin-bottom: 10px !important;
+            background-color: ${baseColor} !important;
+            border: 1px solid rgba(126, 87, 255, 0.15) !important;
+            padding: 16px !important;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            z-index: 1 !important;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+        `;
+        
+        // 添加悬浮效果
+        item.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-6px) scale(1.01)';
+            this.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.08)';
+        });
+        
+        item.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+            this.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.03)';
+        });
+        
+        // 添加装饰元素
+        addDecorativeElementTo(item);
     });
 }
 
@@ -409,4 +706,29 @@ function injectBoxRowStyles() {
     
     // 添加到文档
     document.head.appendChild(styleSheet);
+}
+
+// 添加立即执行的初始化函数
+(function() {
+    // 立即添加全局背景
+    addGlobalBackground();
+    
+    // 立即增强背景动画
+    setTimeout(enhanceBackgroundAnimation, 0);
+})();
+
+// 立即添加全局背景
+function addGlobalBackground() {
+    var html = document.documentElement;
+    var body = document.body;
+    
+    // 确保HTML和BODY有正确的最小高度和背景色
+    html.style.cssText += 'min-height: 100vh !important; background-color: var(--global-bg) !important; height: 100% !important;';
+    body.style.cssText += 'min-height: 100vh !important; background-color: var(--global-bg) !important; height: 100% !important;';
+    
+    // 添加固定的背景元素
+    var background = document.createElement('div');
+    background.id = 'fixed-background';
+    background.style.cssText = 'position: fixed !important; z-index: -999 !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; background-color: var(--global-bg) !important; animation: backgroundColorShift 20s ease-in-out infinite alternate !important;';
+    document.body.parentNode.insertBefore(background, document.body);
 }

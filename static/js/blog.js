@@ -72,6 +72,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 添加标签链接点击处理，确保可点击
     setupTagClickHandlers();
+    
+    // 强制应用列表样式
+    forceApplyListStyles();
+    
+    // 设置定时器，确保样式完全应用
+    setTimeout(forceApplyListStyles, 500);
+    setTimeout(forceApplyListStyles, 1000);
 });
 
 // 处理标签链接点击
@@ -205,6 +212,10 @@ function modeSwitch() {
     
     // 触发主题变更事件
     window.dispatchEvent(new Event('theme-changed'));
+    
+    // 强制重新应用列表样式
+    forceApplyListStyles();
+    setTimeout(forceApplyListStyles, 300);
 }
 
 // 添加立即执行的初始化函数
@@ -235,4 +246,167 @@ function addGlobalBackground() {
             fixedBg.style.animation = 'backgroundColorShift 20s ease-in-out infinite alternate';
         }
     }, 100);
+}
+
+// 确保列表元素应用了正确的样式
+function forceApplyListStyles() {
+    // 查找所有Box-row元素
+    const boxRows = document.querySelectorAll('.Box-row');
+    
+    // 首先尝试通过注入一个专用样式表来强制应用样式
+    injectBoxRowStyles();
+    
+    // 为每个列表项强制应用样式
+    boxRows.forEach(function(row, index) {
+        // 添加一个特殊的类，以便我们可以通过类选择器设置样式
+        row.classList.add('tech-box-row');
+        
+        // 确保元素有正确的样式
+        row.style.cssText += 'transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important; position: relative !important; overflow: hidden !important; border-radius: 12px !important; margin-bottom: 10px !important; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03) !important; backdrop-filter: blur(10px) !important; -webkit-backdrop-filter: blur(10px) !important; z-index: 1 !important;';
+        
+        // 根据索引添加不同的左侧边框颜色
+        if (index % 3 === 0) {
+            row.style.borderLeft = '2px solid var(--primary-color)';
+        } else if (index % 3 === 1) {
+            row.style.borderLeft = '2px solid var(--secondary-color)';
+        } else {
+            row.style.borderLeft = '2px solid var(--accent-color)';
+        }
+        
+        // 确保亮/暗模式的背景色正确
+        const isDarkMode = document.documentElement.getAttribute('data-color-mode') === 'dark';
+        if (isDarkMode) {
+            row.style.backgroundColor = 'rgba(18, 18, 42, 0.5)';
+            row.style.border = '1px solid rgba(126, 87, 255, 0.2)';
+        } else {
+            row.style.backgroundColor = 'rgba(246, 250, 255, 0.6)';
+            row.style.border = '1px solid rgba(126, 87, 255, 0.15)';
+        }
+        
+        // 增强元素，添加伪元素装饰
+        addDecorativeElementTo(row);
+    });
+}
+
+// 添加装饰性元素
+function addDecorativeElementTo(element) {
+    // 创建一个装饰性边框
+    const decorator = document.createElement('div');
+    decorator.classList.add('tech-border-decoration');
+    
+    // 设置样式
+    decorator.style.cssText = `
+        position: absolute;
+        inset: 0;
+        border-radius: 12px;
+        pointer-events: none;
+        overflow: hidden;
+        z-index: 0;
+    `;
+    
+    // 创建边框发光效果
+    const glow = document.createElement('div');
+    glow.classList.add('border-glow');
+    glow.style.cssText = `
+        position: absolute;
+        inset: 0;
+        border-radius: 12px;
+        background: linear-gradient(135deg, 
+            transparent 0%, 
+            rgba(126, 87, 255, 0.2) 15%, 
+            rgba(0, 220, 220, 0.2) 35%,
+            transparent 50%,
+            transparent 70%, 
+            rgba(255, 79, 154, 0.2) 85%, 
+            transparent 100%);
+        opacity: 0.8;
+        transition: all 0.5s ease;
+    `;
+    
+    // 创建左侧边条
+    const leftBar = document.createElement('div');
+    leftBar.classList.add('left-decoration-bar');
+    leftBar.style.cssText = `
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    `;
+    
+    // 添加元素到DOM
+    decorator.appendChild(glow);
+    decorator.appendChild(leftBar);
+    
+    // 添加到列表项
+    if (!element.querySelector('.tech-border-decoration')) {
+        element.appendChild(decorator);
+    }
+    
+    // 添加鼠标悬停效果
+    element.addEventListener('mouseenter', function() {
+        glow.style.opacity = '1';
+        leftBar.style.opacity = '1';
+    });
+    
+    element.addEventListener('mouseleave', function() {
+        glow.style.opacity = '0.8';
+        leftBar.style.opacity = '0';
+    });
+}
+
+// 注入专用的Box-row样式表
+function injectBoxRowStyles() {
+    // 检查是否已经存在专用样式表
+    if (document.getElementById('tech-box-row-styles')) {
+        return;
+    }
+    
+    // 创建样式表
+    const styleSheet = document.createElement('style');
+    styleSheet.id = 'tech-box-row-styles';
+    
+    // 设置样式内容
+    const isDarkMode = document.documentElement.getAttribute('data-color-mode') === 'dark';
+    const bgcolor = isDarkMode ? 'rgba(18, 18, 42, 0.5)' : 'rgba(246, 250, 255, 0.6)';
+    const borderColor = isDarkMode ? 'rgba(126, 87, 255, 0.2)' : 'rgba(126, 87, 255, 0.15)';
+    const hoverBgColor = isDarkMode ? 'rgba(25, 25, 55, 0.7)' : 'rgba(246, 250, 255, 0.9)';
+    const hoverBorderColor = isDarkMode ? 'rgba(126, 87, 255, 0.4)' : 'rgba(126, 87, 255, 0.3)';
+    
+    styleSheet.textContent = `
+        .Box-row, body .Box-row, html .Box-row, #content .Box-row, .tech-box-row {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+            position: relative !important;
+            overflow: hidden !important;
+            border-radius: 12px !important;
+            margin-bottom: 10px !important;
+            background-color: ${bgcolor} !important;
+            border: 1px solid ${borderColor} !important;
+            padding: 16px !important;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            z-index: 1 !important;
+        }
+        
+        .Box-row:hover, body .Box-row:hover, html .Box-row:hover, #content .Box-row:hover, .tech-box-row:hover {
+            transform: translateY(-6px) scale(1.01) !important;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08) !important;
+            background-color: ${hoverBgColor} !important;
+            border-color: ${hoverBorderColor} !important;
+            z-index: 2 !important;
+        }
+        
+        @keyframes borderGlow {
+            0% { background-position: 0% 50%; filter: blur(0px); }
+            50% { background-position: 100% 50%; filter: blur(1px); }
+            100% { background-position: 0% 50%; filter: blur(0px); }
+        }
+    `;
+    
+    // 添加到文档
+    document.head.appendChild(styleSheet);
 }

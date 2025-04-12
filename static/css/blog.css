@@ -39,18 +39,30 @@ html, body {
   margin: 0;
   padding: 0;
   width: 100%;
-  height: auto;
-  min-height: 100vh;
 }
 
 html {
+  height: 100%;
   background-color: var(--global-bg);
+  overflow-y: scroll; /* 只在html上保留滚动 */
+  overflow-x: hidden;
 }
 
 body {
   position: relative;
-  overflow-x: hidden;
-  overflow-y: auto;
+  min-height: 100vh;
+  overflow: visible !important; /* 移除body滚动 */
+  font-family: -apple-system, BlinkMacSystemFont, Helvetica, Arial, "PingFang SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+  line-height: 1.6;
+  color: var(--text-color);
+  max-width: var(--max-width);
+  margin: 0 auto;
+  background-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.15);
+  padding: 0;
+  border-radius: 0 0 12px 12px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 /* 全站背景元素 */
@@ -62,6 +74,7 @@ body {
   width: 100%;
   height: 100%;
   background: var(--global-bg);
+  overflow: hidden !important;
 }
 
 /* 背景渐变效果 */
@@ -97,7 +110,10 @@ html[data-color-mode="light"] #fixed-background::before {
     radial-gradient(circle at 20% 30%, rgba(0, 220, 220, 0.2), transparent 25%),
     radial-gradient(circle at 70% 65%, rgba(255, 79, 154, 0.2), transparent 35%),
     radial-gradient(circle at 10% 85%, rgba(126, 87, 255, 0.2), transparent 25%),
-    repeating-linear-gradient(45deg, rgba(200, 210, 255, 0.4) 0%, rgba(220, 230, 255, 0.4) 10%);
+    repeating-linear-gradient(45deg, rgba(200, 210, 255, 0.4) 0%, rgba(220, 230, 255, 0.4) 10%),
+    linear-gradient(135deg, #d0e0ff 0%, #e8edff 100%) !important;
+  animation: backgroundShimmerLight 30s ease-in-out infinite alternate;
+  background-attachment: fixed !important;
 }
 
 /* 标签容器样式 - 修复横向排列 */
@@ -131,70 +147,6 @@ html[data-color-mode="light"] #fixed-background::before {
   visibility: visible !important;
   opacity: 1 !important;
   pointer-events: auto !important;
-}
-
-/* 恢复标签原有颜色 */
-.Label[style*="background-color"], .LabelName[style*="background-color"] {
-  /* 不强制覆盖原有样式，允许内联样式生效 */
-  background: transparent; /* 移除默认背景，允许内联样式生效 */
-}
-
-/* 主页上的标签颜色丰富化，为特定标签添加渐变效果 */
-.Label[style*="background-color:#5d4fff"] {
-  background: linear-gradient(45deg, #5d4fff, #6a5bf9) !important;
-}
-
-.Label[style*="background-color:#0075ca"] {
-  background: linear-gradient(45deg, #0075ca, #00a0e9) !important;
-}
-
-.Label[style*="background-color:#7057ff"] {
-  background: linear-gradient(45deg, #7057ff, #9966ff) !important;
-}
-
-.Label[style*="background-color:#ff4f9a"] {
-  background: linear-gradient(45deg, #ff4f9a, #ff6b6b) !important;
-}
-
-/* 为常见颜色标签添加渐变 */
-.Label[style*="background-color:#d876e3"] {
-  background: linear-gradient(45deg, #d876e3, #e76aff) !important;
-}
-
-.Label[style*="background-color:#008672"] {
-  background: linear-gradient(45deg, #008672, #00b393) !important;
-}
-
-.Label[style*="background-color:#e99695"] {
-  background: linear-gradient(45deg, #e99695, #ffb0af) !important;
-}
-
-.Label[style*="background-color:#fbca04"] {
-  background: linear-gradient(45deg, #fbca04, #ffd84c) !important;
-}
-
-.Label[style*="background-color:#1d76db"] {
-  background: linear-gradient(45deg, #1d76db, #3a95ff) !important;
-}
-
-/* 特殊标签 - 日期类 */
-.LabelTime {
-  background: linear-gradient(45deg, var(--secondary-color), #ff6b6b) !important;
-}
-
-/* 特殊标签 - 计数类 */
-.Counter {
-  background-color: var(--secondary-color) !important;
-  color: white !important;
-  border-radius: 10px !important;
-  padding: 2px 8px !important;
-  font-size: 12px;
-  font-weight: bold;
-}
-
-/* 默认标签样式（无内联样式时） */
-.Label:not([style*="background-color"]), .LabelName:not([style*="background-color"]) {
-  background: linear-gradient(45deg, var(--primary-color), var(--accent-color)) !important;
 }
 
 /* 标签链接样式 */
@@ -234,24 +186,6 @@ html[data-color-mode="light"] #fixed-background::before {
   .LabelName {
     margin: 0 !important;
   }
-}
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, Helvetica, Arial, "PingFang SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
-  line-height: 1.6;
-  color: var(--text-color);
-  max-width: var(--max-width);
-  margin: 0 auto;
-  min-height: 100vh;
-  background-color: rgba(255, 255, 255, 0.95);
-  position: relative;
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.15);
-  padding: 0;
-  overflow-x: hidden;
-  overflow-y: auto;
-  border-radius: 0 0 12px 12px;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
 }
 
 #content {
@@ -723,51 +657,43 @@ html[data-color-mode="light"] .blogTitle:hover::after {
   pointer-events: none;
 }
 
-/* 确保内容可滚动 */
-html {
-  height: 100%;
-  overflow-y: auto;
+/* 移除所有可能导致双滚动条的样式 */
+#content, #content-wrapper, #content-container, .container {
+  overflow: visible !important;
+  height: auto !important;
+  width: 100%;
 }
 
-body {
-  min-height: 100vh;
-  overflow-y: auto;
-}
-
-/* 主要内容区域确保可滚动 */
-#content-wrapper {
-  overflow-y: auto;
-  height: auto;
-}
-
-/* 确保所有内容区域可滚动 */
-html, body, #content, #content-container {
-  overflow-y: auto !important;
-}
-
-/* 修复标签在DOM中的位置不受干扰 */
-.listLabels *, .flexLabels *, #taglabel * {
-  position: static !important;
-  float: none !important;
-}
-
-/* 恢复背景滚动效果 - 确保层级正确 */
+/* 固定背景元素 */
 body::before {
   content: "";
   position: fixed;
   top: 0;
   left: 0;
+  right: 0;
+  bottom: 0;
   width: 100%;
   height: 100%;
-  z-index: -10; /* 使用更低的z-index确保在背景层 */
+  z-index: -10;
   pointer-events: none;
-  will-change: transform; /* 优化动画性能 */
+  will-change: transform;
+  overflow: hidden !important;
 }
 
-/* 确保标签和动画背景不冲突 */
-.Label, .LabelName, #taglabel {
-  z-index: 5 !important; /* 确保标签显示在动画背景之上 */
-  position: relative !important;
+/* 背景动画 - 确保动画只应用于背景 */
+@keyframes backgroundShimmerLight {
+  0% {
+    background-position: 0% 0%;
+    background-size: 100% 100%;
+  }
+  50% {
+    background-position: 100% 100%;
+    background-size: 120% 120%;
+  }
+  100% {
+    background-position: 0% 0%;
+    background-size: 100% 100%;
+  }
 }
 
 /* 亮色模式下的背景处理 */
@@ -795,22 +721,7 @@ html[data-color-mode="dark"] body::before {
   background-attachment: fixed !important;
 }
 
-/* 背景动画 */
-@keyframes backgroundShimmerLight {
-  0% {
-    background-position: 0% 0%;
-    background-size: 100% 100%;
-  }
-  50% {
-    background-position: 100% 100%;
-    background-size: 120% 120%;
-  }
-  100% {
-    background-position: 0% 0%;
-    background-size: 100% 100%;
-  }
-}
-
+/* 添加额外的背景动画样式 */
 @keyframes backgroundShimmerDark {
   0% {
     background-position: 0% 0%;
@@ -829,17 +740,18 @@ html[data-color-mode="dark"] body::before {
 /* 为亮色模式添加光晕效果 */
 html[data-color-mode="light"] body::after {
   content: "";
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
+  position: fixed; /* 改为fixed避免滚动问题 */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: 
     radial-gradient(circle at 30% 40%, rgba(126, 87, 255, 0.05) 0%, transparent 45%),
     radial-gradient(circle at 70% 60%, rgba(0, 220, 220, 0.05) 0%, transparent 45%);
-  z-index: -1;
+  z-index: -2;
   animation: rotateGlow 25s linear infinite;
   pointer-events: none;
+  overflow: hidden !important;
 }
 
 @keyframes rotateGlow {

@@ -77,20 +77,49 @@ function createBackgroundElement() {
     bgElement.id = 'page-background';
     document.body.parentNode.insertBefore(bgElement, document.body);
     
-    // 监听窗口大小变化，确保背景元素覆盖整个窗口
+    // 设置为全屏固定背景
+    bgElement.style.position = 'fixed';
+    bgElement.style.top = '0';
+    bgElement.style.left = '0';
+    bgElement.style.width = '100%';
+    bgElement.style.height = '100%';
+    bgElement.style.zIndex = '-2';
+    
+    // 确保页面的最小高度为视口高度
+    document.documentElement.style.minHeight = '100vh';
+    document.body.style.minHeight = '100vh';
+    
+    // 确保页面内容滚动后背景依然覆盖
+    window.addEventListener('load', function() {
+        adjustBackgroundSize();
+    });
+    
+    // 监听窗口大小变化，调整背景尺寸
     window.addEventListener('resize', function() {
-        bgElement.style.width = window.innerWidth + 'px';
-        bgElement.style.height = Math.max(document.body.scrollHeight, window.innerHeight) + 'px';
+        adjustBackgroundSize();
     });
     
-    // 初始设置
-    bgElement.style.width = window.innerWidth + 'px';
-    bgElement.style.height = Math.max(document.body.scrollHeight, window.innerHeight) + 'px';
-    
-    // 监听页面滚动，确保背景始终充满屏幕
+    // 监听页面滚动，确保背景覆盖全部内容
     window.addEventListener('scroll', function() {
-        bgElement.style.height = Math.max(document.body.scrollHeight, window.innerHeight) + 'px';
+        adjustBackgroundSize();
     });
+}
+
+// 调整背景尺寸和标签显示
+function adjustBackgroundSize() {
+    var contentHeight = Math.max(
+        document.body.scrollHeight,
+        document.body.offsetHeight,
+        document.documentElement.clientHeight,
+        document.documentElement.scrollHeight,
+        document.documentElement.offsetHeight
+    );
+    
+    // 确保body至少和视口一样高
+    document.body.style.minHeight = window.innerHeight + 'px';
+    
+    // 修复标签显示，确保它们水平排列
+    fixTagStyles();
 }
 
 // 主题切换功能
@@ -124,21 +153,23 @@ function modeSwitch() {
 
 // 统一标签样式处理
 function fixTagStyles() {
-    // 添加flexLabels类到标签容器
+    // 添加flexLabels类到标签容器并确保它们使用flex布局
     var labelContainers = document.querySelectorAll('.listLabels');
     labelContainers.forEach(container => {
-        if (!container.classList.contains('flexLabels')) {
-            container.classList.add('flexLabels');
-        }
+        container.classList.add('flexLabels');
+        container.style.display = 'flex';
+        container.style.flexWrap = 'wrap';
+        container.style.gap = '6px';
     });
     
     // 处理所有标签元素
     var labels = document.querySelectorAll('.Label, .LabelName');
     labels.forEach(label => {
         // 设置标签基本样式
-        if (label.style.display !== 'inline-block') {
-            label.style.display = 'inline-block';
-        }
+        label.style.display = 'inline-block';
+        label.style.margin = '0';
+        label.style.visibility = 'visible';
+        label.style.opacity = '1';
         
         // 处理标签中的链接
         var labelLinks = label.querySelectorAll('a');
@@ -147,6 +178,10 @@ function fixTagStyles() {
             link.style.textDecoration = 'none';
             link.style.display = 'block';
             link.style.padding = '2px 12px';
+            link.style.width = '100%';
+            link.style.height = '100%';
+            link.style.position = 'relative';
+            link.style.zIndex = '20';
             
             // 防止事件冒泡
             if (!link.hasAttribute('data-event-fixed')) {
@@ -196,7 +231,9 @@ function fixLabelsDisplay() {
     // 确保所有标签容器显示正常
     var labelContainers = document.querySelectorAll('.listLabels');
     for (var i = 0; i < labelContainers.length; i++) {
-        labelContainers[i].style.display = 'block';
+        labelContainers[i].style.display = 'flex';
+        labelContainers[i].style.flexWrap = 'wrap';
+        labelContainers[i].style.gap = '6px';
         labelContainers[i].style.visibility = 'visible';
         labelContainers[i].style.opacity = '1';
     }
@@ -216,7 +253,15 @@ function fixLabelsDisplay() {
         for (var l = 0; l < itemLabels.length; l++) {
             itemLabels[l].style.overflow = 'visible';
             itemLabels[l].style.whiteSpace = 'normal';
-            itemLabels[l].style.display = 'block';
+            itemLabels[l].style.display = 'flex';
+            itemLabels[l].style.flexWrap = 'wrap';
+            itemLabels[l].style.gap = '6px';
         }
     }
+    
+    // 修复特定页面的标签显示
+    setTimeout(function() {
+        // 延迟执行以确保DOM已完全加载
+        fixTagClicks();
+    }, 500);
 }

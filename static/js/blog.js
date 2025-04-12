@@ -85,12 +85,19 @@ document.addEventListener('DOMContentLoaded', function() {
     // 强制应用列表样式
     forceApplyListStyles();
     
+    // 增强列表项悬停效果
+    enhanceListHoverEffects();
+    
     // 设置定时器，确保样式完全应用
-    setTimeout(forceApplyListStyles, 500);
+    setTimeout(function() {
+        forceApplyListStyles();
+        enhanceListHoverEffects(); // 再次调用以确保应用
+    }, 500);
     
     // 在窗口加载完成后再次强制应用样式
     window.addEventListener('load', function() {
         forceApplyListStyles();
+        enhanceListHoverEffects(); // 在load事件中也调用
     });
 });
 
@@ -247,6 +254,84 @@ function forceApplyListStyles() {
         `;
         document.head.appendChild(listStyle);
     }
+}
+
+// 增强列表项悬停效果
+function enhanceListHoverEffects() {
+    // 选择所有列表项
+    const listItems = document.querySelectorAll('.Box-row, .d-flex, #indexPostsList > div, tr.post-item, .post-item');
+    
+    listItems.forEach(item => {
+        // 鼠标移入效果
+        item.addEventListener('mouseenter', function() {
+            // 查找内部元素并应用变换
+            
+            // 标题效果
+            const headings = this.querySelectorAll('h1, h2, h3, h4, a.Link--primary');
+            headings.forEach(heading => {
+                heading.style.transform = 'translateX(5px)';
+                heading.style.textShadow = '0 1px 2px rgba(0, 0, 0, 0.1)';
+            });
+            
+            // 段落效果
+            const paragraphs = this.querySelectorAll('p');
+            paragraphs.forEach(p => {
+                p.style.transform = 'scale(1.02)';
+                p.style.letterSpacing = '0.02em';
+            });
+            
+            // 图片效果
+            const images = this.querySelectorAll('img');
+            images.forEach(img => {
+                img.style.transform = 'scale(1.05)';
+                img.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+                img.style.filter = 'brightness(1.1)';
+                img.style.borderRadius = '8px';
+            });
+            
+            // SVG图标效果
+            const svgs = this.querySelectorAll('svg');
+            svgs.forEach(svg => {
+                svg.style.transform = 'scale(1.1) rotate(5deg)';
+                svg.style.filter = 'drop-shadow(0 2px 3px rgba(0, 0, 0, 0.2))';
+            });
+        });
+        
+        // 鼠标移出效果
+        item.addEventListener('mouseleave', function() {
+            // 恢复原始样式
+            
+            // 恢复标题
+            const headings = this.querySelectorAll('h1, h2, h3, h4, a.Link--primary');
+            headings.forEach(heading => {
+                heading.style.transform = '';
+                heading.style.textShadow = '';
+            });
+            
+            // 恢复段落
+            const paragraphs = this.querySelectorAll('p');
+            paragraphs.forEach(p => {
+                p.style.transform = '';
+                p.style.letterSpacing = '';
+            });
+            
+            // 恢复图片
+            const images = this.querySelectorAll('img');
+            images.forEach(img => {
+                img.style.transform = '';
+                img.style.boxShadow = '';
+                img.style.filter = '';
+                img.style.borderRadius = '';
+            });
+            
+            // 恢复SVG图标
+            const svgs = this.querySelectorAll('svg');
+            svgs.forEach(svg => {
+                svg.style.transform = '';
+                svg.style.filter = '';
+            });
+        });
+    });
 }
 
 // 立即初始化

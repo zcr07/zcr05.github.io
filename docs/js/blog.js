@@ -1,7 +1,10 @@
 // main.js
 window.addEventListener('load', function() {
-    // 创建唯一背景
-    createSingleBackground();
+    // 确保背景元素存在并且正确覆盖整个页面
+    ensureBackgroundElement();
+
+    // 增强背景动画
+    enhanceBackgroundAnimation();
     
     // 监听滚动事件，确保滚动时背景正常显示
     window.addEventListener('scroll', handleScrollForBackground, { passive: true });

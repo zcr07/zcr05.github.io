@@ -1,5 +1,27 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>爱捣鼓的小水木的博客</title><link>https://blog.mymaskking.dpdns.org/</link><description>一个等着裁员的java程序猿，每天无所事事，只想搞钱，喜欢钻研各种实用的技能，讨厌天天做工作上的项目，对自己毫无实用价值。</description><copyright>爱捣鼓的小水木的博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/41733240?v=4</url><title>avatar</title><link>https://blog.mymaskking.dpdns.org/</link></image><lastBuildDate>Sat, 12 Apr 2025 21:42:21 +0000</lastBuildDate><managingEditor>爱捣鼓的小水木的博客</managingEditor><ttl>60</ttl><webMaster>爱捣鼓的小水木的博客</webMaster><item><title>Linux基础网络知识</title><link>https://blog.mymaskking.dpdns.org//post/Linux-ji-chu-wang-luo-zhi-shi.html</link><description>1. Wan/Lan
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>爱捣鼓的小水木的博客</title><link>https://blog.mymaskking.dpdns.org/</link><description>一个等着裁员的java程序猿，每天无所事事，只想搞钱，喜欢钻研各种实用的技能，讨厌天天做工作上的项目，对自己毫无实用价值。</description><copyright>爱捣鼓的小水木的博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/41733240?v=4</url><title>avatar</title><link>https://blog.mymaskking.dpdns.org/</link></image><lastBuildDate>Sat, 12 Apr 2025 21:43:04 +0000</lastBuildDate><managingEditor>爱捣鼓的小水木的博客</managingEditor><ttl>60</ttl><webMaster>爱捣鼓的小水木的博客</webMaster><item><title>Linux知识点（基础知识）</title><link>https://blog.mymaskking.dpdns.org//post/Linux-zhi-shi-dian-%EF%BC%88-ji-chu-zhi-shi-%EF%BC%89.html</link><description>💡1. ps &gt; File1时优先执行管道符，管道符是先删除文件后再重新新建
+• ls a.txt xxx.txt &gt;&gt; #标准输出
+• ls a.txt xxx.txt 2&gt;&gt; #异常输出
+• ls a.txt xxx.txt &amp;&gt; #标准和异常都输出
+• ls a.txt xxx.txt &gt; a.log 2&gt;&amp;1 #2&gt;&amp;1把异常改写成标准输出
+2. cd - 返回进入此目录之前所在的目录
+3. systemctl enable httpd --now                       #启动服务并设置开机自启
+4. nohup #告诉系统即使终端关闭也不要停止这个命令
+发展史：unix(19700101)-&gt;linux(1991)
+云计算机
+👋Iaas 提供基础网络储存等，类似于毛胚房
+Paas 可以直接进行开发测试，类似于公寓，只需要做自己想做的就好
+Saas 所有软件都已经安装好，可以直接用，无需关注其他
+系统层面
+uname #查看内核名字
+• -r 显示内核版本
+lscpu #查看Cpu信息
+hostname #查看主机名   hostnamectl set-hostname aaa
+alias  别名=真实命令 #设置临时别名
+• unalias  别名 #取消临时别名
+poweroff #关机
+/etc/shells #查看系统支持的shell解析器
+/ect/rocky-release #查看系统版本（仅限rocky Linux）。</description><guid isPermaLink="true">https://blog.mymaskking.dpdns.org//post/Linux-zhi-shi-dian-%EF%BC%88-ji-chu-zhi-shi-%EF%BC%89.html</guid><pubDate>Sat, 12 Apr 2025 21:42:40 +0000</pubDate></item><item><title>Linux基础网络知识</title><link>https://blog.mymaskking.dpdns.org//post/Linux-ji-chu-wang-luo-zhi-shi.html</link><description>1. Wan/Lan
 路由器--&gt;交换机
 网络设备的架构：一对一，一对多，多对多(星状集群)
 2. 网络模型

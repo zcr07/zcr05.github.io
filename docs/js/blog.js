@@ -11,6 +11,12 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(error => {
             console.error('Error loading GmeekVercount.js:', error);
         });
+    
+    // 确保SVG图标正确填充颜色
+    const svgPaths = document.querySelectorAll('.btn svg path');
+    svgPaths.forEach(path => {
+        path.setAttribute('fill', 'currentColor');
+    });
         
     // 添加页面淡入效果
     document.body.style.opacity = 0;
@@ -31,8 +37,28 @@ document.addEventListener('DOMContentLoaded', function() {
         card.classList.add('post-card');
     });
     
-    // 链接点击动画
-    const links = document.querySelectorAll('a');
+    // 修复标签链接，确保可点击 - 处理首页中的标签
+    const labelLinks = document.querySelectorAll('.LabelName a, .LabelName object a');
+    labelLinks.forEach(link => {
+        // 移除现有的事件处理器以防止冲突
+        const newLink = link.cloneNode(true);
+        if (link.parentNode) {
+            link.parentNode.replaceChild(newLink, link);
+        }
+    });
+    
+    // 修复Tag页面中的标签按钮点击
+    if (window.location.pathname.includes('tag.html')) {
+        const tagButtons = document.querySelectorAll('#taglabel .Label');
+        if (tagButtons.length > 0) {
+            tagButtons.forEach(button => {
+                button.style.cursor = 'pointer';
+            });
+        }
+    }
+    
+    // 链接点击动画 - 排除标签链接和锚点链接
+    const links = document.querySelectorAll('a:not(.LabelName a):not([href^="tag.html"]):not([href^="#"])');
     links.forEach(link => {
         link.addEventListener('click', function(e) {
             // 仅对非外部链接应用动画效果

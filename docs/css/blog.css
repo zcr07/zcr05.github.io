@@ -12,6 +12,7 @@
   --text-secondary: #b0b0b0;
   --border-radius: 12px;
   --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  --max-width: 900px;
 }
 
 /* 全局样式 */
@@ -20,6 +21,14 @@ body {
   color: var(--text-primary);
   font-family: 'Poppins', sans-serif;
   transition: all 0.3s ease;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 20px;
+}
+
+#content {
+  width: 100%;
+  margin: 0 auto;
 }
 
 /* 滚动条样式 */
@@ -56,6 +65,50 @@ a {
 a:hover {
   color: var(--secondary-color);
   text-decoration: none;
+}
+
+/* 修复标签链接样式 */
+.LabelName object a {
+  color: #fff !important;
+  text-decoration: none;
+  pointer-events: auto;
+}
+
+.LabelName object {
+  pointer-events: auto;
+}
+
+.Label {
+  display: inline-block;
+  margin-right: 4px;
+  border-radius: 20px !important;
+  cursor: pointer;
+}
+
+/* 标签页面特殊样式 */
+#taglabel .Label {
+  margin-right: 8px;
+  margin-bottom: 8px;
+  border-radius: 20px !important;
+  transition: all 0.3s ease;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+#taglabel .Label:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--box-shadow);
+}
+
+.LabelName {
+  border-radius: 20px !important;
+  padding: 2px 8px !important;
+}
+
+.SideNav-item .listLabels .Label {
+  margin-left: 4px;
+  padding: 2px 8px;
 }
 
 /* 按钮样式 */
@@ -108,6 +161,10 @@ a:hover {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
 
 .postTitle {
@@ -115,6 +172,21 @@ a:hover {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: 700;
+  text-shadow: 0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+/* 修复标题文字与背景融合问题 */
+.title-right .btn svg path {
+  fill: var(--text-primary) !important;
+}
+
+.title-right .btn:hover svg path {
+  fill: var(--secondary-color) !important;
+}
+
+.title-right .btn {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  margin: 0 5px;
 }
 
 /* 博客内容样式 */
@@ -142,12 +214,25 @@ a:hover {
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
+/* 文章列表样式 */
+.SideNav-item {
+  border-radius: var(--border-radius) !important;
+  margin-bottom: 8px !important;
+  transition: all 0.3s ease;
+}
+
+.SideNav-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--box-shadow);
+}
+
 /* 页脚样式 */
 #footer {
   margin-top: 3rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   padding-top: 1.5rem;
   color: var(--text-secondary);
+  text-align: center;
 }
 
 /* 动画效果 */
@@ -160,7 +245,7 @@ a:hover {
 /* 媒体查询-响应式 */
 @media (max-width: 768px) {
   body {
-    padding: 12px;
+    padding: 15px;
   }
   
   .postTitle {
@@ -200,6 +285,14 @@ html[data-color-mode="light"] .Box-body {
 
 html[data-color-mode="light"] .markdown-body pre {
   background-color: #f6f8fa !important;
+}
+
+html[data-color-mode="light"] .title-right .btn {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+html[data-color-mode="light"] .title-right .btn svg path {
+  fill: var(--text-primary) !important;
 }
 
 /* 动画效果 */
@@ -242,4 +335,12 @@ html[data-color-mode="light"] .markdown-body pre {
   background-color: var(--secondary-color) !important;
   color: white !important;
   border-radius: 10px !important;
+}
+
+/* 评论按钮改进 */
+#cmButton {
+  width: 100%;
+  text-align: center;
+  margin: 2rem auto;
+  display: block;
 }

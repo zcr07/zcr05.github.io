@@ -227,6 +227,37 @@ function createBackgroundElement() {
                 0% { transform: rotate(0deg); }
                 100% { transform: rotate(360deg); }
             }
+            
+            /* 确保背景覆盖整个页面，即使内容很长 */
+            html, body {
+                min-height: 100vh !important;
+                background-color: var(--global-bg, #070720) !important;
+            }
+            
+            /* 解决背景不一致问题 */
+            #background-container {
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100vw !important;
+                height: 100vh !important;
+                overflow: hidden !important;
+                z-index: -1000 !important;
+                pointer-events: none !important;
+            }
+            
+            /* 确保内容容器不受模糊影响 */
+            .tech-box-content {
+                position: relative !important;
+                z-index: 2 !important;
+                backface-visibility: hidden !important;
+            }
+            
+            /* 禁用列表项的backdrop-filter，防止内容模糊 */
+            .tech-box-row, [data-tech-styled="true"] {
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+            }
         `;
         document.head.appendChild(keyframes);
     }
@@ -238,13 +269,13 @@ function createBackgroundElement() {
         bgContainer.id = 'background-container';
         document.body.parentNode.insertBefore(bgContainer, document.body);
         
-        // 设置容器样式
+        // 设置容器样式 - 确保充满整个视口
         bgContainer.style.cssText = `
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             overflow: hidden;
             z-index: -1000;
             pointer-events: none;
@@ -258,13 +289,13 @@ function createBackgroundElement() {
         dynamicBg.id = 'dynamic-background';
         bgContainer.appendChild(dynamicBg);
         
-        // 设置背景层样式
+        // 设置背景层样式 - 让背景超出视口以避免边缘问题
         dynamicBg.style.cssText = `
             position: absolute;
-            top: -20px;
-            left: -20px;
-            right: -20px;
-            bottom: -20px;
+            top: -50px;
+            left: -50px;
+            right: -50px;
+            bottom: -50px;
             background-color: var(--global-bg, #070720);
             animation: backgroundColorShift 20s ease-in-out infinite alternate;
             z-index: -999;
@@ -274,7 +305,7 @@ function createBackgroundElement() {
         dynamicBg.style.animation = 'backgroundColorShift 20s ease-in-out infinite alternate';
     }
     
-    // 创建渐变层
+    // 创建渐变层 - 确保覆盖整个视口区域
     let gradientLayer = document.getElementById('gradient-layer');
     if (!gradientLayer) {
         gradientLayer = document.createElement('div');
@@ -284,10 +315,10 @@ function createBackgroundElement() {
         // 设置渐变层样式
         gradientLayer.style.cssText = `
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: -10%;
+            left: -10%;
+            width: 120%;
+            height: 120%;
             background: 
                 radial-gradient(circle at 80% 10%, rgba(126, 87, 255, 0.15), transparent 40%),
                 radial-gradient(circle at 20% 30%, rgba(0, 220, 220, 0.15), transparent 40%),
@@ -313,10 +344,10 @@ function createBackgroundElement() {
         // 设置光晕层样式
         glowLayer.style.cssText = `
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: -10%;
+            left: -10%;
+            width: 120%;
+            height: 120%;
             background: radial-gradient(circle at 50% 50%, rgba(126, 87, 255, 0.05), transparent 70%);
             animation: pulsate 10s ease-in-out infinite;
             z-index: -997;
@@ -336,10 +367,10 @@ function createBackgroundElement() {
         // 设置旋转图形层样式
         shapesLayer.style.cssText = `
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: -10%;
+            left: -10%;
+            width: 120%;
+            height: 120%;
             background: 
                 radial-gradient(circle at 30% 40%, rgba(126, 87, 255, 0.03) 0%, transparent 30%),
                 radial-gradient(circle at 70% 60%, rgba(0, 220, 220, 0.03) 0%, transparent 30%);
@@ -351,9 +382,15 @@ function createBackgroundElement() {
         shapesLayer.style.animation = 'rotate 60s linear infinite';
     }
     
-    // 确保页面的最小高度为视口高度
-    document.documentElement.style.minHeight = '100vh';
-    document.body.style.minHeight = '100vh';
+    // 确保页面的最小高度为视口高度，并设置文档背景色
+    document.documentElement.style.cssText += `
+        min-height: 100vh !important;
+        background-color: var(--global-bg, #070720) !important;
+    `;
+    document.body.style.cssText += `
+        min-height: 100vh !important;
+        background-color: var(--global-bg, #070720) !important;
+    `;
     
     // 设置背景处理事件
     setupBackgroundEvents();
@@ -641,6 +678,30 @@ function applyTechStyleToElement(element, index) {
         sideColor = 'var(--accent-color, #ff4f9a)';
     }
     
+    // 创建内部内容容器，解决模糊问题
+    if (!element.querySelector('.tech-box-content')) {
+        // 保存现有内容
+        const originalContent = element.innerHTML;
+        
+        // 创建内容容器
+        const contentContainer = document.createElement('div');
+        contentContainer.className = 'tech-box-content';
+        contentContainer.style.cssText = `
+            position: relative;
+            z-index: 2;
+        `;
+        
+        // 将原有内容移入容器
+        contentContainer.innerHTML = originalContent;
+        
+        // 清空元素并添加内容容器
+        element.innerHTML = '';
+        element.appendChild(contentContainer);
+        
+        // 添加装饰元素
+        addDecorativeElementTo(element);
+    }
+    
     // 直接使用完整的cssText，完全覆盖原有样式
     element.style.cssText = `
         display: block !important;
@@ -653,17 +714,14 @@ function applyTechStyleToElement(element, index) {
         border-left: 3px solid ${sideColor} !important;
         padding: 16px !important;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
-        backdrop-filter: blur(10px) !important;
-        -webkit-backdrop-filter: blur(10px) !important;
         z-index: 1 !important;
         transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
         transform: translateY(0) scale(1) !important;
         width: auto !important;
         max-width: 100% !important;
+        /* 移除可能导致模糊的效果 */
+        will-change: transform !important;
     `;
-    
-    // 添加装饰元素
-    addDecorativeElementTo(element);
     
     // 直接设置鼠标悬停效果处理函数
     element.onmouseenter = function() {
@@ -722,10 +780,14 @@ function injectForcedListStyles() {
             margin: 15px 0 !important;
             padding: 16px !important;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
-            backdrop-filter: blur(10px) !important;
-            -webkit-backdrop-filter: blur(10px) !important;
             z-index: 1 !important;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+            transition: all 0.4s ease-out !important;
+            /* 移除可能导致模糊的效果 */
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            transform-style: preserve-3d !important;
+            backface-visibility: hidden !important;
+            will-change: transform !important;
         }
         
         /* 特别针对表格中的行元素 */
@@ -747,6 +809,12 @@ function injectForcedListStyles() {
         [data-tech-styled="true"] a {
             position: relative !important;
             z-index: 2 !important;
+        }
+        
+        /* 防止内容模糊 */
+        .tech-box-content {
+            transform: translateZ(0) !important;
+            backface-visibility: hidden !important;
         }
     `;
     
@@ -844,11 +912,13 @@ function injectGmeekSpecificStyles() {
             overflow: hidden !important;
             margin-bottom: 16px !important;
             background-color: rgba(255, 255, 255, 0.7) !important;
-            backdrop-filter: blur(10px) !important;
-            -webkit-backdrop-filter: blur(10px) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
             border: 1px solid rgba(126, 87, 255, 0.2) !important;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+            transition: all 0.4s ease-out !important;
+            transform-style: preserve-3d !important;
+            backface-visibility: hidden !important;
         }
         
         /* 暗色模式下的样式 */
@@ -874,8 +944,8 @@ function injectGmeekSpecificStyles() {
             border-radius: 12px !important;
             overflow: hidden !important;
             border: 1px solid rgba(126, 87, 255, 0.2) !important;
-            backdrop-filter: blur(10px) !important;
-            -webkit-backdrop-filter: blur(10px) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
         }
         
         /* 表格行样式 */
@@ -895,7 +965,8 @@ function injectGmeekSpecificStyles() {
             background-color: rgba(246, 250, 255, 0.7) !important;
             border: 1px solid rgba(126, 87, 255, 0.2) !important;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+            transition: all 0.4s ease-out !important;
+            backface-visibility: hidden !important;
         }
         
         html[data-color-mode="dark"] .d-flex,
@@ -915,6 +986,12 @@ function injectGmeekSpecificStyles() {
             padding: 4px 8px !important;
             margin: 2px !important;
             display: inline-block !important;
+        }
+        
+        /* 修复内容模糊问题 */
+        * {
+            -webkit-font-smoothing: antialiased !important;
+            -moz-osx-font-smoothing: grayscale !important;
         }
     `;
     

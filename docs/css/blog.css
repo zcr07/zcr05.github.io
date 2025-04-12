@@ -8,7 +8,7 @@
   --accent-color: #00dcdc;
   --bg-primary: #0a0a20;
   --bg-secondary: #12122a;
-  --global-bg: #e6e0ff; /* 修改为淡紫色背景 */
+  --global-bg: #ddd6ff; /* 更接近图片的淡紫色背景 */
   --text-primary: #f0f0f0;
   --text-secondary: #b0b0b0;
   --border-radius: 8px;
@@ -20,7 +20,7 @@
   --footer-text-dark-color: #d3d3f9;
   --text-color: #333;
   --text-secondary-color: #c4c4c4;
-  --light-global-bg: #e6e0ff; /* 淡紫色背景 */
+  --light-global-bg: #ddd6ff; /* 更接近图片的淡紫色背景 */
   
   /* 动画相关变量 */
   --gradient-animation-speed: 15s;
@@ -36,7 +36,7 @@ html, body {
 
 html {
   height: 100%;
-  background-color: var(--global-bg); /* 使用淡紫色背景 */
+  background-color: var(--global-bg); /* 淡紫色背景 */
   overflow-y: scroll; /* 只在html上保留滚动 */
   overflow-x: hidden;
 }
@@ -79,7 +79,7 @@ body {
   width: 100%;
   height: 100%;
   background: 
-    linear-gradient(135deg, rgba(230, 224, 255, 0.9), rgba(210, 200, 255, 0.7)); /* 淡紫色渐变 */
+    linear-gradient(135deg, rgba(221, 214, 255, 0.9), rgba(200, 190, 255, 0.7)); /* 更接近图片的淡紫色渐变 */
   z-index: -998;
   pointer-events: none;
 }
@@ -240,16 +240,21 @@ a:not(.LabelName a):not(.btn):hover:after {
   text-rendering: optimizeLegibility !important;
 }
 
-/* 全局字体和头像区域样式 */
+/* 全局字体和头像区域样式 - 恢复动态效果 */
 .blogTitle {
-  color: #333 !important;
+  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
   font-weight: 600;
   font-size: 1.6rem;
   margin-left: 12px;
   text-decoration: none;
   position: relative;
-  display: inline-block;
   font-family: "PingFang SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+  background-size: 200% auto;
+  animation: gradient 5s ease infinite;
 }
 
 /* 增强头像样式 */
@@ -279,18 +284,11 @@ a:not(.LabelName a):not(.btn):hover:after {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
-/* 博客标题样式优化 */
-.postTitle {
-  background: linear-gradient(to right, var(--primary-color), var(--secondary-color), var(--accent-color));
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-  padding: 0.5rem 0;
-  text-shadow: none;
-  font-family: "PingFang SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+/* 动画效果 */
+@keyframes gradient {
+  0% { background-position: 0% center; }
+  50% { background-position: 100% center; }
+  100% { background-position: 0% center; }
 }
 
 /* 首页特殊样式 */
@@ -475,7 +473,10 @@ html[data-color-mode="light"] .Box-row:hover {
 }
 
 html[data-color-mode="light"] .blogTitle {
-  color: var(--text-color) !important;
+  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 html[data-color-mode="light"] .blogTitle::after {

@@ -126,7 +126,7 @@ function createSingleBackground() {
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: var(--global-bg, #e6e0ff); /* 淡紫色背景 */
+        background-color: var(--global-bg, #ddd6ff); /* 更接近图片的淡紫色背景 */
         overflow: hidden !important;
         pointer-events: none;
     `;
@@ -141,9 +141,25 @@ function createSingleBackground() {
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, rgba(230, 224, 255, 0.9), rgba(210, 200, 255, 0.7)); /* 淡紫色渐变 */
+            background: linear-gradient(135deg, rgba(221, 214, 255, 0.9), rgba(200, 190, 255, 0.7)); /* 更接近图片的淡紫色渐变 */
             z-index: -998;
             pointer-events: none;
+        }
+        
+        /* 博客标题动画 */
+        @keyframes gradient {
+            0% { background-position: 0% center; }
+            50% { background-position: 100% center; }
+            100% { background-position: 0% center; }
+        }
+        
+        .blogTitle {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: gradient 5s ease infinite;
         }
     `;
     

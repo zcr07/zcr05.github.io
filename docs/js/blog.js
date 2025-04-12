@@ -283,82 +283,7 @@ function createBackgroundElement() {
     }
     
     
-    // 创建渐变层 - 确保覆盖整个视口区域
-    let gradientLayer = document.getElementById('gradient-layer');
-    if (!gradientLayer) {
-        gradientLayer = document.createElement('div');
-        gradientLayer.id = 'gradient-layer';
-        bgContainer.appendChild(gradientLayer);
-        
-        // 设置渐变层样式
-        gradientLayer.style.cssText = `
-            position: absolute;
-            top: -10%;
-            left: -10%;
-            width: 120%;
-            height: 120%;
-            background: 
-                radial-gradient(circle at 80% 10%, rgba(126, 87, 255, 0.15), transparent 40%),
-                radial-gradient(circle at 20% 30%, rgba(0, 220, 220, 0.15), transparent 40%),
-                radial-gradient(circle at 70% 65%, rgba(255, 79, 154, 0.15), transparent 50%),
-                radial-gradient(circle at 10% 85%, rgba(126, 87, 255, 0.15), transparent 30%);
-            background-size: 200% 200%;
-            animation: gradientFlow 15s ease-in-out infinite;
-            z-index: -998;
-            opacity: 0.8;
-        `;
-    } else {
-        // 直接设置动画
-        gradientLayer.style.animation = 'gradientFlow 15s ease-in-out infinite';
-    }
     
-    // 创建光晕层
-    let glowLayer = document.getElementById('glow-layer');
-    if (!glowLayer) {
-        glowLayer = document.createElement('div');
-        glowLayer.id = 'glow-layer';
-        bgContainer.appendChild(glowLayer);
-        
-        // 设置光晕层样式
-        glowLayer.style.cssText = `
-            position: absolute;
-            top: -10%;
-            left: -10%;
-            width: 120%;
-            height: 120%;
-            background: radial-gradient(circle at 50% 50%, rgba(126, 87, 255, 0.05), transparent 70%);
-            animation: pulsate 10s ease-in-out infinite;
-            z-index: -997;
-        `;
-    } else {
-        // 直接设置动画
-        glowLayer.style.animation = 'pulsate 10s ease-in-out infinite';
-    }
-    
-    // 创建旋转图形层
-    let shapesLayer = document.getElementById('shapes-layer');
-    if (!shapesLayer) {
-        shapesLayer = document.createElement('div');
-        shapesLayer.id = 'shapes-layer';
-        bgContainer.appendChild(shapesLayer);
-        
-        // 设置旋转图形层样式
-        shapesLayer.style.cssText = `
-            position: absolute;
-            top: -10%;
-            left: -10%;
-            width: 120%;
-            height: 120%;
-            background: 
-                radial-gradient(circle at 30% 40%, rgba(126, 87, 255, 0.03) 0%, transparent 30%),
-                radial-gradient(circle at 70% 60%, rgba(0, 220, 220, 0.03) 0%, transparent 30%);
-            animation: rotate 60s linear infinite;
-            z-index: -996;
-        `;
-    } else {
-        // 直接设置动画
-        shapesLayer.style.animation = 'rotate 60s linear infinite';
-    }
     
     // 确保页面的最小高度为视口高度，并设置文档背景色
     document.documentElement.style.cssText += `
@@ -483,19 +408,6 @@ function enhanceBackgroundAnimation() {
             50% { opacity: 0.2; }
         }
         
-        /* 为背景元素添加复合动画 */
-        #fixed-background::before,
-        #page-background::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at 50% 50%, transparent 70%, rgba(10, 10, 40, 0.2) 100%);
-            z-index: -1;
-            pointer-events: none;
-        }
         
         /* 添加星星效果 */
         .star {

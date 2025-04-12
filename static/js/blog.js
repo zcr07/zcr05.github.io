@@ -78,6 +78,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 设置定时器，确保样式完全应用
     setTimeout(forceApplyListStyles, 500);
+
+    initTheme();
+    handleThemeSwitching();
 });
 
 // 处理标签链接点击
@@ -225,52 +228,163 @@ function applyListHoverStyle(element) {
     });
 }
 
-// 主题切换
-function modeSwitch() {
-    const html = document.documentElement;
-    const currentTheme = html.getAttribute('data-color-mode');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+// 主题设置与切换
+function initTheme() {
+    // 检查用户偏好
+    let preferredTheme = localStorage.getItem('preferred-theme');
     
-    // 更新主题
-    html.setAttribute('data-color-mode', newTheme);
-    localStorage.setItem('theme', newTheme);
-    
-    // 更新主题切换按钮图标
-    if (document.getElementById('themeSwitch')) {
-        const IconList = {
-            'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z',
-            'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z'
-        };
-        document.getElementById('themeSwitch').setAttribute('d', newTheme === 'light' ? IconList['moon'] : IconList['sun']);
+    // 如果没有用户偏好，则使用系统主题
+    if (!preferredTheme) {
+        preferredTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        localStorage.setItem('preferred-theme', preferredTheme);
     }
+
+    // 应用主题
+    document.documentElement.setAttribute('data-color-mode', preferredTheme);
     
-    // 触发主题变更事件
-    window.dispatchEvent(new Event('theme-changed'));
+    // 添加过渡效果
+    document.documentElement.classList.add('theme-transition');
 }
 
-// 立即执行初始化
-(function() {
-    // 设置DOM加载事件
-    document.addEventListener('DOMContentLoaded', function() {
-        createSingleBackground();
-        forceApplyListStyles();
+// 处理主题切换按钮
+function handleThemeSwitching() {
+    document.querySelectorAll('.js-toggle-theme').forEach(button => {
+        updateThemeButton(button);
+        
+        button.addEventListener('click', function() {
+            // 获取当前主题
+            const currentTheme = document.documentElement.getAttribute('data-color-mode');
+            // 切换主题
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            // 保存用户偏好
+            localStorage.setItem('preferred-theme', newTheme);
+            
+            // 应用新主题
+            document.documentElement.setAttribute('data-color-mode', newTheme);
+            
+            // 更新所有主题按钮状态
+            document.querySelectorAll('.js-toggle-theme').forEach(updateThemeButton);
+        });
     });
-    
-    // 监听window加载完成事件
-    window.addEventListener('load', function() {
-        createSingleBackground();
-        forceApplyListStyles();
-    });
-})();
+}
 
-// 修复链接，确保所有链接都可点击
-function fixLinks() {
-    const allLinks = document.querySelectorAll('a');
-    allLinks.forEach(link => {
-        if (!link.getAttribute('data-fixed')) {
-            link.style.position = 'relative';
-            link.style.zIndex = '5';
-            link.setAttribute('data-fixed', 'true');
+// 更新主题按钮图标状态
+function updateThemeButton(button) {
+    const currentTheme = document.documentElement.getAttribute('data-color-mode');
+    
+    // 更新SVG内容
+    if (currentTheme === 'light') {
+        button.innerHTML = getSunIcon();
+    } else {
+        button.innerHTML = getMoonIcon();
+    }
+}
+
+// 太阳图标SVG
+function getSunIcon() {
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" style="fill: currentColor;">
+        <path d="M12 18a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM11 1h2v3h-2V1zm0 19h2v3h-2v-3zM3.515 4.929l1.414-1.414L7.05 5.636 5.636 7.05 3.515 4.93zM16.95 18.364l1.414-1.414 2.121 2.121-1.414 1.414-2.121-2.121zm2.121-14.85l1.414 1.415-2.121 2.121-1.414-1.414 2.121-2.121zM5.636 16.95l1.414 1.414-2.121 2.121-1.414-1.414 2.121-2.121zM23 11v2h-3v-2h3zM4 11v2H1v-2h3z"/>
+    </svg>`;
+}
+
+// 月亮图标SVG
+function getMoonIcon() {
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" style="fill: currentColor;">
+        <path d="M10 7a7 7 0 0 0 12 4.9v.1c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2h.1A6.979 6.979 0 0 0 10 7zm-6 5a8 8 0 0 0 15.062 3.762A9 9 0 0 1 8.238 4.938 7.999 7.999 0 0 0 4 12z"/>
+    </svg>`;
+}
+
+// 添加语言切换
+function toggleZhCn() {
+    var elements = document.querySelectorAll('.lang-zhcn');
+    for (var i = 0; i < elements.length; i++) {
+        var element = elements[i];
+        if (element.style.display === 'none') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
         }
-    });
+    }
 }
+
+// 添加点击复制代码功能
+document.addEventListener('DOMContentLoaded', function() {
+    var preElements = document.querySelectorAll('pre');
+    
+    preElements.forEach(function(preElement) {
+        // 创建复制按钮
+        var copyButton = document.createElement('button');
+        copyButton.className = 'copy-button';
+        copyButton.textContent = '复制';
+        copyButton.style.position = 'absolute';
+        copyButton.style.top = '5px';
+        copyButton.style.right = '5px';
+        copyButton.style.padding = '4px 8px';
+        copyButton.style.background = 'rgba(126, 87, 255, 0.8)';
+        copyButton.style.color = 'white';
+        copyButton.style.border = 'none';
+        copyButton.style.borderRadius = '3px';
+        copyButton.style.fontSize = '12px';
+        copyButton.style.cursor = 'pointer';
+        copyButton.style.opacity = '0';
+        copyButton.style.transition = 'opacity 0.2s';
+        
+        // 设置预格式化元素样式
+        preElement.style.position = 'relative';
+        preElement.style.overflow = 'hidden';
+        preElement.style.borderRadius = '6px';
+        preElement.style.border = '1px solid rgba(126, 87, 255, 0.2)';
+        
+        // 添加悬停显示复制按钮
+        preElement.addEventListener('mouseenter', function() {
+            copyButton.style.opacity = '1';
+        });
+        
+        preElement.addEventListener('mouseleave', function() {
+            copyButton.style.opacity = '0';
+        });
+        
+        // 添加复制功能
+        copyButton.addEventListener('click', function() {
+            // 获取代码内容
+            var codeElement = preElement.querySelector('code');
+            var textToCopy = codeElement ? codeElement.textContent : preElement.textContent;
+            
+            // 复制到剪贴板
+            navigator.clipboard.writeText(textToCopy).then(function() {
+                copyButton.textContent = '已复制!';
+                copyButton.style.background = 'rgba(40, 167, 69, 0.8)';
+                
+                // 延迟恢复原样
+                setTimeout(function() {
+                    copyButton.textContent = '复制';
+                    copyButton.style.background = 'rgba(126, 87, 255, 0.8)';
+                }, 2000);
+            }).catch(function(err) {
+                console.error('无法复制文本: ', err);
+                copyButton.textContent = '复制失败';
+                copyButton.style.background = 'rgba(220, 53, 69, 0.8)';
+                
+                // 延迟恢复原样
+                setTimeout(function() {
+                    copyButton.textContent = '复制';
+                    copyButton.style.background = 'rgba(126, 87, 255, 0.8)';
+                }, 2000);
+            });
+        });
+        
+        // 将按钮添加到预格式化元素
+        preElement.appendChild(copyButton);
+    });
+});
+
+// 监听系统主题变化
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+    // 仅当用户没有手动设置主题时才根据系统变化
+    if (!localStorage.getItem('preferred-theme')) {
+        const newTheme = e.matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-color-mode', newTheme);
+        document.querySelectorAll('.js-toggle-theme').forEach(updateThemeButton);
+    }
+});

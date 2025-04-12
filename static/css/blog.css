@@ -1,4 +1,5 @@
 /* style.css */
+@import url("https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css");
 body {
     font-family: 'Arial', sans-serif;
     background: linear-gradient(to right, #43c6ac, #f8ffae);

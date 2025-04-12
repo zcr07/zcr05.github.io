@@ -131,37 +131,15 @@ html[data-color-mode="light"] #fixed-background::before {
   opacity: 1 !important;
 }
 
-/* 标签样式 - 保留颜色多样性 */
+/* 标签样式 - 只保留可见性设置 */
 .Label, .LabelName {
-  display: inline-flex !important;
-  flex: 0 0 auto !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border-radius: 20px !important;
-  overflow: hidden !important;
-  cursor: pointer !important;
-  position: relative !important;
-  z-index: 1 !important;
-  border: none !important;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2) !important;
   visibility: visible !important;
   opacity: 1 !important;
   pointer-events: auto !important;
 }
 
-/* 标签链接样式 */
+/* 标签链接样式 - 只保留点击相关属性 */
 .Label a, .LabelName a {
-  display: block !important;
-  width: 100% !important;
-  height: 100% !important;
-  padding: 2px 12px !important;
-  color: white !important;
-  text-decoration: none !important;
-  font-size: 14px !important;
-  font-weight: 500 !important;
-  line-height: 1.5 !important;
-  position: relative !important;
-  z-index: 2 !important;
   pointer-events: auto !important;
 }
 
@@ -761,4 +739,11 @@ html[data-color-mode="light"] body::after {
   100% {
     transform: rotate(360deg);
   }
+}
+
+/* 修复标签在DOM中的位置不受干扰 */
+.listLabels *, .flexLabels *, #taglabel * {
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
 }

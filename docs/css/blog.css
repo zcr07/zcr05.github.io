@@ -116,29 +116,24 @@ html[data-color-mode="light"] #fixed-background::before {
   background-attachment: fixed !important;
 }
 
-/* 标签容器样式 - 修复横向排列 */
+/* 确保标签容器只设置flex布局，不影响标签本身的样式 */
 .listLabels, .flexLabels, #taglabel {
   display: flex !important;
   flex-direction: row !important;
   flex-wrap: wrap !important;
   gap: 6px !important;
-  margin: 5px 0 !important;
-  padding: 0 !important;
-  list-style: none !important;
-  width: auto !important;
-  height: auto !important;
   visibility: visible !important;
   opacity: 1 !important;
 }
 
-/* 标签样式 - 只保留可见性设置 */
+/* 只确保标签可见可点击，不设置任何大小和样式 */
 .Label, .LabelName {
   visibility: visible !important;
   opacity: 1 !important;
   pointer-events: auto !important;
 }
 
-/* 标签链接样式 - 只保留点击相关属性 */
+/* 只确保标签链接可点击 */
 .Label a, .LabelName a {
   pointer-events: auto !important;
 }

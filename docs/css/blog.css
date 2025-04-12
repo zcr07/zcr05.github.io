@@ -355,9 +355,19 @@ table > tbody > tr:hover, .Box:hover {
   z-index: 2 !important;
 }
 
-/* 主题过渡效果 */
+/* 主题切换过渡动画 */
 .theme-transition {
-  transition: all 0.5s ease;
+  transition: background-color 0.5s ease,
+              color 0.5s ease,
+              border-color 0.5s ease,
+              box-shadow 0.5s ease !important;
+}
+
+.theme-transition * {
+  transition: background-color 0.5s ease,
+              color 0.5s ease,
+              border-color 0.5s ease,
+              box-shadow 0.5s ease !important;
 }
 
 /* 通用按钮样式 */
@@ -367,6 +377,7 @@ table > tbody > tr:hover, .Box:hover {
   padding: 8px 12px !important;
   cursor: pointer !important;
   transition: all 0.3s ease !important;
+  color: inherit !important; /* 确保按钮颜色继承自父元素 */
 }
 
 .btn-invisible:hover {
@@ -379,7 +390,33 @@ table > tbody > tr:hover, .Box:hover {
 .btn-invisible svg {
   vertical-align: middle !important;
   transition: all 0.3s ease !important;
-  fill: currentColor !important; /* 确保SVG颜色与父元素一致 */
+  fill: currentColor !important;
+  color: inherit !important;
+}
+
+/* SVG 图标样式修复 */
+svg {
+  fill: currentColor !important;
+}
+
+svg path {
+  fill: currentColor !important;
+}
+
+.circle svg {
+  color: white !important;
+}
+
+.circle svg path {
+  fill: white !important;
+}
+
+.SideNav-icon svg {
+  color: var(--text-color) !important;
+}
+
+.SideNav-icon path {
+  fill: var(--text-color) !important;
 }
 
 /* 暗色模式样式 */
@@ -427,18 +464,22 @@ html[data-color-mode="dark"] .btn-invisible:hover {
   color: white !important;
 }
 
-/* SVG 图标样式恢复 */
-svg {
-  fill: currentColor !important;
+html[data-color-mode="dark"] svg {
+  fill: var(--text-primary) !important;
 }
 
-svg path {
-  fill: currentColor !important;
+html[data-color-mode="dark"] svg path {
+  fill: var(--text-primary) !important;
 }
 
-.btn-invisible svg,
-.header-nav-item svg {
-  color: inherit !important;
+html[data-color-mode="dark"] .circle svg,
+html[data-color-mode="dark"] .circle svg path {
+  fill: white !important;
+}
+
+html[data-color-mode="dark"] .SideNav-icon svg,
+html[data-color-mode="dark"] .SideNav-icon path {
+  fill: var(--text-primary) !important;
 }
 
 /* 亮色模式样式 */
@@ -496,6 +537,19 @@ html[data-color-mode="light"] .blogTitle:hover::after {
   transform-origin: left;
 }
 
+html[data-color-mode="light"] svg {
+  fill: var(--text-color) !important;
+}
+
+html[data-color-mode="light"] svg path {
+  fill: var(--text-color) !important;
+}
+
+html[data-color-mode="light"] .circle svg,
+html[data-color-mode="light"] .circle svg path {
+  fill: white !important;
+}
+
 /* 内容容器 */
 #content, #content-wrapper, #content-container, .container {
   position: relative;
@@ -517,4 +571,67 @@ html[data-color-mode="light"] .blogTitle:hover::after {
   .home-title {
     font-size: 2rem !important;
   }
+}
+
+/* 为pre添加复制按钮样式 */
+pre {
+  position: relative;
+  overflow: hidden;
+  border-radius: 6px;
+  border: 1px solid rgba(126, 87, 255, 0.2);
+}
+
+.copy-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  padding: 4px 8px;
+  background: rgba(126, 87, 255, 0.8);
+  color: white;
+  border: none;
+  border-radius: 3px;
+  font-size: 12px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s, background 0.3s;
+}
+
+pre:hover .copy-button {
+  opacity: 1;
+}
+
+.copy-button:hover {
+  background: rgba(126, 87, 255, 1);
+}
+
+/* 多语言支持 */
+.lang-toggle {
+  display: inline-block;
+  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 10px 0;
+}
+
+.lang-toggle:hover {
+  box-shadow: 0 5px 15px rgba(126, 87, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.lang-zhcn {
+  display: block;
+  margin: 15px 0;
+  padding: 15px;
+  background-color: rgba(126, 87, 255, 0.05);
+  border-left: 3px solid var(--primary-color);
+  border-radius: 0 8px 8px 0;
+}
+
+html[data-color-mode="dark"] .lang-zhcn {
+  background-color: rgba(126, 87, 255, 0.15);
 }

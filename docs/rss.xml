@@ -1,5 +1,74 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>爱捣鼓的小水木的博客</title><link>https://blog.mymaskking.dpdns.org/</link><description>一个等着裁员的java程序猿，每天无所事事，只想搞钱，喜欢钻研各种实用的技能，讨厌天天做工作上的项目，对自己毫无实用价值。</description><copyright>爱捣鼓的小水木的博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/41733240?v=4</url><title>avatar</title><link>https://blog.mymaskking.dpdns.org/</link></image><lastBuildDate>Sat, 12 Apr 2025 21:41:26 +0000</lastBuildDate><managingEditor>爱捣鼓的小水木的博客</managingEditor><ttl>60</ttl><webMaster>爱捣鼓的小水木的博客</webMaster><item><title>软件版本选择</title><link>https://blog.mymaskking.dpdns.org//post/ruan-jian-ban-ben-xuan-ze.html</link><description>• 系统/软件版本选择：通常选择双数版本，例如：1.2
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>爱捣鼓的小水木的博客</title><link>https://blog.mymaskking.dpdns.org/</link><description>一个等着裁员的java程序猿，每天无所事事，只想搞钱，喜欢钻研各种实用的技能，讨厌天天做工作上的项目，对自己毫无实用价值。</description><copyright>爱捣鼓的小水木的博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/41733240?v=4</url><title>avatar</title><link>https://blog.mymaskking.dpdns.org/</link></image><lastBuildDate>Sat, 12 Apr 2025 21:42:21 +0000</lastBuildDate><managingEditor>爱捣鼓的小水木的博客</managingEditor><ttl>60</ttl><webMaster>爱捣鼓的小水木的博客</webMaster><item><title>Linux基础网络知识</title><link>https://blog.mymaskking.dpdns.org//post/Linux-ji-chu-wang-luo-zhi-shi.html</link><description>1. Wan/Lan
+路由器--&gt;交换机
+网络设备的架构：一对一，一对多，多对多(星状集群)
+2. 网络模型
+💡网络层常见的协议：IP协议、ICMP协议和ARP协议等
+ARP协议：就是把ip地址解析为mac地址
+arm -a 
+---
+ICMP协议：例（ping命令）
+---
+四层协议：TCP/UPD
+七层协议：Http/Https
+数据发送
+数据接收
+协议数据单元
+设备与层的对应关系
+3. IP地址
+平常的IP4地址192.168.1.1，子网掩码：255.255.255.0是十进制，IP6是16进制
+👋IP类别优先看子网掩码，例：192.168.25.1/16是B类地址
+子网掩码
+A类/8（255.0.0.0）
+B类/16(255.255.0.0)
+C类/24(255.255.255.0)
+其中8是因为255的2进制是8个1，下面的D，E类IP主要用于政府和医院等机构
+私网IP段
+🔔平常的家庭网络和公司都是私有网络，公网是全球唯一的
+⭐网关使用的IP一般是xx.xx.xx.1或者xx.xx.xx.254,.255是不能使用的，只作为广播使用
+简单记法:10-10,172.16-172.31,192.168-192.168
+10.0.0.0 - 10.255.255.255
+172.16.0.0 - 172.31.255.255
+192.168.0.0 - 192.168.255.255
+4. 交换机
+转发原理
+1. 初始化
+2. 各个PC的MAC地址学习
+👋交换机自主学习老化时间300s更新一次
+3. 广播未知数据帧
+4. PC回应
+5. 交换机实现单薄通信
+常用命令
+enable 进入管理员模式
+configure terminal 进入全局配置模式
+interface fastEthernet 0/1 进入端口 fastEthernet：端口类型
+show mac address-table 查看各个PC的Mac地址
+vlan(虚拟局域网)
+交换机和PC之间通过默认的vlan1进行静态交互，但是在同一台交换机内有不同网段PC的情况，通过在交换机内配置vlan名(或ID)，根据vlan找到其他交换机的同名vlan内的PC设备实现通信
+目的：减少交互(广播)，减少因广播带来的延迟
+vlan种类
+💡（静态）基于端口，（动态）基于 MAC，基于 IP 
+相关命令
+#管理员模式
+#创建Vlan第一种方法
+swich#configure terminal
+Switch(config)#vlan 5
+Switch(config-vlan)#name 5hhh
+#创建Vlan第二种方法
+swich#vlan database 
+Switch(vlan)#vlan 17 name 17v
+#查看Vlan
+swich#show vlan brief
+swich#show vlan id 5
+#把端口加到vlan中
+Switch(config-if)#switchport access vlan 5
+Switch(config)#interface range fastEthernet 0/2-10
+Switch(config-if-range)#switchport access vlan 17
+#删除vlan 方法1
+swich#no vlan 5
+#删除vlan 方法2,database下删除
+switch(vlan)#no vlan 17trunk(交换机之间互通)
+🔔由于n个vlan，交换机之间不会配置n个端口，所以通过trunk对数据包进行标识来实现不同网段PC在多个交换机内的通信。</description><guid isPermaLink="true">https://blog.mymaskking.dpdns.org//post/Linux-ji-chu-wang-luo-zhi-shi.html</guid><pubDate>Sat, 12 Apr 2025 21:41:58 +0000</pubDate></item><item><title>软件版本选择</title><link>https://blog.mymaskking.dpdns.org//post/ruan-jian-ban-ben-xuan-ze.html</link><description>• 系统/软件版本选择：通常选择双数版本，例如：1.2
 • systemctl disable httpd --now #取消开启自启并关闭
 • https的加密：(早期)对称加密，(现在)非对称加密[例如，公钥私钥]
 第一次【S的公钥给了C】,第二次【C的公钥加密了三角给S】，第三次【S返回给C可以发送请求】，第四次【C用三角加密X给了S】,期间三角这个文件没有独自在互联网出现过  这就是非对称加密了，类似于SSH

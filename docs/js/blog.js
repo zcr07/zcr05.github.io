@@ -88,6 +88,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // 增强列表项悬停效果
     enhanceListHoverEffects();
     
+    // 添加阅读计数功能
+    createVercount();
+    var element = document.createElement('script');
+    element.src = 'https://vercount.one/js';
+    document.head.appendChild(element);
+    console.log("\n %c GmeekVercount Plugins https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#bc4c00;color:#fff");
+    
     // 设置定时器，确保样式完全应用
     setTimeout(function() {
         forceApplyListStyles();
@@ -289,6 +296,16 @@ function enhanceListHoverEffects() {
                 img.style.borderRadius = '8px';
             });
             
+            // 阅读数量效果特殊处理 - 包括官方的阅读计数元素
+            const viewCounts = this.querySelectorAll('#vercount, #postVercount, [id*="vercount"], .mr-3.text-gray, #busuanzi_value_page_pv, #busuanzi_value_site_pv');
+            viewCounts.forEach(count => {
+                count.style.color = 'var(--secondary-color)';
+                count.style.fontWeight = 'bold';
+                count.style.transform = 'scale(1.1)';
+                count.style.textShadow = '0 0 5px rgba(255, 79, 154, 0.3)';
+                count.style.transition = 'all 0.3s ease';
+            });
+            
             // SVG图标效果
             const svgs = this.querySelectorAll('svg');
             svgs.forEach(svg => {
@@ -324,6 +341,15 @@ function enhanceListHoverEffects() {
                 img.style.borderRadius = '';
             });
             
+            // 恢复阅读数量 - 包括官方的阅读计数元素
+            const viewCounts = this.querySelectorAll('#vercount, #postVercount, [id*="vercount"], .mr-3.text-gray, #busuanzi_value_page_pv, #busuanzi_value_site_pv');
+            viewCounts.forEach(count => {
+                count.style.color = '';
+                count.style.fontWeight = '';
+                count.style.transform = '';
+                count.style.textShadow = '';
+            });
+            
             // 恢复SVG图标
             const svgs = this.querySelectorAll('svg');
             svgs.forEach(svg => {
@@ -332,6 +358,18 @@ function enhanceListHoverEffects() {
             });
         });
     });
+}
+
+// 添加浏览量计数功能
+function createVercount() {
+    var postBody = document.getElementById('postBody');
+    if (postBody){
+        postBody.insertAdjacentHTML('afterend','<div id="busuanzi_container_page_pv" style="display:none;float:left;margin-top:8px;font-size:small;">本文浏览量<span id="busuanzi_value_page_pv"></span>次</div>');
+    }
+    var runday = document.getElementById('runday');
+    if (runday) {
+        runday.insertAdjacentHTML('afterend', '<span id="busuanzi_container_site_pv" style="display:none">总浏览量<span id="busuanzi_value_site_pv"></span>次 • </span>');
+    }
 }
 
 // 立即初始化

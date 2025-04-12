@@ -1,2 +1,26 @@
 /* style.css */
 @import url("primer.css");
+body {
+    background-color: #121212;  /* 深色背景 */
+    color: #d1d1d1;  /* 亮灰色文字 */
+    font-family: 'Roboto', sans-serif;
+}
+
+h1, h2, h3 {
+    color: #ff6b81;  /* 未来感的粉红色标题 */
+}
+
+a {
+    color: #00f2f2;  /* 青色超链接 */
+}
+
+a:hover {
+    color: #ff6b81;  /* 超链接悬停时的颜色 */
+}
+
+footer {
+    background-color: #000000;
+    color: #ffffff;
+    text-align: center;
+    padding: 20px;
+}

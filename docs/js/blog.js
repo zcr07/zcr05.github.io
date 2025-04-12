@@ -102,29 +102,46 @@ function handleScrollForBackground() {
 
 // 确保背景元素存在并正确配置
 function ensureBackgroundElement() {
-    // 检查现有背景元素
-    var bgElement = document.getElementById('page-background');
-    
-    // 如果不存在，创建一个新的
-    if (!bgElement) {
-        bgElement = document.createElement('div');
-        bgElement.id = 'page-background';
-        document.body.parentNode.insertBefore(bgElement, document.body);
+    // 检查固定背景元素
+    var fixedBg = document.getElementById('fixed-background');
+    if (!fixedBg) {
+        fixedBg = document.createElement('div');
+        fixedBg.id = 'fixed-background';
+        document.body.parentNode.insertBefore(fixedBg, document.body);
     }
-    
-    // 强制设置背景元素样式
-    bgElement.style.cssText = 'position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important; width: 100vw !important; height: 100vh !important; z-index: -20 !important; background: var(--global-bg) !important; pointer-events: none !important;';
+
+    // 强制设置固定背景元素样式，确保动画能够正常工作
+    fixedBg.style.cssText = 'position: fixed !important; z-index: -999 !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; background: var(--global-bg) !important; animation: backgroundColorShift 20s ease-in-out infinite alternate !important;';
+
+    // 检查页面背景元素
+    var pageBg = document.getElementById('page-background');
+    if (!pageBg) {
+        pageBg = document.createElement('div');
+        pageBg.id = 'page-background';
+        document.body.parentNode.insertBefore(pageBg, document.body);
+    }
+
+    // 设置页面背景样式
+    pageBg.style.cssText = 'position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important; width: 100vw !important; height: 100vh !important; z-index: -20 !important; background: var(--global-bg) !important; pointer-events: none !important; animation: backgroundColorShift 20s ease-in-out infinite alternate !important;';
 }
 
 // 创建全屏背景元素
 function createBackgroundElement() {
+    // 创建主背景元素
+    var fixedBg = document.createElement('div');
+    fixedBg.id = 'fixed-background';
+    document.body.parentNode.insertBefore(fixedBg, document.body);
+    
+    // 设置主背景强制样式
+    fixedBg.style.cssText = 'position: fixed !important; z-index: -999 !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; background: var(--global-bg) !important; animation: backgroundColorShift 20s ease-in-out infinite alternate !important;';
+    
     // 创建背景元素
-    var bgElement = document.createElement('div');
-    bgElement.id = 'page-background';
-    document.body.parentNode.insertBefore(bgElement, document.body);
+    var pageBg = document.createElement('div');
+    pageBg.id = 'page-background';
+    document.body.parentNode.insertBefore(pageBg, document.body);
     
     // 设置强制全屏样式
-    bgElement.style.cssText = 'position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important; width: 100vw !important; height: 100vh !important; z-index: -20 !important; background: var(--global-bg) !important; pointer-events: none !important;';
+    pageBg.style.cssText = 'position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important; width: 100vw !important; height: 100vh !important; z-index: -20 !important; background: var(--global-bg) !important; pointer-events: none !important; animation: backgroundColorShift 20s ease-in-out infinite alternate !important;';
     
     // 确保页面的最小高度为视口高度
     document.documentElement.style.minHeight = '100vh';
@@ -147,6 +164,11 @@ function setupBackgroundEvents() {
     // 监听窗口大小变化
     window.addEventListener('resize', function() {
         ensureBackgroundElement();
+    });
+    
+    // 确保主题切换时背景保持
+    window.addEventListener('theme-changed', function() {
+        setTimeout(ensureBackgroundElement, 100);
     });
 }
 
@@ -180,6 +202,9 @@ function modeSwitch() {
     
     // 确保背景元素正确显示
     ensureBackgroundElement();
+    
+    // 触发主题变更事件
+    window.dispatchEvent(new Event('theme-changed'));
 }
 
 // 添加立即执行的初始化函数
@@ -200,6 +225,14 @@ function addGlobalBackground() {
     // 添加固定的背景元素
     var background = document.createElement('div');
     background.id = 'fixed-background';
-    background.style.cssText = 'position: fixed !important; z-index: -999 !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; background-color: var(--global-bg) !important;';
+    background.style.cssText = 'position: fixed !important; z-index: -999 !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; background-color: var(--global-bg) !important; animation: backgroundColorShift 20s ease-in-out infinite alternate !important;';
     document.body.parentNode.insertBefore(background, document.body);
+    
+    // 立即激活动画效果
+    setTimeout(function() {
+        var fixedBg = document.getElementById('fixed-background');
+        if (fixedBg) {
+            fixedBg.style.animation = 'backgroundColorShift 20s ease-in-out infinite alternate';
+        }
+    }, 100);
 }

@@ -8,7 +8,7 @@
   --accent-color: #00dcdc;
   --bg-primary: #0a0a20;
   --bg-secondary: #12122a;
-  --global-bg: #070718;
+  --global-bg: #ddd6ff; /* 保留淡紫色背景 */
   --text-primary: #f0f0f0;
   --text-secondary: #b0b0b0;
   --border-radius: 8px;
@@ -20,7 +20,7 @@
   --footer-text-dark-color: #d3d3f9;
   --text-color: #333;
   --text-secondary-color: #c4c4c4;
-  --light-global-bg: #e0e8ff;
+  --light-global-bg: #ddd6ff; /* 淡紫色背景 */
   
   /* 动画相关变量 */
   --gradient-animation-speed: 15s;
@@ -36,7 +36,7 @@ html, body {
 
 html {
   height: 100%;
-  background-color: var(--global-bg);
+  background-color: var(--global-bg); /* 淡紫色背景 */
   overflow-y: scroll; /* 只在html上保留滚动 */
   overflow-x: hidden;
 }
@@ -66,9 +66,8 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: var(--global-bg);
+  background: var(--global-bg); /* 淡紫色背景 */
   overflow: hidden !important;
-  animation: backgroundColorShift 20s ease-in-out infinite alternate;
 }
 
 /* 背景渐变效果 */
@@ -80,60 +79,24 @@ body {
   width: 100%;
   height: 100%;
   background: 
-    radial-gradient(circle at 80% 10%, rgba(126, 87, 255, 0.15), transparent 25%),
-    radial-gradient(circle at 20% 30%, rgba(0, 220, 220, 0.15), transparent 20%),
-    radial-gradient(circle at 70% 65%, rgba(255, 79, 154, 0.15), transparent 30%),
-    radial-gradient(circle at 10% 85%, rgba(126, 87, 255, 0.15), transparent 20%);
+    linear-gradient(135deg, rgba(221, 214, 255, 0.9), rgba(200, 190, 255, 0.7)); /* 保留淡紫色渐变 */
   z-index: -998;
   pointer-events: none;
-  animation: gradientShift 15s ease-in-out infinite alternate;
-}
-
-/* 背景颜色变化动画 */
-@keyframes backgroundColorShift {
-  0% { background-color: var(--global-bg); }
-  33% { background-color: #080830; }
-  66% { background-color: #10102a; }
-  100% { background-color: #070720; }
-}
-
-/* 渐变移动动画 */
-@keyframes gradientShift {
-  0% { 
-    opacity: 0.8;
-    transform: scale(1) rotate(0deg); 
-  }
-  50% { 
-    opacity: 1;
-    transform: scale(1.1) rotate(3deg); 
-  }
-  100% { 
-    opacity: 0.9;
-    transform: scale(1.05) rotate(-2deg); 
-  }
 }
 
 /* 暗色模式变体 */
 html[data-color-mode="dark"] #fixed-background::before {
   background: 
-    radial-gradient(circle at 80% 10%, rgba(126, 87, 255, 0.2), transparent 25%),
-    radial-gradient(circle at 20% 30%, rgba(0, 220, 220, 0.2), transparent 20%),
-    radial-gradient(circle at 70% 65%, rgba(255, 79, 154, 0.2), transparent 30%),
-    radial-gradient(circle at 10% 85%, rgba(126, 87, 255, 0.2), transparent 20%);
-  animation: gradientShift 15s ease-in-out infinite alternate;
+    radial-gradient(circle at 80% 10%, rgba(126, 87, 255, 0.2), transparent 40%),
+    radial-gradient(circle at 20% 30%, rgba(0, 220, 220, 0.2), transparent 40%),
+    radial-gradient(circle at 70% 65%, rgba(255, 79, 154, 0.2), transparent 50%),
+    radial-gradient(circle at 10% 85%, rgba(126, 87, 255, 0.2), transparent 30%);
 }
 
 /* 亮色模式变体 */
 html[data-color-mode="light"] #fixed-background::before {
   background: 
-    radial-gradient(circle at 80% 10%, rgba(126, 87, 255, 0.2), transparent 30%),
-    radial-gradient(circle at 20% 30%, rgba(0, 220, 220, 0.2), transparent 25%),
-    radial-gradient(circle at 70% 65%, rgba(255, 79, 154, 0.2), transparent 35%),
-    radial-gradient(circle at 10% 85%, rgba(126, 87, 255, 0.2), transparent 25%),
-    repeating-linear-gradient(45deg, rgba(200, 210, 255, 0.4) 0%, rgba(220, 230, 255, 0.4) 10%),
-    linear-gradient(135deg, #d0e0ff 0%, #e8edff 100%) !important;
-  animation: backgroundShimmerLight 30s ease-in-out infinite alternate;
-  background-attachment: fixed !important;
+    linear-gradient(135deg, rgba(221, 214, 255, 0.9), rgba(200, 190, 255, 0.7)); /* 保留淡紫色渐变 */
 }
 
 /* 添加媒体查询以确保在移动设备上正常显示 */
@@ -198,24 +161,25 @@ a:hover {
 a:not(.LabelName a):not(.btn):after {
   content: '';
   position: absolute;
-  width: 0;
-  height: 2px;
   bottom: -2px;
   left: 0;
+  width: 100%;
+  height: 1px;
   background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-  transition: width 0.3s ease;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease;
 }
 
 a:not(.LabelName a):not(.btn):hover:after {
-  width: 100%;
+  transform: scaleX(1);
+  transform-origin: left;
 }
 
-/* 优化按钮效果 */
 .btn-primary, .btn-block {
   background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)) !important;
-  color: white !important;
-  font-weight: 500;
   border: none !important;
+  color: white !important;
   position: relative;
   z-index: 1;
   overflow: hidden;
@@ -225,62 +189,72 @@ a:not(.LabelName a):not(.btn):hover:after {
   content: '';
   position: absolute;
   top: 0;
-  left: 0;
+  left: -100%;
   width: 100%;
   height: 100%;
   background: linear-gradient(45deg, var(--secondary-color), var(--accent-color));
+  transition: left 0.3s ease;
   z-index: -1;
-  opacity: 0;
-  transition: opacity 0.4s ease;
 }
 
 .btn-primary:hover::before, .btn-block:hover::before {
-  opacity: 1;
+  left: 0;
 }
 
 .btn-primary:hover, .btn-block:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(126, 87, 255, 0.4);
+  box-shadow: 0 5px 15px rgba(126, 87, 255, 0.4);
+  transform: translateY(-2px);
 }
 
 .circle {
-  border-radius: 50% !important;
   width: 40px;
   height: 40px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.circle:hover {
-  transform: rotate(15deg) scale(1.1);
-}
-
-/* 卡片样式 */
-.Box, .Box-body {
-  background-color: rgba(255, 255, 255, 0.9) !important;
-  border-radius: 12px !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  margin: 0 5px;
   transition: all 0.3s ease;
 }
 
-/* 全局字体和头像区域样式 */
+.circle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(126, 87, 255, 0.5);
+}
+
+/* Box基础样式 */
+.Box, .Box-body {
+  border-radius: 8px !important;
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  transition: all 0.3s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* 文字清晰度增强 */
+* {
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  text-rendering: optimizeLegibility !important;
+}
+
+/* 全局字体和头像区域样式 - 恢复动态效果 */
 .blogTitle {
-  background: none !important;
-  -webkit-text-fill-color: initial !important;
-  background-clip: initial !important;
-  -webkit-background-clip: initial !important;
-  color: #333 !important;
-  text-shadow: none;
+  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
   font-weight: 600;
   font-size: 1.6rem;
   margin-left: 12px;
   text-decoration: none;
   position: relative;
-  display: inline-block;
   font-family: "PingFang SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+  background-size: 200% auto;
+  animation: gradient 5s ease infinite;
 }
 
 /* 增强头像样式 */
@@ -325,9 +299,11 @@ a:not(.LabelName a):not(.btn):hover:after {
   font-family: "PingFang SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
 }
 
+/* 动画效果 */
 @keyframes gradient {
   0% { background-position: 0% center; }
-  100% { background-position: 200% center; }
+  50% { background-position: 100% center; }
+  100% { background-position: 0% center; }
 }
 
 /* 首页特殊样式 */
@@ -340,20 +316,23 @@ a:not(.LabelName a):not(.btn):hover:after {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: gradient 5s linear infinite;
+  animation: gradient 5s ease infinite;
 }
 
-/* 强制重设列表Box-row样式 */
-body .Box-row, 
-html .Box-row, 
-#content .Box-row {
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+/* 列表项基础样式 */
+.Box-row, .d-flex, #indexPostsList > div, tr.post-item, .post-item, .tech-box-row,
+body > div.container-lg > div.container-lg > div.Box,
+body > div.container-lg > div.container-lg > div > div,
+#blog-container > div, main > div > div,
+table > tbody > tr, .Box {
   position: relative !important;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
   overflow: hidden !important;
   border-radius: 12px !important;
   margin-bottom: 10px !important;
-  background-color: rgba(255, 255, 255, 0.6) !important;
-  border: 1px solid rgba(126, 87, 255, 0.15) !important;
+  background-color: rgba(255, 255, 255, 0.8) !important; /* 列表项稍微透明 */
+  border: 1px solid rgba(126, 87, 255, 0.1) !important;
+  border-left: 3px solid transparent !important;
   padding: 16px !important;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03) !important;
   backdrop-filter: blur(10px) !important;
@@ -361,238 +340,119 @@ html .Box-row,
   z-index: 1 !important;
 }
 
-body .Box-row:hover, 
-html .Box-row:hover,
-#content .Box-row:hover {
-  transform: translateY(-6px) scale(1.01) !important;
+/* 鼠标悬停效果 */
+.Box-row:hover, .d-flex:hover, #indexPostsList > div:hover, 
+tr.post-item:hover, .post-item:hover, .tech-box-row:hover,
+body > div.container-lg > div.container-lg > div.Box:hover,
+body > div.container-lg > div.container-lg > div > div:hover,
+#blog-container > div:hover, main > div > div:hover,
+table > tbody > tr:hover, .Box:hover {
+  transform: translateY(-6px) !important;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08) !important;
-  background-color: rgba(255, 255, 255, 0.8) !important;
-  border-color: rgba(126, 87, 255, 0.25) !important;
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  border-left: 6px solid #7e57ff !important;
+  padding-left: 13px !important;
   z-index: 2 !important;
 }
 
-/* 科技感边框基础效果 */
-body .Box-row::after,
-html .Box-row::after,
-#content .Box-row::after {
-  content: '' !important;
-  position: absolute !important;
-  inset: 0 !important;
-  border-radius: 12px !important;
-  padding: 1px !important;
-  background: linear-gradient(135deg, 
-    transparent 0%, 
-    rgba(126, 87, 255, 0.2) 15%, 
-    rgba(0, 220, 220, 0.2) 35%,
-    transparent 50%,
-    transparent 70%, 
-    rgba(255, 79, 154, 0.2) 85%, 
-    transparent 100%) !important;
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0) !important;
-  -webkit-mask-composite: xor !important;
-  mask-composite: exclude !important;
-  pointer-events: none !important;
-  transition: all 0.5s ease !important;
-  z-index: 0 !important;
-}
-
-body .Box-row:hover::after,
-html .Box-row:hover::after,
-#content .Box-row:hover::after {
-  background: linear-gradient(135deg, 
-    transparent 0%, 
-    rgba(126, 87, 255, 0.5) 15%, 
-    rgba(0, 220, 220, 0.5) 35%,
-    transparent 50%,
-    transparent 70%, 
-    rgba(255, 79, 154, 0.5) 85%, 
-    transparent 100%) !important;
-  animation: borderGlow 3s infinite alternate !important;
-}
-
-/* 左侧装饰条 */
-body .Box-row::before,
-html .Box-row::before,
-#content .Box-row::before {
-  content: '' !important;
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 4px !important;
-  height: 100% !important;
-  background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color)) !important;
-  opacity: 0 !important;
-  transition: opacity 0.3s ease !important;
-  z-index: 1 !important;
-}
-
-body .Box-row:hover::before,
-html .Box-row:hover::before,
-#content .Box-row:hover::before {
-  opacity: 1 !important;
-}
-
-/* 列表项标题效果 */
-body .Box-row a.Link--primary,
-html .Box-row a.Link--primary,
-#content .Box-row a.Link--primary {
-  font-weight: 600 !important;
-  position: relative !important;
-  display: inline-block !important;
-  transition: all 0.3s ease !important;
-  background: linear-gradient(90deg, var(--text-color), var(--text-color)) !important;
-  background-size: 0% 1px !important;
-  background-repeat: no-repeat !important;
-  background-position: left bottom !important;
-  padding-bottom: 2px !important;
-  z-index: 2 !important;
-}
-
-body .Box-row a.Link--primary:hover,
-html .Box-row a.Link--primary:hover,
-#content .Box-row a.Link--primary:hover {
-  color: var(--secondary-color) !important;
-  transform: translateX(3px) !important;
-  background-size: 100% 1px !important;
-}
-
-/* 为各种列表元素添加独特样式 */
-body .Box-row:nth-child(3n+1),
-html .Box-row:nth-child(3n+1),
-#content .Box-row:nth-child(3n+1) {
-  border-left: 2px solid var(--primary-color) !important;
-}
-
-body .Box-row:nth-child(3n+2),
-html .Box-row:nth-child(3n+2),
-#content .Box-row:nth-child(3n+2) {
-  border-left: 2px solid var(--secondary-color) !important;
-}
-
-body .Box-row:nth-child(3n+3),
-html .Box-row:nth-child(3n+3),
-#content .Box-row:nth-child(3n+3) {
-  border-left: 2px solid var(--accent-color) !important;
-}
-
-/* 暗色模式下的列表项 */
-html[data-color-mode="dark"] body .Box-row,
-html[data-color-mode="dark"] html .Box-row,
-html[data-color-mode="dark"] #content .Box-row {
-  background-color: rgba(18, 18, 42, 0.5) !important;
-  border: 1px solid rgba(126, 87, 255, 0.2) !important;
-  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.2) !important;
-}
-
-html[data-color-mode="dark"] body .Box-row:hover,
-html[data-color-mode="dark"] html .Box-row:hover,
-html[data-color-mode="dark"] #content .Box-row:hover {
-  background-color: rgba(25, 25, 55, 0.7) !important;
-  border-color: rgba(126, 87, 255, 0.4) !important;
-  box-shadow: 0 5px 20px rgba(10, 10, 35, 0.3) !important;
-}
-
-html[data-color-mode="dark"] body .Box-row::after,
-html[data-color-mode="dark"] html .Box-row::after,
-html[data-color-mode="dark"] #content .Box-row::after {
-  background: linear-gradient(135deg, 
-    transparent 0%, 
-    rgba(126, 87, 255, 0.3) 15%, 
-    rgba(0, 220, 220, 0.3) 35%,
-    transparent 50%,
-    transparent 70%, 
-    rgba(255, 79, 154, 0.3) 85%, 
-    transparent 100%) !important;
-}
-
-html[data-color-mode="dark"] body .Box-row:hover::after,
-html[data-color-mode="dark"] html .Box-row:hover::after,
-html[data-color-mode="dark"] #content .Box-row:hover::after {
-  background: linear-gradient(135deg, 
-    transparent 0%, 
-    rgba(126, 87, 255, 0.6) 15%, 
-    rgba(0, 220, 220, 0.6) 35%,
-    transparent 50%,
-    transparent 70%, 
-    rgba(255, 79, 154, 0.6) 85%, 
-    transparent 100%) !important;
-}
-
-/* 亮色模式下的列表项 */
-html[data-color-mode="light"] body .Box-row,
-html[data-color-mode="light"] html .Box-row,
-html[data-color-mode="light"] #content .Box-row {
-  background-color: rgba(246, 250, 255, 0.6) !important;
-  border: 1px solid rgba(126, 87, 255, 0.15) !important;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03) !important;
-}
-
-html[data-color-mode="light"] body .Box-row:hover,
-html[data-color-mode="light"] html .Box-row:hover,
-html[data-color-mode="light"] #content .Box-row:hover {
-  background-color: rgba(246, 250, 255, 0.9) !important;
-  border-color: rgba(126, 87, 255, 0.3) !important;
-  box-shadow: 0 8px 20px rgba(100, 120, 220, 0.15) !important;
-}
-
-/* 主题切换相关样式 */
+/* 主题切换过渡动画 */
 .theme-transition {
-  transition: background-color 0.5s ease, color 0.5s ease;
+  transition: background-color 0.5s ease,
+              color 0.5s ease,
+              border-color 0.5s ease,
+              box-shadow 0.5s ease !important;
 }
 
-/* 按钮样式优化 */
+.theme-transition * {
+  transition: background-color 0.5s ease,
+              color 0.5s ease,
+              border-color 0.5s ease,
+              box-shadow 0.5s ease !important;
+}
+
+/* 通用按钮样式 */
 .btn-invisible {
-  color: var(--primary-color) !important;
   background-color: transparent !important;
-  opacity: 0.8;
-  transition: all 0.3s ease;
+  border: none !important;
+  padding: 8px 12px !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  color: inherit !important; /* 确保按钮颜色继承自父元素 */
 }
 
 .btn-invisible:hover {
-  opacity: 1;
-  transform: scale(1.1);
-  color: var(--secondary-color) !important;
-  background-color: rgba(255, 255, 255, 0.1) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1) !important;
+  background-color: rgba(126, 87, 255, 0.1) !important;
+  border-radius: 8px !important;
 }
 
 .btn-invisible svg {
-  fill: currentColor;
+  vertical-align: middle !important;
+  transition: all 0.3s ease !important;
+  fill: currentColor !important;
+  color: inherit !important;
 }
 
-/* 暗色模式特定样式 */
+/* SVG 图标样式修复 */
+svg {
+  fill: currentColor !important;
+}
+
+svg path {
+  fill: currentColor !important;
+}
+
+.circle svg {
+  color: white !important;
+}
+
+.circle svg path {
+  fill: white !important;
+}
+
+.SideNav-icon svg {
+  color: var(--text-color) !important;
+}
+
+.SideNav-icon path {
+  fill: var(--text-color) !important;
+}
+
+/* 暗色模式样式 */
 html[data-color-mode="dark"] {
-  --global-bg: #070718; /* 暗色模式下的背景颜色 */
-  --text-color: #f0f0f0;
+  background-color: var(--bg-primary) !important;
 }
 
 html[data-color-mode="dark"] body {
-  background-color: rgba(18, 18, 42, 0.9);
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
-  color: var(--text-color);
+  background-color: rgba(15, 15, 35, 0.9) !important;
+  color: var(--text-primary) !important;
+  border-color: rgba(100, 100, 200, 0.1) !important;
 }
 
 html[data-color-mode="dark"] #header {
-  background: linear-gradient(to right, rgba(18, 18, 42, 0.9), rgba(10, 10, 32, 0.8));
+  background: linear-gradient(to right, rgba(15, 15, 40, 0.9), rgba(18, 18, 45, 0.8)) !important;
 }
 
 html[data-color-mode="dark"] .Box, 
-html[data-color-mode="dark"] .Box-body {
-  background-color: rgba(18, 18, 42, 0.7) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+html[data-color-mode="dark"] .Box-header {
+  background-color: rgba(20, 20, 45, 0.8) !important;
+  border-color: rgba(126, 87, 255, 0.2) !important;
 }
 
 html[data-color-mode="dark"] .Box-row {
-  background-color: rgba(18, 18, 42, 0.5) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(100, 100, 200, 0.15) !important;
 }
 
 html[data-color-mode="dark"] .Box-row:hover {
-  background-color: rgba(25, 25, 55, 0.7) !important;
-  border-color: rgba(126, 87, 255, 0.4) !important;
+  border-color: rgba(126, 87, 255, 0.3) !important;
 }
 
 html[data-color-mode="dark"] .blogTitle {
-  color: #f0f0f0 !important;
+  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 html[data-color-mode="dark"] .btn-invisible {
@@ -600,236 +460,178 @@ html[data-color-mode="dark"] .btn-invisible {
 }
 
 html[data-color-mode="dark"] .btn-invisible:hover {
-  color: var(--secondary-color) !important;
-  background-color: rgba(255, 255, 255, 0.05) !important;
+  background-color: rgba(126, 87, 255, 0.2) !important;
+  color: white !important;
 }
 
-/* 亮色模式特定样式 */
+html[data-color-mode="dark"] svg {
+  fill: var(--text-primary) !important;
+}
+
+html[data-color-mode="dark"] svg path {
+  fill: var(--text-primary) !important;
+}
+
+html[data-color-mode="dark"] .circle svg,
+html[data-color-mode="dark"] .circle svg path {
+  fill: white !important;
+}
+
+html[data-color-mode="dark"] .SideNav-icon svg,
+html[data-color-mode="dark"] .SideNav-icon path {
+  fill: var(--text-primary) !important;
+}
+
+/* 亮色模式样式 */
 html[data-color-mode="light"] {
-  --global-bg: #e0e8ff; /* 淡蓝色背景 */
-  --light-global-bg: #e0e8ff;
-  --text-color: #333;
+  background-color: var(--light-global-bg) !important; /* 亮色模式背景 */
 }
 
 html[data-color-mode="light"] body {
-  background-color: rgba(236, 240, 255, 0.75); /* 淡蓝色 */
-  color: var(--text-color);
-  backdrop-filter: blur(12px);
-  position: relative;
-  overflow-x: hidden;
-  overflow-y: auto;
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  color: var(--text-color) !important;
+  border-color: rgba(230, 230, 250, 0.8) !important;
+  box-shadow: 0 0 30px rgba(100, 120, 220, 0.1) !important;
 }
 
 html[data-color-mode="light"] #header {
-  background: linear-gradient(135deg, rgba(210, 220, 255, 0.9), rgba(220, 230, 255, 0.8));
-  border-bottom: 1px solid rgba(180, 190, 255, 0.2);
-  box-shadow: 0 2px 15px rgba(100, 100, 200, 0.1);
+  background: linear-gradient(to right, rgba(250, 250, 255, 0.9), rgba(240, 244, 255, 0.8)) !important;
 }
 
 html[data-color-mode="light"] .Box, 
-html[data-color-mode="light"] .Box-body {
-  background-color: rgba(236, 245, 255, 0.7) !important;
-  border: 1px solid rgba(180, 190, 255, 0.3) !important;
-  box-shadow: 0 5px 20px rgba(100, 120, 220, 0.1);
+html[data-color-mode="light"] .Box-header {
+  background-color: rgba(250, 250, 255, 0.8) !important;
+  border-color: rgba(126, 87, 255, 0.1) !important;
 }
 
 html[data-color-mode="light"] .Box-row {
-  background-color: rgba(246, 250, 255, 0.6) !important;
-  border: 1px solid rgba(200, 210, 255, 0.3) !important;
+  border-color: rgba(126, 87, 255, 0.1) !important;
 }
 
 html[data-color-mode="light"] .Box-row:hover {
-  background-color: rgba(246, 250, 255, 0.9) !important;
-  border-color: rgba(126, 87, 255, 0.3) !important;
+  border-color: rgba(126, 87, 255, 0.2) !important;
 }
 
 html[data-color-mode="light"] .blogTitle {
-  color: var(--text-color) !important;
-  position: relative;
-  text-shadow: 0 1px 2px rgba(70, 100, 200, 0.2);
+  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 html[data-color-mode="light"] .blogTitle::after {
-  content: "";
+  content: '';
   position: absolute;
-  bottom: -2px;
+  bottom: -3px;
   left: 0;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
   transform: scaleX(0);
-  transform-origin: left;
+  transform-origin: right;
   transition: transform 0.3s ease;
 }
 
 html[data-color-mode="light"] .blogTitle:hover::after {
   transform: scaleX(1);
+  transform-origin: left;
 }
 
-/* 访问计数器样式 */
-#vercount, #postVercount {
-  display: inline-block;
-  color: var(--accent-color);
-  font-weight: bold;
-  margin: 0 3px;
+html[data-color-mode="light"] svg {
+  fill: var(--text-color) !important;
 }
 
-/* 动画效果 */
-.animate-gradient {
-  background: linear-gradient(270deg, var(--primary-color), var(--secondary-color), var(--accent-color));
-  background-size: 600% 600%;
-  animation: gradient-animation 8s ease infinite;
+html[data-color-mode="light"] svg path {
+  fill: var(--text-color) !important;
 }
 
-@keyframes gradient-animation {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+html[data-color-mode="light"] .circle svg,
+html[data-color-mode="light"] .circle svg path {
+  fill: white !important;
 }
 
-/* 评论区样式 */
-.utterances {
-  margin-top: 2rem;
-}
-
-/* 评论按钮改进 */
-#cmButton {
-  width: 100%;
-  text-align: center;
-  margin: 2rem auto;
-  display: block;
-}
-
-/* 为整个页面添加全屏固定背景，确保内容可滚动 */
-#page-background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -2;
-  background: var(--global-bg);
-  pointer-events: none;
-  animation: backgroundColorShift 20s ease-in-out infinite alternate;
-}
-
-/* 移除所有可能导致双滚动条的样式 */
+/* 内容容器 */
 #content, #content-wrapper, #content-container, .container {
-  overflow: visible !important;
-  height: auto !important;
-  width: 100%;
+  position: relative;
+  z-index: 2;
 }
 
-/* 固定背景元素 */
-body::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -10;
-  pointer-events: none;
-  will-change: transform;
-  overflow: hidden !important;
-}
-
-/* 背景动画 - 确保动画只应用于背景 */
-@keyframes backgroundShimmerLight {
-  0% {
-    background-position: 0% 0%;
-    background-size: 100% 100%;
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .Box-row, .d-flex, #indexPostsList > div, tr.post-item, .post-item, .tech-box-row {
+    margin: 10px 0 !important;
+    padding: 12px !important;
   }
-  50% {
-    background-position: 100% 100%;
-    background-size: 120% 120%;
+  
+  .Box-row:hover, .d-flex:hover, #indexPostsList > div:hover, 
+  tr.post-item:hover, .post-item:hover, .tech-box-row:hover {
+    transform: translateY(-3px) !important;
   }
-  100% {
-    background-position: 0% 0%;
-    background-size: 100% 100%;
+  
+  .home-title {
+    font-size: 2rem !important;
   }
 }
 
-/* 亮色模式下的背景处理 */
-html[data-color-mode="light"] body::before {
-  background: 
-    radial-gradient(circle at 80% 10%, rgba(126, 87, 255, 0.2), transparent 30%),
-    radial-gradient(circle at 20% 30%, rgba(0, 220, 220, 0.2), transparent 25%),
-    radial-gradient(circle at 70% 65%, rgba(255, 79, 154, 0.2), transparent 35%),
-    radial-gradient(circle at 10% 85%, rgba(126, 87, 255, 0.2), transparent 25%),
-    repeating-linear-gradient(45deg, rgba(200, 210, 255, 0.4) 0%, rgba(220, 230, 255, 0.4) 10%),
-    linear-gradient(135deg, #d0e0ff 0%, #e8edff 100%) !important;
-  animation: backgroundShimmerLight 30s ease-in-out infinite alternate;
-  background-attachment: fixed !important;
+/* 为pre添加复制按钮样式 */
+pre {
+  position: relative;
+  overflow: hidden;
+  border-radius: 6px;
+  border: 1px solid rgba(126, 87, 255, 0.2);
 }
 
-/* 暗色模式下的背景处理 */
-html[data-color-mode="dark"] body::before {
-  background: 
-    radial-gradient(circle at 80% 10%, rgba(126, 87, 255, 0.2), transparent 25%),
-    radial-gradient(circle at 20% 30%, rgba(0, 220, 220, 0.2), transparent 20%),
-    radial-gradient(circle at 70% 65%, rgba(255, 79, 154, 0.2), transparent 30%),
-    radial-gradient(circle at 10% 85%, rgba(126, 87, 255, 0.2), transparent 20%),
-    var(--global-bg);
-  animation: backgroundShimmerDark 30s ease-in-out infinite alternate;
-  background-attachment: fixed !important;
+.copy-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  padding: 4px 8px;
+  background: rgba(126, 87, 255, 0.8);
+  color: white;
+  border: none;
+  border-radius: 3px;
+  font-size: 12px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s, background 0.3s;
 }
 
-/* 添加额外的背景动画样式 */
-@keyframes backgroundShimmerDark {
-  0% {
-    background-position: 0% 0%;
-    background-size: 100% 100%;
-  }
-  50% {
-    background-position: 100% 100%;
-    background-size: 120% 120%;
-  }
-  100% {
-    background-position: 0% 0%;
-    background-size: 100% 100%;
-  }
+pre:hover .copy-button {
+  opacity: 1;
 }
 
-/* 为亮色模式添加光晕效果 */
-html[data-color-mode="light"] body::after {
-  content: "";
-  position: fixed; /* 改为fixed避免滚动问题 */
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: 
-    radial-gradient(circle at 30% 40%, rgba(126, 87, 255, 0.05) 0%, transparent 45%),
-    radial-gradient(circle at 70% 60%, rgba(0, 220, 220, 0.05) 0%, transparent 45%);
-  z-index: -2;
-  animation: rotateGlow 25s linear infinite;
-  pointer-events: none;
-  overflow: hidden !important;
+.copy-button:hover {
+  background: rgba(126, 87, 255, 1);
 }
 
-@keyframes rotateGlow {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+/* 多语言支持 */
+.lang-toggle {
+  display: inline-block;
+  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 10px 0;
 }
 
-@keyframes borderGlow {
-  0% {
-    background-position: 0% 50%;
-    filter: blur(0px);
-  }
-  50% {
-    background-position: 100% 50%;
-    filter: blur(1px);
-  }
-  100% {
-    background-position: 0% 50%;
-    filter: blur(0px);
-  }
+.lang-toggle:hover {
+  box-shadow: 0 5px 15px rgba(126, 87, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.lang-zhcn {
+  display: block;
+  margin: 15px 0;
+  padding: 15px;
+  background-color: rgba(126, 87, 255, 0.05);
+  border-left: 3px solid var(--primary-color);
+  border-radius: 0 8px 8px 0;
+}
+
+html[data-color-mode="dark"] .lang-zhcn {
+  background-color: rgba(126, 87, 255, 0.15);
 }

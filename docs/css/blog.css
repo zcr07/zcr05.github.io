@@ -34,6 +34,7 @@ html {
   height: 100%;
   scroll-behavior: smooth;
   overflow-x: hidden;
+  min-height: 100vh;
 }
 
 /* 创建更炫酷的背景效果 */
@@ -181,6 +182,8 @@ a:not(.LabelName a):not(.btn):hover:after {
   position: relative !important;
   font-weight: 500;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  z-index: 20;
+  pointer-events: auto;
 }
 
 .Label:hover, .LabelName:hover {
@@ -193,9 +196,9 @@ a:not(.LabelName a):not(.btn):hover:after {
 .listLabels, .flexLabels {
   display: block !important;
   margin-top: 4px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
 }
 
 .listLabels .Label, 
@@ -221,20 +224,18 @@ a:not(.LabelName a):not(.btn):hover:after {
 }
 
 /* 标签链接点击修复 */
-.LabelName object {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 5;
-  pointer-events: none;
+.LabelName {
+  position: relative;
+  cursor: pointer;
 }
 
 .LabelName a {
-  pointer-events: auto;
-  z-index: 20;
-  position: relative;
+  pointer-events: auto !important;
+  z-index: 20 !important;
+  position: relative !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
 }
 
 /* 主页上的标签颜色丰富化 */
@@ -271,21 +272,30 @@ a:not(.LabelName a):not(.btn):hover:after {
 
 /* 标签页专用样式 - 修改为水平排列 */
 #taglabel {
-  display: block !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
   margin: 0 0 15px;
   padding: 5px;
+  gap: 8px;
 }
 
 #taglabel .Label {
-  margin: 0 8px 8px 0;
+  margin: 0;
   font-size: 14px;
-  padding: 4px 12px;
+  padding: 0;
   display: inline-block !important;
   vertical-align: middle;
+  cursor: pointer !important;
 }
 
-#taglabel .Label .Counter {
-  margin-left: 5px;
+#taglabel .Label a, 
+#taglabel .Label span {
+  display: block !important;
+  padding: 4px 12px !important;
+  width: 100%;
+  height: 100%;
+  z-index: 20;
+  position: relative;
 }
 
 /* 优化按钮效果 */
@@ -655,17 +665,42 @@ html[data-color-mode="light"] #header::before {
     padding: 0;
     width: 100%;
     border-radius: 0;
+    min-height: 100vh;
+  }
+  
+  body::after {
+    content: "";
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: inherit;
+    z-index: -2;
+  }
+  
+  #page-background {
+    display: block;
   }
   
   .listLabels, .flexLabels {
-    flex-wrap: wrap;
-    margin-top: 4px;
-    gap: 4px;
+    white-space: normal;
+    overflow: visible;
+    margin-top: 6px;
+    margin-bottom: 4px;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px;
   }
   
   #taglabel .Label {
     margin: 3px;
-    padding: 2px 10px;
+    padding: 0;
+  }
+  
+  #taglabel .Label a,
+  #taglabel .Label span {
+    padding: 2px 10px !important;
   }
   
   .blogTitle {
@@ -691,6 +726,14 @@ html[data-color-mode="light"] #header::before {
   .postTitle {
     font-size: 1.8rem;
     text-align: center;
+  }
+  
+  .SideNav-item {
+    padding-bottom: 8px;
+  }
+  
+  .Label, .LabelName {
+    margin-bottom: 5px;
   }
 }
 
@@ -793,4 +836,68 @@ html[data-color-mode="light"] .SideNav-item::before {
 
 html[data-color-mode="light"] .SideNav-item:hover::before {
   left: 100%;
+}
+
+/* 亮色模式下的图片背景样式优化 */
+html[data-color-mode="light"] .avatar {
+  border: 3px solid rgba(126, 87, 255, 0.7);
+  box-shadow: 0 0 15px rgba(126, 87, 255, 0.5);
+}
+
+html[data-color-mode="light"] .avatar:hover {
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 20px rgba(255, 79, 154, 0.6);
+}
+
+/* 修复标签问题 */
+.Label, .LabelName {
+  opacity: 1 !important;
+  display: inline-block !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+/* 修复标签容器样式 */
+.SideNav-item .listLabels {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  margin-top: 6px;
+  padding-top: 2px;
+  min-height: 26px;
+  clear: both;
+  gap: 6px;
+}
+
+/* 为SideNav-item添加更有层次感的背景 */
+html[data-color-mode="light"] .SideNav-item {
+  background: linear-gradient(135deg, rgba(236, 245, 255, 0.8), rgba(240, 248, 255, 0.9));
+  border-radius: 8px;
+  margin-bottom: 8px;
+  border: 1px solid rgba(180, 200, 255, 0.3);
+}
+
+/* 增强可视化对比 */
+html[data-color-mode="light"] .Box, 
+html[data-color-mode="light"] .Box-body,
+html[data-color-mode="light"] .SideNav {
+  background-color: rgba(246, 250, 255, 0.85) !important;
+  border: 1px solid rgba(180, 190, 255, 0.4) !important;
+}
+
+/* 添加更明显的边框和阴影 */
+html[data-color-mode="light"] .SideNav {
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(126, 87, 255, 0.1);
+}
+
+/* 为整个页面添加全屏固定背景 */
+#page-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -2;
+  background: var(--global-bg);
+  pointer-events: none;
 }

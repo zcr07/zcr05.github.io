@@ -20,6 +20,9 @@ document.addEventListener('DOMContentLoaded', function() {
     var savedTheme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-color-mode', savedTheme);
     
+    // 创建全屏背景元素
+    createBackgroundElement();
+    
     // 确保SVG图标正确填充颜色
     var svgPaths = document.querySelectorAll('svg path');
     svgPaths.forEach(path => {
@@ -61,7 +64,34 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 统一标签样式处理
     fixTagStyles();
+
+    // 修复标签显示问题
+    setTimeout(function() {
+        fixLabelsDisplay();
+    }, 300);
 });
+
+// 创建全屏背景元素
+function createBackgroundElement() {
+    var bgElement = document.createElement('div');
+    bgElement.id = 'page-background';
+    document.body.parentNode.insertBefore(bgElement, document.body);
+    
+    // 监听窗口大小变化，确保背景元素覆盖整个窗口
+    window.addEventListener('resize', function() {
+        bgElement.style.width = window.innerWidth + 'px';
+        bgElement.style.height = Math.max(document.body.scrollHeight, window.innerHeight) + 'px';
+    });
+    
+    // 初始设置
+    bgElement.style.width = window.innerWidth + 'px';
+    bgElement.style.height = Math.max(document.body.scrollHeight, window.innerHeight) + 'px';
+    
+    // 监听页面滚动，确保背景始终充满屏幕
+    window.addEventListener('scroll', function() {
+        bgElement.style.height = Math.max(document.body.scrollHeight, window.innerHeight) + 'px';
+    });
+}
 
 // 主题切换功能
 function modeSwitch() {
@@ -159,4 +189,34 @@ function fixTagClicks() {
             link.setAttribute('data-fixed', 'true');
         }
     });
+}
+
+// 修复标签显示问题
+function fixLabelsDisplay() {
+    // 确保所有标签容器显示正常
+    var labelContainers = document.querySelectorAll('.listLabels');
+    for (var i = 0; i < labelContainers.length; i++) {
+        labelContainers[i].style.display = 'block';
+        labelContainers[i].style.visibility = 'visible';
+        labelContainers[i].style.opacity = '1';
+    }
+    
+    // 确保所有标签显示正常
+    var labels = document.querySelectorAll('.Label, .LabelName');
+    for (var j = 0; j < labels.length; j++) {
+        labels[j].style.display = 'inline-block';
+        labels[j].style.visibility = 'visible';
+        labels[j].style.opacity = '1';
+    }
+    
+    // 移除任何可能导致标签隐藏的内联样式
+    var items = document.querySelectorAll('.SideNav-item');
+    for (var k = 0; k < items.length; k++) {
+        var itemLabels = items[k].querySelectorAll('.listLabels');
+        for (var l = 0; l < itemLabels.length; l++) {
+            itemLabels[l].style.overflow = 'visible';
+            itemLabels[l].style.whiteSpace = 'normal';
+            itemLabels[l].style.display = 'block';
+        }
+    }
 }

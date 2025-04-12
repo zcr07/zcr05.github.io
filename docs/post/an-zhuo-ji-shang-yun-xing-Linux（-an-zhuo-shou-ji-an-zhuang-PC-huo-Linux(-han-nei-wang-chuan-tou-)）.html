@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://blog.mymaskking.dpdns.org/css/blog.css' rel='stylesheet' />
+    <script src='https://blog.mymaskking.dpdns.org/js/blog.js'></script>
+    <link rel="icon" href="https://avatars.githubusercontent.com/u/41733240?v=4">
+<meta name="description" content="第一章：在安卓机上运行Linux
+⭐目前网上(含ChatGPT)给出的最优方案就是使用Termux([去官网点我](https://github.com/termux/termux-app))+QEMU
+---
+正在使用的方案(魔改后的Termux)：
+A：已经内置了alpine系统的Termux([去官网点我](https://github.com/FakeRajbhx/alpine-term))(配置过低时使用)
+     原博客使用教程：[点我](https://www.cnblogs.com/yanqb/p/17367504.html)
+     直接查看使用教程：[点我](https://kdocs.cn/l/cheRD9wHnLXd?linkname=zvWJTuBssB)
+     优点：
+            • 内置docker，sshd，Nginx
+            • apk大小为606M
+            • 可以在更低配置上运行(高配置手机可能无法运行)
+     缺点：
+            • 基于QEMU，每次重启都要重新设置映射端口(命令如下)
+                 hostfwd_add tcp::2222-:22 
+B：内置了alpine系统的Termux增强版(🌟优先推荐使用)
+     原博客使用教程：[点我](https://blog.csdn.net/LJZxiaolongbao/article/details/139145986)
+     直接查看使用教程：[点我](https://www.cnblogs.com/yanqb/p/17367504.html)
+     直接下载APK：[点我](https://d.icdown.club/repository/main/Alpine_Termux.apk)
+     优点：
+            • 魔改了QEMU，端口映射一次设置就可以了
+            • apk大小为126M
+     缺点：
+            • 没有内置docker，sshd，需要手动安装
+            • 无法在低配置上运行(高配置手机可以运行)
+测试的安卓配置：
+1. CPU：1.3GHz晓龙450八核
+2. 4G运行内存+32G储存空间
+3. Android7.1.2
+---
+国外大佬使用原版Termux的视频（[点我](https://www.youtube.com/watch?v=xiMJpaWi5Nk)）
+A：内置了alpine系统的Termux使用教程
+APK源和DNS更换这一步，如果没有魔法网络请务必提前做了，否则都会从国外的镜像来下载软件
+1. apk安装完成后左滑，在弹出画面中选择QEMU，输入下面端口映射命令(SSH连接使用)
+hostfwd_add tcp::2222-:22 注意：正常情况输入完成回车是没有任何打印内容的
+2. 左滑弹出画面选择[2]/dev/ttyS0，等待alpine系统启动完成后切换到root
+登录用户 alpine 密码: alpine
+切换到root账户，输入sudo -s 密码：alpine
+3. 修改sshd的配置文件
+方式1：
+sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+sed -i 's/PermitRootLogin no/PermitRootLogin yes/g' /etc/ssh/sshd_config
+service sshd restart#方式2：
+apt install vim #可能需要安装vim
+vim /etc/ssh/sshd_config
+#修改下面内容为yes：
+PasswordAuthentication yes
+PermitRootLogin yes
+#重启sshd服务
+service sshd restart4. 设置内置Docker服务为开机自启
+rc-update add docker
+service docker start
+
+#后台启动
+setsid containerd
+setsid dockerd
+# 测试
+docker info5. 修改docker的镜像源
+vi /etc/docker/daemon.json
+把下面内容复制进去
+{
+    'registry-mirrors': [
+    'https://docker.1panelproxy.com',
+    'https://2a6bf1988cb6428c877f723ec7530dbc.mirror.swr.myhuaweicloud.com',
+    'https://docker.m.daocloud.io',
+    'https://hub-mirror.c.163.com',
+    'https://mirror.baidubce.com',
+    'https://your_preferred_mirror',
+    'https://dockerhub.icu',
+    'https://docker.registry.cyou',
+    'https://docker-cf.registry.cyou',
+    'https://dockercf.jsdelivr.fyi',
+    'https://docker.jsdelivr.fyi',
+    'https://dockertest.jsdelivr.fyi',
+    'https://mirror.aliyuncs.com',
+    'https://dockerproxy.com',
+    'https://mirror.baidubce.com',
+    'https://docker.m.daocloud.io',
+    'https://docker.nju.edu.cn',
+    'https://docker.mirrors.sjtug.sjtu.edu.cn',
+    'https://docker.mirrors.ustc.edu.cn',
+    'https://mirror.iscas.ac.cn',
+    'https://docker.rainbond.cc'
+    ]
+}检测镜像源是否被使用
+docker info6. (国内使用必须配置)APK源和DNS更换，时区修改
+更换阿里云+DNSPOD 的DNS
+sed -i '/^#/! s/^/#/' /etc/apk/repositories
+echo 'https://mirrors.aliyun.com/alpine/v3.9/main' >> /etc/apk/repositories
+echo 'https://mirrors.aliyun.com/alpine/v3.9/community' >> /etc/apk/repositories
+
+sed -i '/^#/! s/^/#/' /etc/resolv.conf
+echo 'nameserver 223.5.5.5' >> /etc/resolv.conf
+echo 'nameserver 223.6.6.6' >> /etc/resolv.conf
+
+apk update时区修改
+setup-timezone
+等到提示Which timezone are you in? ('?' for list) [UTC]，然后输入
+Asia/Shanghai7. (补充)安装Docker Compose
+1.检查最新版本号：
+DOCKER_COMPOSE_VERSION=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | jq -r .tag_name)⭐遇到mksh: adk: inaccessible or not found
+请执行apk update;apk add curl;apk add jq
+2.下载并安装 Docker Compose:
+curl -L 'https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)' -o /usr/local/bin/docker-compose3.给 Docker Compose 添加执行权限并检查版本
+chmod +x /usr/local/bin/docker-compose
+docker-compose --versionB：内置alpine系统的Termux增强版使用教程
+1. apk安装后会有弹出画面，点击Settings设置SSH服务端口映射
+tcp:2022:22
+#端口：2022是你用XShell连接时用的
+#端口：22是alpinex系统的默认端口2. 系统启动完成后直接输入root免密登录
+APK源和DNS更换这一步，如果没有魔法网络请务必提前做了，否则都会从国外的镜像来下载软件
+[点我](https://kdocs.cn/l/cheRD9wHnLXd?linkname=R3mSsqR6Oa)去看修改APK源和DNS方法
+3. 安装SSH服务
+apk update
+#安装ssh
+apk add openssh
+#启动ssh
+rc-service sshd start
+# 设置开机启动
+rc-update add sshd修改ssd_config的配置文件，并且设置root密码，运行root登录
+sed -i 's/PermitRootLogin no/PermitRootLogin yes/g' /etc/ssh/sshd_config
+passwd abc123456 #设置root密码4. 安装docker服务
+#安装docker
+apk add docker
+#启动docker
+service docker start
+docker version
+#开机自启
+rc-update add docker boot修改Docker镜像源：[点我](https://kdocs.cn/l/cheRD9wHnLXd?linkname=hxebueOkWr)
+安装Docker Compose ：[点我](https://kdocs.cn/l/cheRD9wHnLXd?linkname=No8HoMRicO)
+补充资料
+安卓APK(linux系统)
+这是我在找安卓上的linux系统apk的时候找到的软件，下面的软件都支持linux系统，最好用的是userLand，谷歌商店评分4.7。">
+<meta property="og:title" content="安卓机上运行Linux（安卓手机安装PC或Linux(含内网穿透)）">
+<meta property="og:description" content="第一章：在安卓机上运行Linux
+⭐目前网上(含ChatGPT)给出的最优方案就是使用Termux([去官网点我](https://github.com/termux/termux-app))+QEMU
+---
+正在使用的方案(魔改后的Termux)：
+A：已经内置了alpine系统的Termux([去官网点我](https://github.com/FakeRajbhx/alpine-term))(配置过低时使用)
+     原博客使用教程：[点我](https://www.cnblogs.com/yanqb/p/17367504.html)
+     直接查看使用教程：[点我](https://kdocs.cn/l/cheRD9wHnLXd?linkname=zvWJTuBssB)
+     优点：
+            • 内置docker，sshd，Nginx
+            • apk大小为606M
+            • 可以在更低配置上运行(高配置手机可能无法运行)
+     缺点：
+            • 基于QEMU，每次重启都要重新设置映射端口(命令如下)
+                 hostfwd_add tcp::2222-:22 
+B：内置了alpine系统的Termux增强版(🌟优先推荐使用)
+     原博客使用教程：[点我](https://blog.csdn.net/LJZxiaolongbao/article/details/139145986)
+     直接查看使用教程：[点我](https://www.cnblogs.com/yanqb/p/17367504.html)
+     直接下载APK：[点我](https://d.icdown.club/repository/main/Alpine_Termux.apk)
+     优点：
+            • 魔改了QEMU，端口映射一次设置就可以了
+            • apk大小为126M
+     缺点：
+            • 没有内置docker，sshd，需要手动安装
+            • 无法在低配置上运行(高配置手机可以运行)
+测试的安卓配置：
+1. CPU：1.3GHz晓龙450八核
+2. 4G运行内存+32G储存空间
+3. Android7.1.2
+---
+国外大佬使用原版Termux的视频（[点我](https://www.youtube.com/watch?v=xiMJpaWi5Nk)）
+A：内置了alpine系统的Termux使用教程
+APK源和DNS更换这一步，如果没有魔法网络请务必提前做了，否则都会从国外的镜像来下载软件
+1. apk安装完成后左滑，在弹出画面中选择QEMU，输入下面端口映射命令(SSH连接使用)
+hostfwd_add tcp::2222-:22 注意：正常情况输入完成回车是没有任何打印内容的
+2. 左滑弹出画面选择[2]/dev/ttyS0，等待alpine系统启动完成后切换到root
+登录用户 alpine 密码: alpine
+切换到root账户，输入sudo -s 密码：alpine
+3. 修改sshd的配置文件
+方式1：
+sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+sed -i 's/PermitRootLogin no/PermitRootLogin yes/g' /etc/ssh/sshd_config
+service sshd restart#方式2：
+apt install vim #可能需要安装vim
+vim /etc/ssh/sshd_config
+#修改下面内容为yes：
+PasswordAuthentication yes
+PermitRootLogin yes
+#重启sshd服务
+service sshd restart4. 设置内置Docker服务为开机自启
+rc-update add docker
+service docker start
+
+#后台启动
+setsid containerd
+setsid dockerd
+# 测试
+docker info5. 修改docker的镜像源
+vi /etc/docker/daemon.json
+把下面内容复制进去
+{
+    'registry-mirrors': [
+    'https://docker.1panelproxy.com',
+    'https://2a6bf1988cb6428c877f723ec7530dbc.mirror.swr.myhuaweicloud.com',
+    'https://docker.m.daocloud.io',
+    'https://hub-mirror.c.163.com',
+    'https://mirror.baidubce.com',
+    'https://your_preferred_mirror',
+    'https://dockerhub.icu',
+    'https://docker.registry.cyou',
+    'https://docker-cf.registry.cyou',
+    'https://dockercf.jsdelivr.fyi',
+    'https://docker.jsdelivr.fyi',
+    'https://dockertest.jsdelivr.fyi',
+    'https://mirror.aliyuncs.com',
+    'https://dockerproxy.com',
+    'https://mirror.baidubce.com',
+    'https://docker.m.daocloud.io',
+    'https://docker.nju.edu.cn',
+    'https://docker.mirrors.sjtug.sjtu.edu.cn',
+    'https://docker.mirrors.ustc.edu.cn',
+    'https://mirror.iscas.ac.cn',
+    'https://docker.rainbond.cc'
+    ]
+}检测镜像源是否被使用
+docker info6. (国内使用必须配置)APK源和DNS更换，时区修改
+更换阿里云+DNSPOD 的DNS
+sed -i '/^#/! s/^/#/' /etc/apk/repositories
+echo 'https://mirrors.aliyun.com/alpine/v3.9/main' >> /etc/apk/repositories
+echo 'https://mirrors.aliyun.com/alpine/v3.9/community' >> /etc/apk/repositories
+
+sed -i '/^#/! s/^/#/' /etc/resolv.conf
+echo 'nameserver 223.5.5.5' >> /etc/resolv.conf
+echo 'nameserver 223.6.6.6' >> /etc/resolv.conf
+
+apk update时区修改
+setup-timezone
+等到提示Which timezone are you in? ('?' for list) [UTC]，然后输入
+Asia/Shanghai7. (补充)安装Docker Compose
+1.检查最新版本号：
+DOCKER_COMPOSE_VERSION=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | jq -r .tag_name)⭐遇到mksh: adk: inaccessible or not found
+请执行apk update;apk add curl;apk add jq
+2.下载并安装 Docker Compose:
+curl -L 'https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)' -o /usr/local/bin/docker-compose3.给 Docker Compose 添加执行权限并检查版本
+chmod +x /usr/local/bin/docker-compose
+docker-compose --versionB：内置alpine系统的Termux增强版使用教程
+1. apk安装后会有弹出画面，点击Settings设置SSH服务端口映射
+tcp:2022:22
+#端口：2022是你用XShell连接时用的
+#端口：22是alpinex系统的默认端口2. 系统启动完成后直接输入root免密登录
+APK源和DNS更换这一步，如果没有魔法网络请务必提前做了，否则都会从国外的镜像来下载软件
+[点我](https://kdocs.cn/l/cheRD9wHnLXd?linkname=R3mSsqR6Oa)去看修改APK源和DNS方法
+3. 安装SSH服务
+apk update
+#安装ssh
+apk add openssh
+#启动ssh
+rc-service sshd start
+# 设置开机启动
+rc-update add sshd修改ssd_config的配置文件，并且设置root密码，运行root登录
+sed -i 's/PermitRootLogin no/PermitRootLogin yes/g' /etc/ssh/sshd_config
+passwd abc123456 #设置root密码4. 安装docker服务
+#安装docker
+apk add docker
+#启动docker
+service docker start
+docker version
+#开机自启
+rc-update add docker boot修改Docker镜像源：[点我](https://kdocs.cn/l/cheRD9wHnLXd?linkname=hxebueOkWr)
+安装Docker Compose ：[点我](https://kdocs.cn/l/cheRD9wHnLXd?linkname=No8HoMRicO)
+补充资料
+安卓APK(linux系统)
+这是我在找安卓上的linux系统apk的时候找到的软件，下面的软件都支持linux系统，最好用的是userLand，谷歌商店评分4.7。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://blog.mymaskking.dpdns.org//post/an-zhuo-ji-shang-yun-xing-Linux%EF%BC%88-an-zhuo-shou-ji-an-zhuang-PC-huo-Linux%28-han-nei-wang-chuan-tou-%29%EF%BC%89.html">
+<meta property="og:image" content="https://avatars.githubusercontent.com/u/41733240?v=4">
+<title>安卓机上运行Linux（安卓手机安装PC或Linux(含内网穿透)）</title>
+
+<meta name='viewport' content='width=device-width, initial-scale=1.0'/><meta name='theme-color' content='#5d4fff'><meta name='description' content='爱捣鼓的小水木的个人博客，分享技术、生活和想法'>
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+
+</style>
+<link href='https://blog.mymaskking.dpdns.org/css/blog.css' rel='stylesheet' /><link href='https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap' rel='stylesheet'>
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">安卓机上运行Linux（安卓手机安装PC或Linux(含内网穿透)）</h1>
+<div class="title-right">
+    <a href="https://blog.mymaskking.dpdns.org/" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/MyMaskKing/MyMaskKing.github.io/issues/5" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h2>第一章：在安卓机上运行Linux<br>
+⭐目前网上(含ChatGPT)给出的最优方案就是使用Termux(<a href="https://github.com/termux/termux-app">去官网点我</a>)+QEMU</h2>
+<p>正在使用的方案(魔改后的Termux)：<br>
+A：已经内置了alpine系统的Termux(<a href="https://github.com/FakeRajbhx/alpine-term">去官网点我</a>)(配置过低时使用)<br>
+原博客使用教程：<a href="https://www.cnblogs.com/yanqb/p/17367504.html" rel="nofollow">点我</a><br>
+直接查看使用教程：<a href="https://kdocs.cn/l/cheRD9wHnLXd?linkname=zvWJTuBssB" rel="nofollow">点我</a><br>
+优点：<br>
+• 内置docker，sshd，Nginx<br>
+• apk大小为606M<br>
+• 可以在更低配置上运行(高配置手机可能无法运行)<br>
+缺点：<br>
+• 基于QEMU，每次重启都要重新设置映射端口(命令如下)<br>
+hostfwd_add tcp::2222-:22<br>
+B：内置了alpine系统的Termux增强版(🌟优先推荐使用)<br>
+原博客使用教程：<a href="https://blog.csdn.net/LJZxiaolongbao/article/details/139145986" rel="nofollow">点我</a><br>
+直接查看使用教程：<a href="https://www.cnblogs.com/yanqb/p/17367504.html" rel="nofollow">点我</a><br>
+直接下载APK：<a href="https://d.icdown.club/repository/main/Alpine_Termux.apk" rel="nofollow">点我</a><br>
+优点：<br>
+• 魔改了QEMU，端口映射一次设置就可以了<br>
+• apk大小为126M<br>
+缺点：<br>
+• 没有内置docker，sshd，需要手动安装<br>
+• 无法在低配置上运行(高配置手机可以运行)<br>
+测试的安卓配置：</p>
+<ol>
+<li>CPU：1.3GHz晓龙450八核</li>
+<li>4G运行内存+32G储存空间</li>
+<li>Android7.1.2</li>
+</ol>
+<hr>
+<p>国外大佬使用原版Termux的视频（<a href="https://www.youtube.com/watch?v=xiMJpaWi5Nk" rel="nofollow">点我</a>）<br>
+A：内置了alpine系统的Termux使用教程<br>
+APK源和DNS更换这一步，如果没有魔法网络请务必提前做了，否则都会从国外的镜像来下载软件</p>
+<ol>
+<li>apk安装完成后左滑，在弹出画面中选择QEMU，输入下面端口映射命令(SSH连接使用)<br>
+hostfwd_add tcp::2222-:22 注意：正常情况输入完成回车是没有任何打印内容的</li>
+<li>左滑弹出画面选择[2]/dev/ttyS0，等待alpine系统启动完成后切换到root<br>
+登录用户 alpine 密码: alpine<br>
+切换到root账户，输入sudo -s 密码：alpine</li>
+<li>修改sshd的配置文件<br>
+方式1：<br>
+sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config<br>
+sed -i 's/PermitRootLogin no/PermitRootLogin yes/g' /etc/ssh/sshd_config<br>
+service sshd restart#方式2：<br>
+apt install vim #可能需要安装vim<br>
+vim /etc/ssh/sshd_config<br>
+#修改下面内容为yes：<br>
+PasswordAuthentication yes<br>
+PermitRootLogin yes<br>
+#重启sshd服务<br>
+service sshd restart4. 设置内置Docker服务为开机自启<br>
+rc-update add docker<br>
+service docker start</li>
+</ol>
+<p>#后台启动<br>
+setsid containerd<br>
+setsid dockerd</p>
+<h1>测试</h1>
+<p>docker info5. 修改docker的镜像源<br>
+vi /etc/docker/daemon.json<br>
+把下面内容复制进去<br>
+{<br>
+"registry-mirrors": [<br>
+"https://docker.1panelproxy.com",<br>
+"https://2a6bf1988cb6428c877f723ec7530dbc.mirror.swr.myhuaweicloud.com",<br>
+"https://docker.m.daocloud.io",<br>
+"https://hub-mirror.c.163.com",<br>
+"https://mirror.baidubce.com",<br>
+"https://your_preferred_mirror",<br>
+"https://dockerhub.icu",<br>
+"https://docker.registry.cyou",<br>
+"https://docker-cf.registry.cyou",<br>
+"https://dockercf.jsdelivr.fyi",<br>
+"https://docker.jsdelivr.fyi",<br>
+"https://dockertest.jsdelivr.fyi",<br>
+"https://mirror.aliyuncs.com",<br>
+"https://dockerproxy.com",<br>
+"https://mirror.baidubce.com",<br>
+"https://docker.m.daocloud.io",<br>
+"https://docker.nju.edu.cn",<br>
+"https://docker.mirrors.sjtug.sjtu.edu.cn",<br>
+"https://docker.mirrors.ustc.edu.cn",<br>
+"https://mirror.iscas.ac.cn",<br>
+"https://docker.rainbond.cc"<br>
+]<br>
+}检测镜像源是否被使用<br>
+docker info6. (国内使用必须配置)APK源和DNS更换，时区修改<br>
+更换阿里云+DNSPOD 的DNS<br>
+sed -i '/^#/! s/^/#/' /etc/apk/repositories<br>
+echo '<a href="https://mirrors.aliyun.com/alpine/v3.9/main" rel="nofollow">https://mirrors.aliyun.com/alpine/v3.9/main</a>' &gt;&gt; /etc/apk/repositories<br>
+echo '<a href="https://mirrors.aliyun.com/alpine/v3.9/community" rel="nofollow">https://mirrors.aliyun.com/alpine/v3.9/community</a>' &gt;&gt; /etc/apk/repositories</p>
+<p>sed -i '/^#/! s/^/#/' /etc/resolv.conf<br>
+echo 'nameserver 223.5.5.5' &gt;&gt; /etc/resolv.conf<br>
+echo 'nameserver 223.6.6.6' &gt;&gt; /etc/resolv.conf</p>
+<p>apk update时区修改<br>
+setup-timezone<br>
+等到提示Which timezone are you in? ('?' for list) [UTC]，然后输入<br>
+Asia/Shanghai7. (补充)安装Docker Compose<br>
+1.检查最新版本号：<br>
+DOCKER_COMPOSE_VERSION=$(curl -s <a href="https://api.github.com/repos/docker/compose/releases/latest">https://api.github.com/repos/docker/compose/releases/latest</a> | jq -r .tag_name)⭐遇到mksh: adk: inaccessible or not found<br>
+请执行apk update;apk add curl;apk add jq<br>
+2.下载并安装 Docker Compose:<br>
+curl -L "<a href="https://github.com/docker/compose/releases/download/$%7BDOCKER_COMPOSE_VERSION%7D/docker-compose-$(uname">https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname</a> -s)-$(uname -m)" -o /usr/local/bin/docker-compose3.给 Docker Compose 添加执行权限并检查版本<br>
+chmod +x /usr/local/bin/docker-compose<br>
+docker-compose --versionB：内置alpine系统的Termux增强版使用教程</p>
+<ol>
+<li>apk安装后会有弹出画面，点击Settings设置SSH服务端口映射<br>
+tcp:2022:22<br>
+#端口：2022是你用XShell连接时用的<br>
+#端口：22是alpinex系统的默认端口2. 系统启动完成后直接输入root免密登录<br>
+APK源和DNS更换这一步，如果没有魔法网络请务必提前做了，否则都会从国外的镜像来下载软件<br>
+<a href="https://kdocs.cn/l/cheRD9wHnLXd?linkname=R3mSsqR6Oa" rel="nofollow">点我</a>去看修改APK源和DNS方法</li>
+<li>安装SSH服务<br>
+apk update<br>
+#安装ssh<br>
+apk add openssh<br>
+#启动ssh<br>
+rc-service sshd start</li>
+</ol>
+<h1>设置开机启动</h1>
+<h2>rc-update add sshd修改ssd_config的配置文件，并且设置root密码，运行root登录<br>
+sed -i 's/PermitRootLogin no/PermitRootLogin yes/g' /etc/ssh/sshd_config<br>
+passwd abc123456 #设置root密码4. 安装docker服务<br>
+#安装docker<br>
+apk add docker<br>
+#启动docker<br>
+service docker start<br>
+docker version<br>
+#开机自启<br>
+rc-update add docker boot修改Docker镜像源：<a href="https://kdocs.cn/l/cheRD9wHnLXd?linkname=hxebueOkWr" rel="nofollow">点我</a><br>
+安装Docker Compose ：<a href="https://kdocs.cn/l/cheRD9wHnLXd?linkname=No8HoMRicO" rel="nofollow">点我</a><br>
+补充资料<br>
+安卓APK(linux系统)<br>
+这是我在找安卓上的linux系统apk的时候找到的软件，下面的软件都支持linux系统，最好用的是userLand，谷歌商店评分4.7。<br>
+⭐limbo虚拟机(最后一次更新2022年)<br>
+下载：<a href="https://wwvj.lanzoum.com/iRlCB2su0toj%E5%AF%86%E7%A0%81:h1xb" rel="nofollow">https://wwvj.lanzoum.com/iRlCB2su0toj密码:h1xb</a><br>
+Git网址：<a href="https://github.com/limboemu/limbo">https://github.com/limboemu/limbo</a></h2>
+<h2>AidLux 智能物联网(AIoT)应用 开发和部署平台<br>
+下载地址：<a href="https://community.aidlux.com/aidluxdownload" rel="nofollow">https://community.aidlux.com/aidluxdownload</a><br>
+如果进入error模式可能是储存空间不足，参考<a href="https://community.aidlux.com/postDetail/1389" rel="nofollow">解决方案</a></h2>
+<p>UserLAnd(自带镜像商店，需要魔法上网)<br>
+下载：<a href="https://wwvj.lanzoum.com/iix662sucebi%E5%AF%86%E7%A0%81:9y3n" rel="nofollow">https://wwvj.lanzoum.com/iix662sucebi密码:9y3n</a><br>
+Git网址：<a href="https://github.com/CypherpunkArmory/UserLAnd">https://github.com/CypherpunkArmory/UserLAnd</a><br>
+注意：UserLAnd 的 ssh server 端口为 2022<br>
+用户密码：cyj   cyj123456<br>
+vnc:123456<br>
+快速开始<br>
+<a href="https://github.com/CypherpunkArmory/UserLAnd/wiki/Getting-Started-in-UserLAnd">https://github.com/CypherpunkArmory/UserLAnd/wiki/Getting-Started-in-UserLAnd</a><br>
+Linux镜像<br>
+提示：为lambo软件用的<br>
+⭐国外的一款tiny极简镜像，几十M就可以运行一个轻量服务器。<br>
+<a href="https://distro.ibiblio.org/tinycorelinux/downloads.html" rel="nofollow">https://distro.ibiblio.org/tinycorelinux/downloads.html</a></p>
+<p>如何切换Root(<a href="https://detailed.wordpress.com/2017/08/10/tiny-core-linux/" rel="nofollow">来自官网的提示</a>)<br>
+sudo su<br>
+Debian(Ubuntu)安装docker<br>
+使用userland下在的Ubuntu来安装docker，能启动但是直接停止运行了，出错内容是少一些软件，但是无法安装这些软件，可能必须要通过QEMU来套娃吧。<br>
+⭐1. 先升级一下apt<br>
+sudo apt-get update &amp;&amp; sudo apt-get upgrade<br>
+2. 实现安装一些docker的必须依赖<br>
+sudo apt-get install -y ca-certificates curl gnupg lsb-release software-properties-common<br>
+3. 执行下面的快捷安装命令<br>
+curl -fsSL <a href="https://get.docker.com/" rel="nofollow">https://get.docker.com/</a> -o get-docker.sh<br>
+sudo sh get-docker.sh  --version 20.0 --mirror Aliyun<br>
+注意：使用快捷命令安装的docker是最新版，可能会出现问题/etc/init.d/docker: 62: ulimit: error setting limit (Operation not permitted)<br>
+解决方案可参考：方案1（<a href="https://github.com/docker/cli/issues/4807" data-hovercard-type="issue" data-hovercard-url="/docker/cli/issues/4807/hovercard">点我查看</a>） 方案2<a href="https://blog.csdn.net/asd54090/article/details/140996510" rel="nofollow">（点我查看）</a><br>
+<a class="issue-link js-issue-link" data-error-text="Failed to load title" data-id="486122924" data-permission-text="Title is private" data-url="https://github.com/CypherpunkArmory/UserLAnd/issues/1023" data-hovercard-type="issue" data-hovercard-url="/CypherpunkArmory/UserLAnd/issues/1023/hovercard" href="https://github.com/CypherpunkArmory/UserLAnd/issues/1023">CypherpunkArmory/UserLAnd#1023</a><br>
+<a href="https://www.cnblogs.com/dachenyi/p/18329788" rel="nofollow">乌班图中卸载docker</a><br>
+<a href="https://docs.docker.com/engine/install/ubuntu/" rel="nofollow">乌班图的官方docker安装和卸载</a></p>
+<p>sudo apt-get install -y docker-ce=5:24.0.7-1ubuntu.22.04jammy docker-ce-cli=5:20.10.213-0ubuntu-kinetic<br>
+Termux魔改版虚拟机(目前Docker可用)<br>
+⭐<a href="https://blog.csdn.net/LJZxiaolongbao/article/details/139145986" rel="nofollow">这篇博客</a>提供了两个软件<br>
+A：Zerotermux<br>
+网址：<a href="https://github.com/hanxinhao000/ZeroTermux">https://github.com/hanxinhao000/ZeroTermux</a><br>
+B：alpine_Termux（魔改版）<br>
+魔改版按下面命令安装ssh</p>
+<ol>
+<li>apk update</li>
+<li>apk add openssh</li>
+<li>service sshd start # 启动 SSH 服务</li>
+<li>rc-update add sshd # 设置 SSH 服务在系统启动时自动启动</li>
+<li>sed -i 's/PermitRootLogin no/PermitRootLogin yes/g' /etc/ssh/sshd_config</li>
+<li>passwd #默认用cyj123456<br>
+C：alpine_Termux（官方版）<a href="https://github.com/FakeRajbhx/alpine-term">点我</a><br>
+• 关于官方版的使用文档请参考：<a href="https://www.cnblogs.com/yanqb/p/17367504.html" rel="nofollow">点我</a></li>
+</ol>
+<hr>
+<p>目前按照C方案安装成功docker，但是docker源配置请参考：<a href="https://blog.csdn.net/liu854046222/article/details/146000198" rel="nofollow">解决方案Link</a><br>
+4G运行的手机上面，方案B的docker能起到无法执行运行镜像，方案C是没问题的<br>
+docker run -d --restart=always -v /data/alist:/opt/alist/data -p 1744:5244  --name="alist" xhofe/alist-aria2<br>
+docker run hello-world</p></div>
+<div style="font-size:small;margin-top:8px;float:right;">❤️ 转载文章请注明出处，谢谢！❤️</div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://blog.mymaskking.dpdns.org/">爱捣鼓的小水木的博客</a></div>
+<div id="footer2"><span id="filingNum"><a href="https://beian.miit.gov.cn/" target="_blank">浙ICP备20250412号</a> • </span>
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if("2025/04/12"!=""){
+    var startSite=new Date("2025/04/12");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
+var utterancesLoad=0;
+
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","MyMaskKing/MyMaskKing.github.io");
+    script.setAttribute("issue-term","title");
+    
+    script.setAttribute("theme","dark");
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+
+
+</script>
+
+
+</html>

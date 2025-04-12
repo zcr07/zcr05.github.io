@@ -1,0 +1,129 @@
+/* style.css */
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to right, #43c6ac, #f8ffae);
+    color: #333;
+    transition: background-color 0.3s ease;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.post {
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    padding: 32px;
+    margin-bottom: 32px;
+    transition: transform 0.3s ease;
+}
+
+.post:hover {
+    transform: translateY(-8px);
+}
+
+.post-title {
+    color: #333;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 16px;
+}
+
+.post-content {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #555;
+}
+
+.post-meta {
+    color: #999;
+    font-size: 14px;
+    margin-top: 16px;
+}
+
+.post-footer {
+    background-color: #e9ecef;
+    border-radius: 16px;
+    padding: 16px;
+    margin-top: 24px;
+    text-align: right;
+}
+
+.post-footer a {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.post-footer a:hover {
+    color: #0056b3;
+}
+
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+.label {
+    display: inline-block;
+    padding: 6px 12px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-right: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.label:hover {
+    background-color: #0056b3;
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background: linear-gradient(to right, #373b44, #4286f4);
+        color: #f5f5f5;
+    }
+    .post {
+        background-color: #24292e;
+    }
+    .post-title {
+        color: #f5f5f5;
+    }
+    .post-content {
+        color: #c9d1d9;
+    }
+    .post-meta {
+        color: #8b949e;
+    }
+    .post-footer {
+        background-color: #30363d;
+    }
+    .post-footer a {
+        color: #4285f4;
+    }
+    .button {
+        background-color: #4285f4;
+    }
+    .button:hover {
+        background-color: #3367d6;
+    }
+    .label {
+        background-color: #4285f4;
+    }
+    .label:hover {
+        background-color: #3367d6;
+    }
+}

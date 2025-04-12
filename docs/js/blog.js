@@ -1144,86 +1144,90 @@ function replaceBackground() {
     });
 })();
 
-// 完全替换背景实现 - 使用最简单的方法
-function fixBackground() {
-    // 删除所有现有背景相关元素和样式
-    const elementsToRemove = document.querySelectorAll('#background-container, #fixed-background, #page-background, #stars-container, #gradient-layer, #glow-layer, #shapes-layer, #dynamic-background');
+// 创建纯静态背景，彻底解决滚动问题
+function createStaticBackground() {
+    // 删除所有现有背景相关元素
+    const elementsToRemove = document.querySelectorAll(
+        '#background-container, #fixed-background, #page-background, #stars-container, #gradient-layer, ' +
+        '#glow-layer, #shapes-layer, #dynamic-background, #simple-background'
+    );
     elementsToRemove.forEach(el => el && el.parentNode && el.parentNode.removeChild(el));
     
     // 删除所有背景相关样式表
-    const stylesToRemove = document.querySelectorAll('#background-keyframes, #dynamic-background-animations, #glow-animation, #particle-animation');
+    const stylesToRemove = document.querySelectorAll(
+        '#background-keyframes, #dynamic-background-animations, #glow-animation, ' +
+        '#particle-animation, #root-background-fix, #root-force-styles'
+    );
     stylesToRemove.forEach(style => style && style.parentNode && style.parentNode.removeChild(style));
     
-    // 创建单个简单背景元素
-    const simpleBackground = document.createElement('div');
-    simpleBackground.id = 'simple-background';
-    simpleBackground.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: -9999;
-        background-color: #070720;
-        background-image: radial-gradient(circle at 80% 10%, rgba(126, 87, 255, 0.15), transparent 40%), 
-                          radial-gradient(circle at 20% 30%, rgba(0, 220, 220, 0.15), transparent 40%),
-                          radial-gradient(circle at 70% 65%, rgba(255, 79, 154, 0.15), transparent 50%),
-                          radial-gradient(circle at 10% 85%, rgba(126, 87, 255, 0.15), transparent 30%);
-        pointer-events: none;
-    `;
-    
-    // 插入到DOM
-    document.body.parentNode.insertBefore(simpleBackground, document.body);
-    
-    // 强制设置HTML和BODY的背景颜色，确保滚动时一致
-    const rootStyle = document.createElement('style');
-    rootStyle.id = 'root-background-fix';
-    rootStyle.textContent = `
+    // 注入静态背景样式
+    const staticStyle = document.createElement('style');
+    staticStyle.id = 'static-background-style';
+    staticStyle.textContent = `
+        /* 固定基础样式 */
         html, body {
             background-color: #070720 !important;
+            background-image: 
+                radial-gradient(circle at 80% 10%, rgba(126, 87, 255, 0.15), transparent 40%), 
+                radial-gradient(circle at 20% 30%, rgba(0, 220, 220, 0.15), transparent 40%),
+                radial-gradient(circle at 70% 65%, rgba(255, 79, 154, 0.15), transparent 50%),
+                radial-gradient(circle at 10% 85%, rgba(126, 87, 255, 0.15), transparent 30%) !important;
+            background-attachment: fixed !important;
+            background-size: cover !important;
             min-height: 100vh !important;
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }
-    `;
-    document.head.appendChild(rootStyle);
-}
-
-// 极简化列表样式函数 - 不使用任何变换效果
-function simpleListStyles() {
-    // 检查是否已经存在
-    if (document.getElementById('simple-list-styles')) {
-        document.getElementById('simple-list-styles').remove();
-    }
-    
-    const styleSheet = document.createElement('style');
-    styleSheet.id = 'simple-list-styles';
-    styleSheet.innerHTML = `
-        /* 简单的列表样式，无任何动画或变换 */
-        .Box-row, .d-flex, #indexPostsList > div, tr.post-item, .post-item, .tech-box-row, 
-        body > div.container-lg > div.container-lg > div.Box,
-        body > div.container-lg > div.container-lg > div > div,
-        #blog-container > div,
-        main > div > div {
-            position: relative !important;
-            display: block !important;
-            background-color: rgba(246, 250, 255, 0.8) !important;
-            border-radius: 12px !important;
-            border: 1px solid rgba(126, 87, 255, 0.2) !important;
-            padding: 16px !important;
-            margin: 15px 0 !important;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
-            overflow: visible !important;
-            z-index: 1 !important;
-            
-            /* 静态样式 - 无动画或变换 */
-            transition: none !important;
-            transform: none !important;
-            animation: none !important;
+        
+        /* 清除可能影响背景的属性 */
+        * {
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
         }
         
-        /* 暗色模式变体 */
-        html[data-color-mode="dark"] .Box-row, 
+        /* 确保内容显示正确 */
+        .container-lg, main, #content, article {
+            background: transparent !important;
+            position: relative !important;
+            z-index: 1 !important;
+        }
+    `;
+    document.head.appendChild(staticStyle);
+}
+
+// 简化的列表样式函数
+function simpleListItems() {
+    // 移除现有样式
+    const oldStyles = document.querySelectorAll('#simple-list-styles, #gmeek-specific-styles, #forced-list-styles');
+    oldStyles.forEach(style => style && style.parentNode && style.parentNode.removeChild(style));
+    
+    // 创建新样式
+    const listStyle = document.createElement('style');
+    listStyle.id = 'simple-list-styles';
+    listStyle.textContent = `
+        /* 统一列表项样式 */
+        .Box-row, .d-flex, #indexPostsList > div, tr.post-item, .post-item, .tech-box-row, 
+        body > div.container-lg > div.container-lg > div.Box,
+        body > div.container-lg > div.container-lg > div > div,
+        #blog-container > div,
+        main > div > div,
+        [id*="post"] {
+            position: relative !important;
+            display: block !important;
+            margin: 15px 0 !important;
+            padding: 16px !important;
+            background-color: rgba(246, 250, 255, 0.8) !important;
+            border: 1px solid rgba(126, 87, 255, 0.2) !important;
+            border-radius: 12px !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+            z-index: 2 !important;
+            transform: none !important;
+            transition: all 0.25s ease-out !important;
+        }
+        
+        /* 暗色模式 */
+        html[data-color-mode="dark"] .Box-row,
         html[data-color-mode="dark"] .d-flex, 
         html[data-color-mode="dark"] #indexPostsList > div, 
         html[data-color-mode="dark"] tr.post-item,
@@ -1232,132 +1236,98 @@ function simpleListStyles() {
         html[data-color-mode="dark"] body > div.container-lg > div.container-lg > div.Box,
         html[data-color-mode="dark"] body > div.container-lg > div.container-lg > div > div,
         html[data-color-mode="dark"] #blog-container > div,
-        html[data-color-mode="dark"] main > div > div {
+        html[data-color-mode="dark"] main > div > div,
+        html[data-color-mode="dark"] [id*="post"] {
             background-color: rgba(18, 18, 42, 0.8) !important;
             border: 1px solid rgba(126, 87, 255, 0.3) !important;
         }
         
-        /* 悬停变体 - 使用简单的颜色和阴影变化 */
-        .Box-row:hover, .d-flex:hover, #indexPostsList > div:hover, tr.post-item:hover, .post-item:hover, .tech-box-row:hover,
+        /* 简单悬停效果 */
+        .Box-row:hover, .d-flex:hover, #indexPostsList > div:hover, tr.post-item:hover, 
+        .post-item:hover, .tech-box-row:hover,
         body > div.container-lg > div.container-lg > div.Box:hover,
         body > div.container-lg > div.container-lg > div > div:hover,
         #blog-container > div:hover,
-        main > div > div:hover {
-            background-color: rgba(246, 250, 255, 0.9) !important;
+        main > div > div:hover,
+        [id*="post"]:hover {
             box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1) !important;
-            border-color: rgba(126, 87, 255, 0.4) !important;
+            border-left: 4px solid #7e57ff !important;
+            padding-left: 13px !important;
         }
         
-        /* 暗色模式悬停变体 */
-        html[data-color-mode="dark"] .Box-row:hover, 
-        html[data-color-mode="dark"] .d-flex:hover,
-        html[data-color-mode="dark"] #indexPostsList > div:hover, 
-        html[data-color-mode="dark"] tr.post-item:hover,
-        html[data-color-mode="dark"] .post-item:hover,
-        html[data-color-mode="dark"] .tech-box-row:hover,
-        html[data-color-mode="dark"] body > div.container-lg > div.container-lg > div.Box:hover,
-        html[data-color-mode="dark"] body > div.container-lg > div.container-lg > div > div:hover,
-        html[data-color-mode="dark"] #blog-container > div:hover,
-        html[data-color-mode="dark"] main > div > div:hover {
-            background-color: rgba(23, 23, 52, 0.9) !important;
-            border-color: rgba(126, 87, 255, 0.5) !important;
+        /* 确保链接可见 */
+        a {
+            position: relative !important;
+            z-index: 3 !important;
+            text-decoration: none !important;
         }
         
-        /* 装饰条元素 */
-        .decoration-bar {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 3px;
-            height: 0;
-            background: linear-gradient(to bottom, var(--primary-color, #7e57ff), var(--secondary-color, #00dcdc));
-            transition: height 0.3s ease-out;
-            z-index: 2;
+        /* 标签样式 */
+        .Label, .labels, .tag, .tags {
+            display: inline-block !important;
+            border-radius: 10px !important;
+            padding: 4px 8px !important;
+            margin: 2px !important;
+            background-color: rgba(126, 87, 255, 0.1) !important;
+            border: 1px solid rgba(126, 87, 255, 0.2) !important;
         }
         
-        /* 悬停时显示装饰条 */
-        .Box-row:hover .decoration-bar, 
-        .d-flex:hover .decoration-bar,
-        #indexPostsList > div:hover .decoration-bar, 
-        tr.post-item:hover .decoration-bar,
-        .post-item:hover .decoration-bar,
-        .tech-box-row:hover .decoration-bar {
-            height: 100%;
-        }
-        
-        /* 确保文本内容清晰可见 */
+        /* 文本清晰度 */
         * {
             -webkit-font-smoothing: antialiased !important;
             -moz-osx-font-smoothing: grayscale !important;
             text-rendering: optimizeLegibility !important;
         }
     `;
+    document.head.appendChild(listStyle);
     
-    document.head.appendChild(styleSheet);
-}
-
-// 为每个列表项添加装饰条
-function addDecorationBars() {
-    // 查找所有可能的列表项
-    const listItems = document.querySelectorAll('.Box-row, .d-flex, #indexPostsList > div, tr.post-item, .post-item, .tech-box-row, body > div.container-lg > div.container-lg > div.Box, body > div.container-lg > div.container-lg > div > div, #blog-container > div, main > div > div');
-    
-    listItems.forEach(item => {
-        // 跳过已处理的项目
-        if (item.querySelector('.decoration-bar')) {
-            return;
-        }
-        
-        // 添加一个简单的装饰条
-        const bar = document.createElement('div');
-        bar.className = 'decoration-bar';
-        item.appendChild(bar);
+    // 移除所有动画和变换属性
+    const items = document.querySelectorAll('.Box-row, .d-flex, #indexPostsList > div, tr.post-item, .post-item, .tech-box-row, [id*="post"]');
+    items.forEach(item => {
+        // 清除样式转换属性
+        item.style.transition = 'all 0.25s ease-out';
+        item.style.transform = 'none';
+        item.style.animation = 'none';
         
         // 确保项目有相对定位
-        if (window.getComputedStyle(item).position !== 'relative') {
-            item.style.position = 'relative';
-        }
+        item.style.position = 'relative';
     });
 }
 
-// 立即初始化 - 最简单可靠的方法
-(function() {
-    // 应用背景修复
-    fixBackground();
+// 初始化函数
+function initStaticTheme() {
+    // 应用静态背景
+    createStaticBackground();
     
     // 应用简单列表样式
-    simpleListStyles();
+    simpleListItems();
+}
+
+// 立即初始化
+(function() {
+    // 立即应用静态主题
+    initStaticTheme();
     
-    // 等待DOM完全加载
-    if (document.readyState === 'interactive' || document.readyState === 'complete') {
-        addDecorationBars();
-    }
-    
-    // 文档加载完成后应用样式
+    // DOM加载完成后再次应用
     document.addEventListener('DOMContentLoaded', function() {
-        fixBackground();
-        simpleListStyles();
-        addDecorationBars();
+        initStaticTheme();
         
-        // 延迟处理以处理动态内容
-        setTimeout(function() {
-            addDecorationBars();
-        }, 500);
+        // 延迟处理以确保所有元素都已加载
+        setTimeout(initStaticTheme, 500);
     });
     
-    // 窗口加载完成后应用样式
+    // 窗口加载完成后再次应用
     window.addEventListener('load', function() {
-        fixBackground();
-        simpleListStyles();
-        addDecorationBars();
+        initStaticTheme();
     });
     
     // 监听DOM变化
     if (typeof MutationObserver !== 'undefined') {
         const observer = new MutationObserver(function() {
-            addDecorationBars();
+            simpleListItems();
         });
         
-        // 开始观察文档
+        // 观察文档变化
         observer.observe(document.body, {
             childList: true,
             subtree: true
@@ -1365,7 +1335,7 @@ function addDecorationBars() {
     }
 })();
 
-// 主题切换函数
+// 主题切换函数 - 简化版
 function modeSwitch() {
     // 切换主题
     var html = document.documentElement;
@@ -1379,11 +1349,12 @@ function modeSwitch() {
     // 更新主题图标
     var themeSwitch = document.getElementById('themeSwitch');
     if (themeSwitch) {
-        themeSwitch.setAttribute('d', newTheme === 'light' ? IconList['moon'] : IconList['sun']);
+        var iconName = newTheme === 'light' ? 'moon' : 'sun';
+        if (IconList && IconList[iconName]) {
+            themeSwitch.setAttribute('d', IconList[iconName]);
+        }
     }
     
     // 重新应用样式
-    fixBackground();
-    simpleListStyles();
-    addDecorationBars();
+    simpleListItems();
 }

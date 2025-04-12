@@ -82,13 +82,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // 强制应用列表样式
     forceApplyListStyles();
     
-    // 设置定时器，确保样式完全应用
+    // 设置定时器，确保样式完全应用，多次尝试应用
+    setTimeout(forceApplyListStyles, 200);
     setTimeout(forceApplyListStyles, 500);
     setTimeout(forceApplyListStyles, 1000);
+    setTimeout(forceApplyListStyles, 2000);
     
     // 设置定时器，确保背景动画效果完成应用
+    setTimeout(enhanceBackgroundAnimation, 300);
     setTimeout(enhanceBackgroundAnimation, 800);
-    setTimeout(enhanceBackgroundAnimation, 1500);
+    
+    // 在窗口加载完成后再次强制应用样式
+    window.addEventListener('load', function() {
+        forceApplyListStyles();
+        enhanceBackgroundAnimation();
+    });
 });
 
 // 处理标签链接点击
@@ -191,21 +199,157 @@ function ensureBackgroundElement() {
 
 // 创建全屏背景元素
 function createBackgroundElement() {
-    // 创建主背景元素
-    var fixedBg = document.createElement('div');
-    fixedBg.id = 'fixed-background';
-    document.body.parentNode.insertBefore(fixedBg, document.body);
+    // 确保动画关键帧已定义
+    if (!document.getElementById('background-keyframes')) {
+        const keyframes = document.createElement('style');
+        keyframes.id = 'background-keyframes';
+        keyframes.textContent = `
+            @keyframes backgroundColorShift {
+                0% { background-color: var(--global-bg, #070720) !important; }
+                33% { background-color: #080830 !important; }
+                66% { background-color: #10102a !important; }
+                100% { background-color: #070720 !important; }
+            }
+            
+            @keyframes gradientFlow {
+                0% { background-position: 0% 50%; opacity: 0.7; }
+                50% { background-position: 100% 50%; opacity: 0.9; }
+                100% { background-position: 0% 50%; opacity: 0.7; }
+            }
+            
+            @keyframes pulsate {
+                0% { transform: scale(1); opacity: 0.7; }
+                50% { transform: scale(1.05); opacity: 0.8; }
+                100% { transform: scale(1); opacity: 0.7; }
+            }
+            
+            @keyframes rotate {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(keyframes);
+    }
     
-    // 设置主背景强制样式
-    fixedBg.style.cssText = 'position: fixed !important; z-index: -999 !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; background: var(--global-bg) !important; animation: backgroundColorShift 20s ease-in-out infinite alternate !important;';
+    // 创建主背景容器
+    let bgContainer = document.getElementById('background-container');
+    if (!bgContainer) {
+        bgContainer = document.createElement('div');
+        bgContainer.id = 'background-container';
+        document.body.parentNode.insertBefore(bgContainer, document.body);
+        
+        // 设置容器样式
+        bgContainer.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1000;
+            pointer-events: none;
+        `;
+    }
     
-    // 创建背景元素
-    var pageBg = document.createElement('div');
-    pageBg.id = 'page-background';
-    document.body.parentNode.insertBefore(pageBg, document.body);
+    // 创建动态背景层
+    let dynamicBg = document.getElementById('dynamic-background');
+    if (!dynamicBg) {
+        dynamicBg = document.createElement('div');
+        dynamicBg.id = 'dynamic-background';
+        bgContainer.appendChild(dynamicBg);
+        
+        // 设置背景层样式
+        dynamicBg.style.cssText = `
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            bottom: -20px;
+            background-color: var(--global-bg, #070720);
+            animation: backgroundColorShift 20s ease-in-out infinite alternate;
+            z-index: -999;
+        `;
+    } else {
+        // 直接设置动画
+        dynamicBg.style.animation = 'backgroundColorShift 20s ease-in-out infinite alternate';
+    }
     
-    // 设置强制全屏样式
-    pageBg.style.cssText = 'position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important; width: 100vw !important; height: 100vh !important; z-index: -20 !important; background: var(--global-bg) !important; pointer-events: none !important; animation: backgroundColorShift 20s ease-in-out infinite alternate !important;';
+    // 创建渐变层
+    let gradientLayer = document.getElementById('gradient-layer');
+    if (!gradientLayer) {
+        gradientLayer = document.createElement('div');
+        gradientLayer.id = 'gradient-layer';
+        bgContainer.appendChild(gradientLayer);
+        
+        // 设置渐变层样式
+        gradientLayer.style.cssText = `
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 80% 10%, rgba(126, 87, 255, 0.15), transparent 40%),
+                radial-gradient(circle at 20% 30%, rgba(0, 220, 220, 0.15), transparent 40%),
+                radial-gradient(circle at 70% 65%, rgba(255, 79, 154, 0.15), transparent 50%),
+                radial-gradient(circle at 10% 85%, rgba(126, 87, 255, 0.15), transparent 30%);
+            background-size: 200% 200%;
+            animation: gradientFlow 15s ease-in-out infinite;
+            z-index: -998;
+            opacity: 0.8;
+        `;
+    } else {
+        // 直接设置动画
+        gradientLayer.style.animation = 'gradientFlow 15s ease-in-out infinite';
+    }
+    
+    // 创建光晕层
+    let glowLayer = document.getElementById('glow-layer');
+    if (!glowLayer) {
+        glowLayer = document.createElement('div');
+        glowLayer.id = 'glow-layer';
+        bgContainer.appendChild(glowLayer);
+        
+        // 设置光晕层样式
+        glowLayer.style.cssText = `
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(126, 87, 255, 0.05), transparent 70%);
+            animation: pulsate 10s ease-in-out infinite;
+            z-index: -997;
+        `;
+    } else {
+        // 直接设置动画
+        glowLayer.style.animation = 'pulsate 10s ease-in-out infinite';
+    }
+    
+    // 创建旋转图形层
+    let shapesLayer = document.getElementById('shapes-layer');
+    if (!shapesLayer) {
+        shapesLayer = document.createElement('div');
+        shapesLayer.id = 'shapes-layer';
+        bgContainer.appendChild(shapesLayer);
+        
+        // 设置旋转图形层样式
+        shapesLayer.style.cssText = `
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 30% 40%, rgba(126, 87, 255, 0.03) 0%, transparent 30%),
+                radial-gradient(circle at 70% 60%, rgba(0, 220, 220, 0.03) 0%, transparent 30%);
+            animation: rotate 60s linear infinite;
+            z-index: -996;
+        `;
+    } else {
+        // 直接设置动画
+        shapesLayer.style.animation = 'rotate 60s linear infinite';
+    }
     
     // 确保页面的最小高度为视口高度
     document.documentElement.style.minHeight = '100vh';
@@ -213,6 +357,9 @@ function createBackgroundElement() {
     
     // 设置背景处理事件
     setupBackgroundEvents();
+    
+    // 立即触发背景动画效果
+    enhanceBackgroundAnimation();
 }
 
 // 设置背景相关事件
@@ -408,181 +555,202 @@ function createStars() {
 
 // 确保列表元素应用了正确的样式
 function forceApplyListStyles() {
-    // 查找所有Box-row元素
-    const boxRows = document.querySelectorAll('.Box-row');
+    // 特别针对Gmeek博客系统的文章列表项
+    const gmeekSelectors = [
+        '.Box-row',                 // 标准GitHub风格
+        '#indexPostsList > div',    // Gmeek首页文章列表
+        'tr.post-item',             // Gmeek表格样式列表
+        '.post-list > div',         // 其他可能的文章列表容器
+        '.post',                    // 通用文章类
+        '.d-flex'                   // Gmeek常用的flex布局容器
+    ];
     
-    // 首先尝试通过注入一个专用样式表来强制应用样式
-    injectBoxRowStyles();
+    // 合并选择器为一个查询字符串
+    const allRowsSelector = gmeekSelectors.join(', ');
     
-    // 为每个列表项强制应用样式
-    boxRows.forEach(function(row, index) {
-        // 添加一个特殊的类，以便我们可以通过类选择器设置样式
-        row.classList.add('tech-box-row');
+    // 查找所有可能的列表项元素
+    const allRows = document.querySelectorAll(allRowsSelector);
+    
+    // 首先注入高优先级的全局样式
+    injectForcedListStyles();
+    
+    // 为所有可能的列表项应用样式
+    allRows.forEach(function(row, index) {
+        applyTechStyleToElement(row, index);
+    });
+    
+    // 特别处理文档中的第一个表格，通常是文章列表
+    const blogTables = document.querySelectorAll('table');
+    if (blogTables.length > 0) {
+        const firstTable = blogTables[0];
+        const rows = firstTable.querySelectorAll('tr');
+        rows.forEach(function(row, index) {
+            if (index > 0) { // 跳过表头
+                applyTechStyleToElement(row, index);
+            }
+        });
+    }
+    
+    // 处理标签容器
+    const tagContainers = document.querySelectorAll('.tag-container, .tags, .LabelGroup');
+    tagContainers.forEach(container => {
+        container.style.display = 'flex';
+        container.style.flexWrap = 'wrap';
+        container.style.gap = '5px';
+        container.style.margin = '5px 0';
+    });
+    
+    // 延迟处理，确保DOM更新后再次应用样式
+    setTimeout(function() {
+        // 特殊处理 - 查找页面上所有带链接的容器元素作为潜在的列表项
+        document.querySelectorAll('div > a[href], p > a[href]').forEach(function(link) {
+            // 检查是否是文章链接
+            if (link.href.includes('/post/')) {
+                const parent = link.parentElement;
+                if (parent && !parent.classList.contains('tech-box-row')) {
+                    applyTechStyleToElement(parent, Math.floor(Math.random() * 100));
+                }
+            }
+        });
+    }, 300);
+}
+
+// 对单个元素应用技术风格样式
+function applyTechStyleToElement(element, index) {
+    // 跳过已处理的元素
+    if (element.hasAttribute('data-tech-styled')) {
+        return;
+    }
+    
+    // 标记元素为已处理
+    element.setAttribute('data-tech-styled', 'true');
+    
+    // 添加类以便CSS选择器能找到
+    element.classList.add('tech-box-row');
+    
+    // 计算样式值
+    const isDarkMode = document.documentElement.getAttribute('data-color-mode') === 'dark';
+    const baseColor = isDarkMode ? 'rgba(18, 18, 42, 0.7)' : 'rgba(246, 250, 255, 0.8)';
+    const borderColor = isDarkMode ? 'rgba(126, 87, 255, 0.3)' : 'rgba(126, 87, 255, 0.2)';
+    
+    // 根据索引选择边框颜色
+    let sideColor = 'var(--primary-color, #7e57ff)';
+    if (index % 3 === 1) {
+        sideColor = 'var(--secondary-color, #00dcdc)';
+    } else if (index % 3 === 2) {
+        sideColor = 'var(--accent-color, #ff4f9a)';
+    }
+    
+    // 直接使用完整的cssText，完全覆盖原有样式
+    element.style.cssText = `
+        display: block !important;
+        position: relative !important;
+        overflow: hidden !important;
+        border-radius: 12px !important;
+        margin: 15px 0 !important;
+        background-color: ${baseColor} !important;
+        border: 1px solid ${borderColor} !important;
+        border-left: 3px solid ${sideColor} !important;
+        padding: 16px !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
+        backdrop-filter: blur(10px) !important;
+        -webkit-backdrop-filter: blur(10px) !important;
+        z-index: 1 !important;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+        transform: translateY(0) scale(1) !important;
+        width: auto !important;
+        max-width: 100% !important;
+    `;
+    
+    // 添加装饰元素
+    addDecorativeElementTo(element);
+    
+    // 直接设置鼠标悬停效果处理函数
+    element.onmouseenter = function() {
+        this.style.transform = 'translateY(-6px) scale(1.01)';
+        this.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.1)';
+        this.style.backgroundColor = isDarkMode ? 
+            'rgba(25, 25, 55, 0.85)' : 
+            'rgba(246, 250, 255, 0.95)';
+        this.style.borderColor = isDarkMode ? 
+            'rgba(126, 87, 255, 0.5)' : 
+            'rgba(126, 87, 255, 0.4)';
+        this.style.zIndex = '2';
         
-        // 检测行的父元素以确定是列表
-        const isInList = row.parentElement && 
-            (row.parentElement.classList.contains('Box') || 
-             row.parentElement.tagName === 'UL' || 
-             row.parentElement.tagName === 'OL' ||
-             row.parentElement.id === 'indexPostsList');
-             
-        if (!isInList) {
-            return; // 如果不是列表项，则跳过
+        // 查找装饰元素并激活它们
+        const glow = this.querySelector('.border-glow');
+        const leftBar = this.querySelector('.left-decoration-bar');
+        if (glow) glow.style.opacity = '1';
+        if (leftBar) leftBar.style.opacity = '1';
+    };
+    
+    element.onmouseleave = function() {
+        this.style.transform = 'translateY(0) scale(1)';
+        this.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.05)';
+        this.style.backgroundColor = baseColor;
+        this.style.borderColor = borderColor;
+        this.style.zIndex = '1';
+        
+        // 重置装饰元素
+        const glow = this.querySelector('.border-glow');
+        const leftBar = this.querySelector('.left-decoration-bar');
+        if (glow) glow.style.opacity = '0.8';
+        if (leftBar) leftBar.style.opacity = '0';
+    };
+}
+
+// 注入强制的列表样式表
+function injectForcedListStyles() {
+    // 检查是否已经存在
+    if (document.getElementById('forced-list-styles')) {
+        return;
+    }
+    
+    const styleSheet = document.createElement('style');
+    styleSheet.id = 'forced-list-styles';
+    styleSheet.innerHTML = `
+        /* 强制应用到所有列表相关元素 */
+        .tech-box-row,
+        #indexPostsList > div,
+        tr.post-item,
+        .Box-row,
+        .d-flex {
+            display: block !important;
+            position: relative !important;
+            overflow: hidden !important;
+            border-radius: 12px !important;
+            margin: 15px 0 !important;
+            padding: 16px !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            z-index: 1 !important;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
         }
         
-        // 确保元素有正确的样式 - 完全覆盖，不要追加
-        const isDarkMode = document.documentElement.getAttribute('data-color-mode') === 'dark';
-        const baseColor = isDarkMode ? 'rgba(18, 18, 42, 0.5)' : 'rgba(246, 250, 255, 0.6)';
-        const borderColor = isDarkMode ? 'rgba(126, 87, 255, 0.2)' : 'rgba(126, 87, 255, 0.15)';
-        
-        // 根据索引选择边框颜色
-        let sideColor = 'var(--primary-color)';
-        if (index % 3 === 1) {
-            sideColor = 'var(--secondary-color)';
-        } else if (index % 3 === 2) {
-            sideColor = 'var(--accent-color)';
+        /* 特别针对表格中的行元素 */
+        table tr {
+            display: block !important;
+            margin: 15px 0 !important;
+            border-radius: 12px !important;
         }
         
-        // 直接使用完整的cssText，不追加
-        row.style.cssText = `
-            display: block !important;
-            position: relative !important;
-            overflow: hidden !important;
+        /* 强制类优先级 */
+        [data-tech-styled="true"] {
             border-radius: 12px !important;
-            margin-bottom: 10px !important;
-            background-color: ${baseColor} !important;
-            border: 1px solid ${borderColor} !important;
-            border-left: 2px solid ${sideColor} !important;
-            padding: 16px !important;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03) !important;
-            backdrop-filter: blur(10px) !important;
-            -webkit-backdrop-filter: blur(10px) !important;
-            z-index: 1 !important;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
-            transform: translateY(0) scale(1) !important;
-        `;
+            overflow: hidden !important;
+            position: relative !important; 
+        }
         
-        // 清除任何可能覆盖我们设置的样式的属性
-        row.removeAttribute('class');
-        row.classList.add('tech-box-row');
-        
-        // 增强元素，添加伪元素装饰
-        addDecorativeElementTo(row);
-        
-        // 添加鼠标悬停和离开事件
-        row.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-6px) scale(1.01) !important';
-            this.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.08) !important';
-            this.style.backgroundColor = isDarkMode ? 
-                'rgba(25, 25, 55, 0.7) !important' : 
-                'rgba(246, 250, 255, 0.9) !important';
-            this.style.borderColor = isDarkMode ? 
-                'rgba(126, 87, 255, 0.4) !important' : 
-                'rgba(126, 87, 255, 0.3) !important';
-            this.style.zIndex = '2 !important';
-        });
-        
-        row.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0) scale(1) !important';
-            this.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.03) !important';
-            this.style.backgroundColor = baseColor + ' !important';
-            this.style.borderColor = borderColor + ' !important';
-            this.style.zIndex = '1 !important';
-        });
-        
-        // 处理列表项中的链接
-        const links = row.querySelectorAll('a');
-        links.forEach(link => {
-            link.style.cssText = `
-                position: relative !important;
-                display: inline-block !important;
-                z-index: 2 !important;
-                color: var(--primary-color) !important;
-                text-decoration: none !important;
-                transition: all 0.3s ease !important;
-            `;
-            
-            link.addEventListener('mouseenter', function() {
-                this.style.color = 'var(--secondary-color) !important';
-                this.style.transform = 'translateX(3px) !important';
-            });
-            
-            link.addEventListener('mouseleave', function() {
-                this.style.color = 'var(--primary-color) !important';
-                this.style.transform = 'translateX(0) !important';
-            });
-        });
-    });
+        /* 确保链接可点击 */
+        .tech-box-row a,
+        [data-tech-styled="true"] a {
+            position: relative !important;
+            z-index: 2 !important;
+        }
+    `;
     
-    // 添加专门的元素查找
-    const additionalBoxRows = document.querySelectorAll('#indexPostsList > .d-flex');
-    additionalBoxRows.forEach(function(row, index) {
-        // 直接应用样式
-        row.classList.add('tech-box-row');
-        const isDarkMode = document.documentElement.getAttribute('data-color-mode') === 'dark';
-        const baseColor = isDarkMode ? 'rgba(18, 18, 42, 0.5)' : 'rgba(246, 250, 255, 0.6)';
-        
-        // 为非标准列表项应用样式
-        row.style.cssText = `
-            display: block !important;
-            position: relative !important;
-            overflow: hidden !important;
-            border-radius: 12px !important;
-            margin-bottom: 10px !important;
-            background-color: ${baseColor} !important;
-            border: 1px solid rgba(126, 87, 255, 0.15) !important;
-            padding: 16px !important;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03) !important;
-            backdrop-filter: blur(10px) !important;
-            -webkit-backdrop-filter: blur(10px) !important;
-            z-index: 1 !important;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
-        `;
-        
-        // 添加装饰元素
-        addDecorativeElementTo(row);
-    });
-    
-    // 处理Gmeek特定的博客列表项
-    const postItems = document.querySelectorAll('.post-item, .post, .post-card, [id^="post-"]');
-    postItems.forEach(function(item, index) {
-        // 添加特殊类
-        item.classList.add('tech-box-row');
-        
-        // 应用样式
-        const isDarkMode = document.documentElement.getAttribute('data-color-mode') === 'dark';
-        const baseColor = isDarkMode ? 'rgba(18, 18, 42, 0.5)' : 'rgba(246, 250, 255, 0.6)';
-        
-        item.style.cssText = `
-            display: block !important;
-            position: relative !important;
-            overflow: hidden !important;
-            border-radius: 12px !important;
-            margin-bottom: 10px !important;
-            background-color: ${baseColor} !important;
-            border: 1px solid rgba(126, 87, 255, 0.15) !important;
-            padding: 16px !important;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03) !important;
-            backdrop-filter: blur(10px) !important;
-            -webkit-backdrop-filter: blur(10px) !important;
-            z-index: 1 !important;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
-        `;
-        
-        // 添加悬浮效果
-        item.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-6px) scale(1.01)';
-            this.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.08)';
-        });
-        
-        item.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0) scale(1)';
-            this.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.03)';
-        });
-        
-        // 添加装饰元素
-        addDecorativeElementTo(item);
-    });
+    document.head.appendChild(styleSheet);
 }
 
 // 添加装饰性元素
@@ -655,80 +823,155 @@ function addDecorativeElementTo(element) {
     });
 }
 
-// 注入专用的Box-row样式表
-function injectBoxRowStyles() {
-    // 检查是否已经存在专用样式表
-    if (document.getElementById('tech-box-row-styles')) {
+// 为Gmeek博客系统特定添加一个直接的样式注入函数
+function injectGmeekSpecificStyles() {
+    // 检查是否已存在
+    if (document.getElementById('gmeek-specific-styles')) {
         return;
     }
     
-    // 创建样式表
-    const styleSheet = document.createElement('style');
-    styleSheet.id = 'tech-box-row-styles';
+    const styleEl = document.createElement('style');
+    styleEl.id = 'gmeek-specific-styles';
     
-    // 设置样式内容
-    const isDarkMode = document.documentElement.getAttribute('data-color-mode') === 'dark';
-    const bgcolor = isDarkMode ? 'rgba(18, 18, 42, 0.5)' : 'rgba(246, 250, 255, 0.6)';
-    const borderColor = isDarkMode ? 'rgba(126, 87, 255, 0.2)' : 'rgba(126, 87, 255, 0.15)';
-    const hoverBgColor = isDarkMode ? 'rgba(25, 25, 55, 0.7)' : 'rgba(246, 250, 255, 0.9)';
-    const hoverBorderColor = isDarkMode ? 'rgba(126, 87, 255, 0.4)' : 'rgba(126, 87, 255, 0.3)';
-    
-    styleSheet.textContent = `
-        .Box-row, body .Box-row, html .Box-row, #content .Box-row, .tech-box-row {
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
-            position: relative !important;
-            overflow: hidden !important;
+    // 针对Gmeek特定的HTML结构定义强制样式
+    styleEl.textContent = `
+        /* 直接针对博客首页文章列表 */
+        body > div.container-lg > div.container-lg > div.Box,
+        body > div.container-lg > div.container-lg > div > div,
+        #blog-container > div,
+        main > div > div {
             border-radius: 12px !important;
-            margin-bottom: 10px !important;
-            background-color: ${bgcolor} !important;
-            border: 1px solid ${borderColor} !important;
-            padding: 16px !important;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03) !important;
+            overflow: hidden !important;
+            margin-bottom: 16px !important;
+            background-color: rgba(255, 255, 255, 0.7) !important;
             backdrop-filter: blur(10px) !important;
             -webkit-backdrop-filter: blur(10px) !important;
-            z-index: 1 !important;
+            border: 1px solid rgba(126, 87, 255, 0.2) !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
         }
         
-        .Box-row:hover, body .Box-row:hover, html .Box-row:hover, #content .Box-row:hover, .tech-box-row:hover {
-            transform: translateY(-6px) scale(1.01) !important;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08) !important;
-            background-color: ${hoverBgColor} !important;
-            border-color: ${hoverBorderColor} !important;
-            z-index: 2 !important;
+        /* 暗色模式下的样式 */
+        html[data-color-mode="dark"] body > div.container-lg > div.container-lg > div.Box,
+        html[data-color-mode="dark"] body > div.container-lg > div.container-lg > div > div,
+        html[data-color-mode="dark"] #blog-container > div,
+        html[data-color-mode="dark"] main > div > div {
+            background-color: rgba(18, 18, 42, 0.7) !important;
+            border: 1px solid rgba(126, 87, 255, 0.3) !important;
         }
         
-        @keyframes borderGlow {
-            0% { background-position: 0% 50%; filter: blur(0px); }
-            50% { background-position: 100% 50%; filter: blur(1px); }
-            100% { background-position: 0% 50%; filter: blur(0px); }
+        /* 悬停效果 */
+        body > div.container-lg > div.container-lg > div.Box:hover,
+        body > div.container-lg > div.container-lg > div > div:hover,
+        #blog-container > div:hover,
+        main > div > div:hover {
+            transform: translateY(-5px) !important;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1) !important;
+        }
+        
+        /* 特定针对文章表格和列表 */
+        table, .Box {
+            border-radius: 12px !important;
+            overflow: hidden !important;
+            border: 1px solid rgba(126, 87, 255, 0.2) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+        }
+        
+        /* 表格行样式 */
+        tr {
+            transition: all 0.3s ease !important;
+        }
+        
+        tr:hover {
+            background-color: rgba(126, 87, 255, 0.1) !important;
+        }
+        
+        /* 确保所有文章项目都有正确样式 */
+        .d-flex, #indexPostsList > div, .Box-row {
+            border-radius: 12px !important;
+            padding: 16px !important;
+            margin-bottom: 12px !important;
+            background-color: rgba(246, 250, 255, 0.7) !important;
+            border: 1px solid rgba(126, 87, 255, 0.2) !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+        }
+        
+        html[data-color-mode="dark"] .d-flex,
+        html[data-color-mode="dark"] #indexPostsList > div,
+        html[data-color-mode="dark"] .Box-row {
+            background-color: rgba(18, 18, 42, 0.7) !important;
+        }
+        
+        .d-flex:hover, #indexPostsList > div:hover, .Box-row:hover {
+            transform: translateY(-5px) !important;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1) !important;
+        }
+        
+        /* 修复标签样式 */
+        .Label {
+            border-radius: 12px !important;
+            padding: 4px 8px !important;
+            margin: 2px !important;
+            display: inline-block !important;
         }
     `;
     
-    // 添加到文档
-    document.head.appendChild(styleSheet);
+    document.head.appendChild(styleEl);
 }
 
-// 添加立即执行的初始化函数
+// 立即执行初始化
 (function() {
-    // 立即添加全局背景
-    addGlobalBackground();
+    // 立即添加全局背景和增强动画
+    createBackgroundElement();
+    enhanceBackgroundAnimation();
     
-    // 立即增强背景动画
-    setTimeout(enhanceBackgroundAnimation, 0);
+    // 直接注入Gmeek特定样式
+    injectGmeekSpecificStyles();
+    
+    // 立即应用列表样式(在元素可用时)
+    if (document.readyState === 'interactive' || document.readyState === 'complete') {
+        forceApplyListStyles();
+        injectGmeekSpecificStyles(); // 再次尝试注入
+        createStars(); // 创建星星效果
+    }
+    
+    // 等待DOM加载完成后再次应用样式
+    document.addEventListener('DOMContentLoaded', function() {
+        forceApplyListStyles();
+        injectGmeekSpecificStyles(); // 确保样式已注入
+        enhanceBackgroundAnimation();
+        createStars();
+        
+        // 多次尝试应用样式，确保在各种情况下都能生效
+        setTimeout(forceApplyListStyles, 100);
+        setTimeout(injectGmeekSpecificStyles, 100);
+        setTimeout(forceApplyListStyles, 500);
+        setTimeout(injectGmeekSpecificStyles, 500);
+        
+        // MutationObserver监听DOM变化，以应对动态加载的内容
+        if (typeof MutationObserver !== 'undefined') {
+            const observer = new MutationObserver(function(mutations) {
+                let needsUpdate = false;
+                
+                mutations.forEach(function(mutation) {
+                    if (mutation.addedNodes.length > 0) {
+                        needsUpdate = true;
+                    }
+                });
+                
+                if (needsUpdate) {
+                    forceApplyListStyles();
+                    injectGmeekSpecificStyles();
+                }
+            });
+            
+            // 开始观察文档变化
+            observer.observe(document.documentElement, {
+                childList: true,
+                subtree: true
+            });
+        }
+    });
 })();
-
-// 立即添加全局背景
-function addGlobalBackground() {
-    var html = document.documentElement;
-    var body = document.body;
-    
-    // 确保HTML和BODY有正确的最小高度和背景色
-    html.style.cssText += 'min-height: 100vh !important; background-color: var(--global-bg) !important; height: 100% !important;';
-    body.style.cssText += 'min-height: 100vh !important; background-color: var(--global-bg) !important; height: 100% !important;';
-    
-    // 添加固定的背景元素
-    var background = document.createElement('div');
-    background.id = 'fixed-background';
-    background.style.cssText = 'position: fixed !important; z-index: -999 !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; background-color: var(--global-bg) !important; animation: backgroundColorShift 20s ease-in-out infinite alternate !important;';
-    document.body.parentNode.insertBefore(background, document.body);
-}

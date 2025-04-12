@@ -29,7 +29,7 @@
     "style": "<link href='https://blog.mymaskking.dpdns.org/css/blog.css' rel='stylesheet' />",
     "script": "",
     "head": "<meta name='viewport' content='width=device-width, initial-scale=1.0'/>",
-    "allHead": "<script src='https://blog.mymaskking.dpdns.org/js/blog.css'></script>",
+    "allHead": "<script src='https://blog.mymaskking.dpdns.org/js/blog.js'></script>",
     "indexStyle": "<link href='https://blog.mymaskking.dpdns.org/css/blog.css rel='stylesheet' />",
     "indexScript": "",
     "showPostSource": 1,

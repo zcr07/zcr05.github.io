@@ -81,48 +81,14 @@ document.addEventListener('DOMContentLoaded', function() {
         card.classList.add('post-card');
     });
     
-    // 修复标签点击功能
-    // 方法1：直接修复object内部链接
-    const objectLinks = document.querySelectorAll('.LabelName object');
-    objectLinks.forEach(obj => {
-        // 确保object内部有效
-        if (obj && obj.contentDocument) {
-            const links = obj.contentDocument.querySelectorAll('a');
-            links.forEach(link => {
-                link.style.display = 'block';
-                link.style.width = '100%';
-                link.style.height = '100%';
-            });
-        }
-    });
+    // 主题切换
+    setupThemeToggle();
     
-    // 方法2：创建新的直接链接替换object
-    const labelContainers = document.querySelectorAll('.LabelName');
-    labelContainers.forEach(container => {
-        const object = container.querySelector('object');
-        if (object && object.querySelector('a')) {
-            const link = object.querySelector('a');
-            const href = link.getAttribute('href');
-            const text = link.textContent;
-            
-            const newLink = document.createElement('a');
-            newLink.setAttribute('href', href);
-            newLink.style.color = '#fff';
-            newLink.style.display = 'block';
-            newLink.style.width = '100%';
-            newLink.style.height = '100%';
-            newLink.style.textDecoration = 'none';
-            newLink.textContent = text;
-            
-            // 保留原有样式
-            const bgColor = container.style.backgroundColor;
-            
-            // 替换object为直接链接
-            container.innerHTML = '';
-            container.appendChild(newLink);
-            container.style.backgroundColor = bgColor;
-        }
-    });
+    // 修复标签点击问题
+    fixTagLabels();
+    
+    // 初始化搜索功能
+    initSearch();
     
     // 链接点击动画 - 排除标签链接和锚点链接
     const links = document.querySelectorAll('a:not(.LabelName a):not([href^="tag.html"]):not([href^="#"])');
@@ -238,14 +204,198 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// 添加CSS变量
-const cssStyle = document.createElement('style');
-cssStyle.textContent = `
-    .theme-transition {
-        transition: background 0.5s ease, color 0.5s ease;
+/**
+ * 修复标签点击功能
+ */
+function fixTagLabels() {
+    try {
+        // 处理首页和文章页的标签
+        const labelContainers = document.querySelectorAll('.LabelName');
+        
+        if (labelContainers && labelContainers.length > 0) {
+            labelContainers.forEach(container => {
+                // 避免重复处理
+                if (container.getAttribute('data-fixed') === 'true') {
+                    return;
+                }
+                
+                let targetLink = '';
+                let labelText = '';
+                
+                // 检查是否有object标签
+                const objectTag = container.querySelector('object');
+                if (objectTag) {
+                    try {
+                        // 从object中获取链接和文本
+                        const linkInObject = objectTag.querySelector('a');
+                        if (linkInObject) {
+                            targetLink = linkInObject.getAttribute('href');
+                            labelText = linkInObject.textContent.trim();
+                        }
+                    } catch (e) {
+                        console.warn('无法获取object中的链接:', e);
+                    }
+                } else {
+                    // 直接从a标签获取
+                    const directLink = container.querySelector('a');
+                    if (directLink) {
+                        targetLink = directLink.getAttribute('href');
+                        labelText = directLink.textContent.trim();
+                    }
+                }
+                
+                // 如果成功获取了链接和文本，替换容器内容
+                if (targetLink && labelText) {
+                    // 保存原始背景色
+                    const originalStyle = window.getComputedStyle(container);
+                    const bgColor = originalStyle.backgroundColor;
+                    
+                    // 创建新的链接元素
+                    container.innerHTML = `<a href="${targetLink}">${labelText}</a>`;
+                    container.style.backgroundColor = bgColor;
+                    container.setAttribute('data-fixed', 'true');
+                }
+            });
+        }
+        
+        // 处理标签页面的标签按钮
+        const tagButtons = document.querySelectorAll('#taglabel .Label');
+        if (tagButtons && tagButtons.length > 0) {
+            tagButtons.forEach(button => {
+                // 避免重复处理
+                if (button.getAttribute('data-fixed') === 'true') {
+                    return;
+                }
+                
+                button.addEventListener('click', function(e) {
+                    const tagName = this.textContent.trim();
+                    if (tagName) {
+                        window.location.href = `/tags/${tagName.toLowerCase()}.html`;
+                    }
+                });
+                
+                button.setAttribute('data-fixed', 'true');
+                button.style.cursor = 'pointer';
+            });
+        }
+    } catch (err) {
+        console.error('修复标签点击时出错:', err);
     }
-`;
-document.head.appendChild(cssStyle);
+}
+
+/**
+ * 设置主题切换
+ */
+function setupThemeToggle() {
+    const themeToggle = document.getElementById('theme-toggle');
+    if (!themeToggle) return;
+    
+    // 检查本地存储中的主题设置
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-color-mode', savedTheme);
+    
+    // 更新主题切换按钮的状态
+    updateThemeToggleState(savedTheme);
+    
+    // 添加点击事件
+    themeToggle.addEventListener('click', function() {
+        const currentTheme = document.documentElement.getAttribute('data-color-mode');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        
+        // 设置新主题
+        document.documentElement.setAttribute('data-color-mode', newTheme);
+        localStorage.setItem('theme', newTheme);
+        
+        // 更新主题切换按钮的状态
+        updateThemeToggleState(newTheme);
+    });
+}
+
+/**
+ * 更新主题切换按钮的状态
+ */
+function updateThemeToggleState(theme) {
+    const themeToggle = document.getElementById('theme-toggle');
+    if (!themeToggle) return;
+    
+    if (theme === 'dark') {
+        themeToggle.innerHTML = '<i class="fa fa-sun-o"></i>';
+        themeToggle.title = '切换到亮色模式';
+    } else {
+        themeToggle.innerHTML = '<i class="fa fa-moon-o"></i>';
+        themeToggle.title = '切换到暗色模式';
+    }
+}
+
+/**
+ * 初始化搜索功能
+ */
+function initSearch() {
+    const searchInput = document.getElementById('search-input');
+    const searchResults = document.getElementById('search-results');
+    
+    if (!searchInput || !searchResults) return;
+    
+    searchInput.addEventListener('input', function() {
+        const query = this.value.trim().toLowerCase();
+        
+        if (query.length < 2) {
+            searchResults.style.display = 'none';
+            return;
+        }
+        
+        // 这里可以实现搜索逻辑
+        // 示例: 从posts.json加载文章数据并搜索
+        fetch('/static/data/posts.json')
+            .then(response => response.json())
+            .then(posts => {
+                const results = posts.filter(post => 
+                    post.title.toLowerCase().includes(query) || 
+                    post.summary.toLowerCase().includes(query) ||
+                    post.tags.some(tag => tag.toLowerCase().includes(query))
+                );
+                
+                displaySearchResults(results, query);
+            })
+            .catch(err => {
+                console.error('搜索时出错:', err);
+                searchResults.innerHTML = '<p>搜索时发生错误</p>';
+                searchResults.style.display = 'block';
+            });
+    });
+    
+    // 点击其他区域关闭搜索结果
+    document.addEventListener('click', function(e) {
+        if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+            searchResults.style.display = 'none';
+        }
+    });
+}
+
+/**
+ * 显示搜索结果
+ */
+function displaySearchResults(results, query) {
+    const searchResults = document.getElementById('search-results');
+    
+    if (results.length === 0) {
+        searchResults.innerHTML = `<p>未找到与"${query}"相关的结果</p>`;
+    } else {
+        let html = '<ul>';
+        results.slice(0, 5).forEach(post => {
+            html += `<li><a href="${post.url}">${post.title}</a></li>`;
+        });
+        html += '</ul>';
+        
+        if (results.length > 5) {
+            html += `<p>共找到 ${results.length} 个结果，显示前 5 个</p>`;
+        }
+        
+        searchResults.innerHTML = html;
+    }
+    
+    searchResults.style.display = 'block';
+}
 
 // 备用访问量统计函数，仅在官方脚本加载失败时使用
 function loadBackupVercountScript() {

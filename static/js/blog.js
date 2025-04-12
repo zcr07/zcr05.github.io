@@ -105,10 +105,8 @@ function handleScrollForBackground() {
     // 基于滚动位置调整背景效果
     const fixedBg = document.getElementById('fixed-background');
     if (fixedBg) {
-        // 随滚动轻微改变背景色调
-        fixedBg.style.filter = `hue-rotate(${scrollPercent * 15}deg)`;
-        // 背景微小位移效果
-        fixedBg.style.transform = `translateY(${scrollPercent * -10}px)`;
+        // 轻微调整透明度
+        fixedBg.style.opacity = 1 - (scrollPercent * 0.1);
     }
 }
 
@@ -128,7 +126,7 @@ function createSingleBackground() {
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: var(--global-bg, #070720);
+        background-color: var(--global-bg, #e6e0ff); /* 淡紫色背景 */
         overflow: hidden !important;
         pointer-events: none;
     `;
@@ -143,11 +141,7 @@ function createSingleBackground() {
             left: 0;
             width: 100%;
             height: 100%;
-            background: 
-                radial-gradient(circle at 80% 10%, rgba(126, 87, 255, 0.15), transparent 40%),
-                radial-gradient(circle at 20% 30%, rgba(0, 220, 220, 0.15), transparent 40%),
-                radial-gradient(circle at 70% 65%, rgba(255, 79, 154, 0.15), transparent 50%),
-                radial-gradient(circle at 10% 85%, rgba(126, 87, 255, 0.15), transparent 30%);
+            background: linear-gradient(135deg, rgba(230, 224, 255, 0.9), rgba(210, 200, 255, 0.7)); /* 淡紫色渐变 */
             z-index: -998;
             pointer-events: none;
         }
@@ -157,7 +151,7 @@ function createSingleBackground() {
     document.body.parentNode.insertBefore(fixedBg, document.body);
 }
 
-// 确保列表元素应用了正确的样式
+// 确保列表元素应用了正确的样式，但不修改标签样式
 function forceApplyListStyles() {
     // 特别针对Gmeek博客系统的文章列表项
     const gmeekSelectors = [
@@ -180,14 +174,7 @@ function forceApplyListStyles() {
         applyListHoverStyle(row);
     });
     
-    // 处理标签容器
-    const tagContainers = document.querySelectorAll('.tag-container, .tags, .LabelGroup');
-    tagContainers.forEach(container => {
-        container.style.display = 'flex';
-        container.style.flexWrap = 'wrap';
-        container.style.gap = '5px';
-        container.style.margin = '5px 0';
-    });
+    // 不再对标签容器应用自定义样式，保留官方样式
 }
 
 // 为单个元素应用悬停样式

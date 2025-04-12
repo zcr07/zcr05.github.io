@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://blog.mymaskking.dpdns.org/css/blog.css' rel='stylesheet' />
+    <script src='https://blog.mymaskking.dpdns.org/js/blog.js'></script>
+    <link rel="icon" href="https://avatars.githubusercontent.com/u/41733240?v=4">
+<meta name="description" content="<html>
+<body>
+<!--StartFragment--><html><head></head><body><div ksdocclipboard='ksDocClipboardId:'{86603348-d321-018e-93e9-cc3185758c7c-0}';from:'outline';priorityFormat:'';mimetypes:'text/html;text/plain';dataType:'';srcRange:'';ext:'e30=''><div finger='kso-wps-otl' source='387283028536'><h1 backgroundcolor='0' class='otl-heading' level='1' listlevel='0' style='text-indent:0em;padding-left:0em;text-align:left;' textalign='left'><span>第二章：cloudflare做网络穿透</span></h1><div class='sub-doc' extraattrs='{}' type='HighlightBlock'><div class='sub-doc-object' nodename='HighlightBlock' style='background-color: #FAF1E6;border-color: #FEC794;'><div class='sub-doc-layout-object' classname='left-content-box'><div class='sub-doc-tile' config='{}' info='{}'><div canbedelete='true' class='readonly-inline-container' nodename='HighlightBlock' static='true' traversable='true'><span class='otl-emoji' emoji='⭐' emoji_name='Star' emoji_type='base' unicode='U+2B50'>⭐</span></div></div></div><div class='sub-doc-layout-object' classname='right-content-box'><div class='sub-doc-tile' config='{}' info='{}'><ol><li backgroundcolor='0' class='otl-paragraph' listformat='{0}.' listlevel='0' listtype='ordered' listvalue='aribicNum' style='padding-left:1.4em;text-indent:-1.4em;text-align:left;' textalign='left'><span>下载cloudflare的安装包</span></li></ol></div><div class='sub-doc-tile' config='{}' info='{}'><p backgroundcolor='0' class='otl-paragraph' listlevel='0' style='text-align:left;' textalign='left'><code style='font-size:16px;'><span>curl -L </span></code><a class='hyperlink' href='https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64' hreftitle='https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64' sync2href='true' target='_Blank'><code style='font-size:16px;'><span>https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64</span></code></a><code style='font-size:16px;'><span> -o /usr/local/bin/cloudflared</span></code></p></div><div class='sub-doc-tile' config='{}' info='{}'><ol><li backgroundcolor='0' class='otl-paragraph' listformat='{0}.' listlevel='0' listtype='ordered' listvalue='aribicNum' style='padding-left:1.4em;text-indent:-1.4em;text-align:left;' textalign='left'><span>赋予执行权限</span></li></ol></div><div class='sub-doc-tile' config='{}' info='{}'><p backgroundcolor='0' class='otl-paragraph' listlevel='0' style='text-align:left;' textalign='left'><code style='font-size:16px;'><span>chmod +x /usr/local/bin/cloudflared</span></code></p></div><div class='sub-doc-tile' config='{}' info='{}'><ol><li backgroundcolor='0' class='otl-paragraph' listformat='{0}.' listlevel='0' listtype='ordered' listvalue='aribicNum' style='padding-left:1.4em;text-indent:-1.4em;text-align:left;' textalign='left'><span>确认是否安装成功</span></li></ol></div><div class='sub-doc-tile' config='{}' info='{}'><p backgroundcolor='0' class='otl-paragraph' style='text-align:left;' textalign='left'><code style='font-size:16px;'><span>cloudflared version</span></code></p></div><div class='sub-doc-tile' config='{}' info='{}'><ol><li backgroundcolor='0' class='otl-paragraph' listformat='{0}.' listlevel='0' listtype='ordered' listvalue='aribicNum' style='padding-left:1.4em;text-indent:-1.4em;text-align:left;' textalign='left'><span>执行</span></li></ol></div><div class='sub-doc-tile' config='{}' info='{}'><p backgroundcolor='0' class='otl-paragraph' style='text-align:left;' textalign='left'><code style='font-size:16px;'><span>cloudflared service install 你的密钥</span></code></p></div><div class='sub-doc-tile' config='{}' info='{}'><p backgroundcolor='0' class='otl-paragraph' style='text-align:left;' textalign='left'></p></div><div class='sub-doc-tile' config='{}' info='{}'><p backgroundcolor='0' class='otl-paragraph' style='text-align:left;' textalign='left'><span class='color_font' style='color:#C21C13;font-weight:bold;'><strong><span style='color:#C21C13;font-weight:bold;'>卸载命令</span></strong></span><span>：</span><code style='font-size:16px;'><span class='color_font' style='color:#C21C13;'><span style='color:#C21C13;'>cloudflared service uninstall</span></span></code></p></div><div class='sub-doc-tile' config='{}' info='{}'><p backgroundcolor='0' class='otl-paragraph' style='text-align:left;' textalign='left'><span class='color_font' style='-webkit-background-clip:text;-webkit-box-decoration-break:clone;-webkit-text-fill-color:transparent;background-clip:text;background-image:linear-gradient(90deg,#0E52D4,#A639D7);box-decoration-break:clone;color:#0E52D4;font-size:18px;font-weight:bold;'><strong><span style='-webkit-background-clip:text;-webkit-box-decoration-break:clone;-webkit-text-fill-color:transparent;background-clip:text;background-image:linear-gradient(90deg,#0E52D4,#A639D7);box-decoration-break:clone;color:#0E52D4;font-size:18px;font-weight:bold;'>Docker版看这里</span></strong></span></p></div><div class='sub-doc-tile' config='{}' info='{}'><p backgroundcolor='0' class='otl-paragraph' style='text-align:left;' textalign='left'><span class='color_font' style='background-color:#FBF5B3;font-size:20px;font-weight:bold;mso-highlight:#FBF5B3;text-decoration:underline;'><strong><u><span style='background-color:#FBF5B3;font-size:20px;font-weight:bold;mso-highlight:#FBF5B3;text-decoration:underline;'>参考这个链接</span></u></strong></span><span>：</span><a class='hyperlink' href='https://sspai.com/post/79278' hreftitle='点我' sync2href='false' target='_Blank'><span>点我</span></a></p></div><div class='sub-doc-tile' config='{}' info='{}'><p backgroundcolor='0' class='otl-paragraph' style='text-align:left;' textalign='left'><strong><span style='font-weight:bold;'>docker的附加参数：</span></strong></p></div><div class='sub-doc-tile' config='{}' info='{}'><ul><li backgroundcolor='0' class='otl-paragraph' listlevel='0' listtype='bullet' listvalue='dot' style='padding-left:1.4em;text-indent:-1.4em;text-align:left;' textalign='left'><span>--link alist:alist #容器间相互通信</span></li></ul></div><div class='sub-doc-tile' config='{}' info='{}'><ul><li backgroundcolor='0' class='otl-paragraph' listlevel='0' listtype='bullet' listvalue='dot' style='padding-left:1.4em;text-indent:-1.4em;text-align:left;' textalign='left'><span>--network host #容器内的应用就能直接访问宿主机的 localhost</span></li></ul></div><div class='sub-doc-tile' config='{}' info='{}'><p backgroundcolor='0' class='otl-paragraph' style='text-align:left;' textalign='left'><code style='font-size:18px;'><span style='font-size:18px;'>docker run --link alist:alist cloudflare/cloudflared:latest tunnel --no-autoupdate run --token 你的token</span></code></p></div></div></div></div><p backgroundcolor='0' class='otl-paragraph' style='text-align:left;' textalign='left'><span>已废弃部分</span></p><div class='sub-doc' extraattrs='{}' type='HighlightBlock'><div class='sub-doc-object' nodename='HighlightBlock' style='background-color: #EBEBEB;border-color: #C5C5C5;'><div class='sub-doc-layout-object' classname='left-content-box'><div class='sub-doc-tile' config='{}' info='{}'><div canbedelete='true' class='readonly-inline-container' nodename='HighlightBlock' static='true' traversable='true'><span class='otl-emoji' emoji='⭐' emoji_name='Star' emoji_type='base' unicode='U+2B50'>⭐</span></div></div></div><div class='sub-doc-layout-object' classname='right-content-box'><div class='sub-doc-tile' config='{}' info='{}'><ol><li backgroundcolor='9' class='otl-paragraph' listformat='{0}.' listlevel='0' listtype='ordered' listvalue='aribicNum' style='padding-left:1.4em;text-indent:-1.4em;text-align:left;background-color:#F2F2F2;
+      border-radius: 3px;
+      box-shadow: -2px 0 #F2F2F2, 2px 0 #F2F2F2;
+      --current-bg-color: #F2F2F2;' textalign='left'><s><span style='text-decoration:line-through;'>下载cloudflare的ubuntu文件</span></s></li></ol></div><div class='sub-doc-tile' config='{}' info='{}'><p backgroundcolor='0' class='otl-paragraph' listlevel='0' style='text-align:left;' textalign='left'><code style='font-size:16px;'><s><span style='text-decoration:line-through;'>curl -L --output cloudflared.deb </span></s></code><a class='hyperlink' href='https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb' hreftitle='https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb' sync2href='true' target='_Blank'><code style='font-size:16px;'><s><span style='text-decoration:line-through;'>https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb</span></s></code></a></p></div><div class='sub-doc-tile' config='{}' info='{}'><p backgroundcolor='0' class='otl-paragraph' listlevel='0' style='text-align:left;' textalign='left'><span class='color_font' style='color:#C21C13;text-decoration:line-through underline;'><s><u><span style='color:#C21C13;text-decoration:line-through underline;'>注意：这里curl可能会碰到https无法下载的问题，建议把文件放到http（</span></u></s></span><span class='color_font' style='color:#C21C13;font-weight:bold;text-decoration:line-through underline;'><strong><s><u><span style='color:#C21C13;font-weight:bold;text-decoration:line-through underline;'>AList</span></u></s></strong></span><span class='color_font' style='color:#C21C13;text-decoration:line-through underline;'><s><u><span style='color:#C21C13;text-decoration:line-through underline;'>）下面</span></u></s></span></p></div><div class='sub-doc-tile' config='{}' info='{}'><ol><li backgroundcolor='0' class='otl-paragraph' listformat='{0}.' listlevel='0' listtype='ordered' listvalue='aribicNum' style='padding-left:1.4em;text-indent:-1.4em;text-align:left;' textalign='left'><s><span style='text-decoration:line-through;'>sudo dpkg -i cloudflared.deb </span></s></li></ol></div><div class='sub-doc-tile' config='{}' info='{}'><p backgroundcolor='0' class='otl-paragraph' listlevel='0' style='text-align:left;' textalign='left'><span class='color_font' style='color:#C21C13;text-decoration:line-through underline;'><s><u><span style='color:#C21C13;text-decoration:line-through underline;'>注意：这里可能会报错package architecture (amd64) does not match system (arm64)</span></u></s></span></p></div><div class='sub-doc-tile' config='{}' info='{}'><p backgroundcolor='0' class='otl-paragraph' listlevel='0' style='text-align:left;' textalign='left'><span class='color_font' style='color:#C21C13;text-decoration:line-through;'><s><span style='color:#C21C13;text-decoration:line-through;'>解决：sudo dpkg -i --force-architecture cloudflared.deb （</span></s></span><a class='hyperlink' href='https://github.com/kubernetes/minikube/issues/10001' hreftitle='点击参考' sync2href='false' target='_Blank'><span class='color_font' style='color:#C21C13;text-decoration:line-through;'><s><span style='color:#C21C13;text-decoration:line-through;'>点击参考</span></s></span></a><span class='color_font' style='color:#C21C13;text-decoration:line-through;'><s><span style='color:#C21C13;text-decoration:line-through;'>）</span></s></span></p></div><div class='sub-doc-tile' config='{}' info='{}'><ol><li backgroundcolor='0' class='otl-paragraph' listformat='{0}.' listlevel='0' listtype='ordered' listvalue='aribicNum' style='padding-left:1.4em;text-indent:-1.4em;text-align:left;' textalign='left'><s><span style='text-decoration:line-through;'>sudo cloudflared service install 你的密钥</span></s></li></ol></div><div class='sub-doc-tile' config='{}' info='{}'><p backgroundcolor='0' class='otl-paragraph' listlevel='0' style='text-align:left;' textalign='left'><span class='color_font' style='color:#C21C13;text-decoration:line-through;'><s><span style='color:#C21C13;text-decoration:line-through;'>成功会显示：</span></s></span><code style='font-size:16px;'><span class='color_font' style='color:#C21C13;text-decoration:line-through;'><s><span style='color:#C21C13;text-decoration:line-through;'>Illegal instruction</span></s></span></code></p></div></div></div></div><h2 backgroundcolor='0' class='otl-heading' level='2' style='text-indent:0em;padding-left:0em;text-align:left;' textalign='left'><span>网页版SSH内网穿透</span></h2><div class='sub-doc' extraattrs='{}' type='HighlightBlock'><div class='sub-doc-object' nodename='HighlightBlock' style='background-color: #FAF1E6;border-color: #FEC794;'><div class='sub-doc-layout-object' classname='left-content-box'><div class='sub-doc-tile' config='{}' info='{}'><div canbedelete='true' class='readonly-inline-container' nodename='HighlightBlock' static='true' traversable='true'><span class='otl-emoji' emoji='⭐' emoji_name='Star' emoji_type='base' unicode='U+2B50'>⭐</span></div></div></div><div class='sub-doc-layout-object' classname='right-content-box'><div class='sub-doc-tile' config='{}' info='{}'><ol><li backgroundcolor='0' class='otl-paragraph' listlevel='0' listtype='ordered' listvalue='aribicNum' style='padding-left:1.4em;text-indent:-1.4em;text-align:left;' textalign='left'><strong><span style='font-weight:bold;'>将服务器连接到 Cloudflare：</span></strong></li></ol></div><div class='sub-doc-tile' config='{}' info='{}'><ul><ul><li backgroundcolor='0' class='otl-paragraph' listlevel='1' listtype='bullet' listvalue='circle' style='padding-left:2.8em;text-indent:-1.4em;text-align:left;' textalign='left'><strong><span style='font-weight:bold;'>创建 Cloudflare Tunnel：</span></strong><span> 登录到 Cloudflare Zero Trust 仪表板，导航至“Networks” &gt; “Tunnels”，点击“Create a tunnel”。">
+<meta property="og:title" content="cloudflare做网络穿透(安卓手机安装PC或Linux(含内网穿透))">
+<meta property="og:description" content="<html>
+<body>
+<!--StartFragment--><html><head></head><body><div ksdocclipboard='ksDocClipboardId:'{86603348-d321-018e-93e9-cc3185758c7c-0}';from:'outline';priorityFormat:'';mimetypes:'text/html;text/plain';dataType:'';srcRange:'';ext:'e30=''><div finger='kso-wps-otl' source='387283028536'><h1 backgroundcolor='0' class='otl-heading' level='1' listlevel='0' style='text-indent:0em;padding-left:0em;text-align:left;' textalign='left'><span>第二章：cloudflare做网络穿透</span></h1><div class='sub-doc' extraattrs='{}' type='HighlightBlock'><div class='sub-doc-object' nodename='HighlightBlock' style='background-color: #FAF1E6;border-color: #FEC794;'><div class='sub-doc-layout-object' classname='left-content-box'><div class='sub-doc-tile' config='{}' info='{}'><div canbedelete='true' class='readonly-inline-container' nodename='HighlightBlock' static='true' traversable='true'><span class='otl-emoji' emoji='⭐' emoji_name='Star' emoji_type='base' unicode='U+2B50'>⭐</span></div></div></div><div class='sub-doc-layout-object' classname='right-content-box'><div class='sub-doc-tile' config='{}' info='{}'><ol><li backgroundcolor='0' class='otl-paragraph' listformat='{0}.' listlevel='0' listtype='ordered' listvalue='aribicNum' style='padding-left:1.4em;text-indent:-1.4em;text-align:left;' textalign='left'><span>下载cloudflare的安装包</span></li></ol></div><div class='sub-doc-tile' config='{}' info='{}'><p backgroundcolor='0' class='otl-paragraph' listlevel='0' style='text-align:left;' textalign='left'><code style='font-size:16px;'><span>curl -L </span></code><a class='hyperlink' href='https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64' hreftitle='https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64' sync2href='true' target='_Blank'><code style='font-size:16px;'><span>https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64</span></code></a><code style='font-size:16px;'><span> -o /usr/local/bin/cloudflared</span></code></p></div><div class='sub-doc-tile' config='{}' info='{}'><ol><li backgroundcolor='0' class='otl-paragraph' listformat='{0}.' listlevel='0' listtype='ordered' listvalue='aribicNum' style='padding-left:1.4em;text-indent:-1.4em;text-align:left;' textalign='left'><span>赋予执行权限</span></li></ol></div><div class='sub-doc-tile' config='{}' info='{}'><p backgroundcolor='0' class='otl-paragraph' listlevel='0' style='text-align:left;' textalign='left'><code style='font-size:16px;'><span>chmod +x /usr/local/bin/cloudflared</span></code></p></div><div class='sub-doc-tile' config='{}' info='{}'><ol><li backgroundcolor='0' class='otl-paragraph' listformat='{0}.' listlevel='0' listtype='ordered' listvalue='aribicNum' style='padding-left:1.4em;text-indent:-1.4em;text-align:left;' textalign='left'><span>确认是否安装成功</span></li></ol></div><div class='sub-doc-tile' config='{}' info='{}'><p backgroundcolor='0' class='otl-paragraph' style='text-align:left;' textalign='left'><code style='font-size:16px;'><span>cloudflared version</span></code></p></div><div class='sub-doc-tile' config='{}' info='{}'><ol><li backgroundcolor='0' class='otl-paragraph' listformat='{0}.' listlevel='0' listtype='ordered' listvalue='aribicNum' style='padding-left:1.4em;text-indent:-1.4em;text-align:left;' textalign='left'><span>执行</span></li></ol></div><div class='sub-doc-tile' config='{}' info='{}'><p backgroundcolor='0' class='otl-paragraph' style='text-align:left;' textalign='left'><code style='font-size:16px;'><span>cloudflared service install 你的密钥</span></code></p></div><div class='sub-doc-tile' config='{}' info='{}'><p backgroundcolor='0' class='otl-paragraph' style='text-align:left;' textalign='left'></p></div><div class='sub-doc-tile' config='{}' info='{}'><p backgroundcolor='0' class='otl-paragraph' style='text-align:left;' textalign='left'><span class='color_font' style='color:#C21C13;font-weight:bold;'><strong><span style='color:#C21C13;font-weight:bold;'>卸载命令</span></strong></span><span>：</span><code style='font-size:16px;'><span class='color_font' style='color:#C21C13;'><span style='color:#C21C13;'>cloudflared service uninstall</span></span></code></p></div><div class='sub-doc-tile' config='{}' info='{}'><p backgroundcolor='0' class='otl-paragraph' style='text-align:left;' textalign='left'><span class='color_font' style='-webkit-background-clip:text;-webkit-box-decoration-break:clone;-webkit-text-fill-color:transparent;background-clip:text;background-image:linear-gradient(90deg,#0E52D4,#A639D7);box-decoration-break:clone;color:#0E52D4;font-size:18px;font-weight:bold;'><strong><span style='-webkit-background-clip:text;-webkit-box-decoration-break:clone;-webkit-text-fill-color:transparent;background-clip:text;background-image:linear-gradient(90deg,#0E52D4,#A639D7);box-decoration-break:clone;color:#0E52D4;font-size:18px;font-weight:bold;'>Docker版看这里</span></strong></span></p></div><div class='sub-doc-tile' config='{}' info='{}'><p backgroundcolor='0' class='otl-paragraph' style='text-align:left;' textalign='left'><span class='color_font' style='background-color:#FBF5B3;font-size:20px;font-weight:bold;mso-highlight:#FBF5B3;text-decoration:underline;'><strong><u><span style='background-color:#FBF5B3;font-size:20px;font-weight:bold;mso-highlight:#FBF5B3;text-decoration:underline;'>参考这个链接</span></u></strong></span><span>：</span><a class='hyperlink' href='https://sspai.com/post/79278' hreftitle='点我' sync2href='false' target='_Blank'><span>点我</span></a></p></div><div class='sub-doc-tile' config='{}' info='{}'><p backgroundcolor='0' class='otl-paragraph' style='text-align:left;' textalign='left'><strong><span style='font-weight:bold;'>docker的附加参数：</span></strong></p></div><div class='sub-doc-tile' config='{}' info='{}'><ul><li backgroundcolor='0' class='otl-paragraph' listlevel='0' listtype='bullet' listvalue='dot' style='padding-left:1.4em;text-indent:-1.4em;text-align:left;' textalign='left'><span>--link alist:alist #容器间相互通信</span></li></ul></div><div class='sub-doc-tile' config='{}' info='{}'><ul><li backgroundcolor='0' class='otl-paragraph' listlevel='0' listtype='bullet' listvalue='dot' style='padding-left:1.4em;text-indent:-1.4em;text-align:left;' textalign='left'><span>--network host #容器内的应用就能直接访问宿主机的 localhost</span></li></ul></div><div class='sub-doc-tile' config='{}' info='{}'><p backgroundcolor='0' class='otl-paragraph' style='text-align:left;' textalign='left'><code style='font-size:18px;'><span style='font-size:18px;'>docker run --link alist:alist cloudflare/cloudflared:latest tunnel --no-autoupdate run --token 你的token</span></code></p></div></div></div></div><p backgroundcolor='0' class='otl-paragraph' style='text-align:left;' textalign='left'><span>已废弃部分</span></p><div class='sub-doc' extraattrs='{}' type='HighlightBlock'><div class='sub-doc-object' nodename='HighlightBlock' style='background-color: #EBEBEB;border-color: #C5C5C5;'><div class='sub-doc-layout-object' classname='left-content-box'><div class='sub-doc-tile' config='{}' info='{}'><div canbedelete='true' class='readonly-inline-container' nodename='HighlightBlock' static='true' traversable='true'><span class='otl-emoji' emoji='⭐' emoji_name='Star' emoji_type='base' unicode='U+2B50'>⭐</span></div></div></div><div class='sub-doc-layout-object' classname='right-content-box'><div class='sub-doc-tile' config='{}' info='{}'><ol><li backgroundcolor='9' class='otl-paragraph' listformat='{0}.' listlevel='0' listtype='ordered' listvalue='aribicNum' style='padding-left:1.4em;text-indent:-1.4em;text-align:left;background-color:#F2F2F2;
+      border-radius: 3px;
+      box-shadow: -2px 0 #F2F2F2, 2px 0 #F2F2F2;
+      --current-bg-color: #F2F2F2;' textalign='left'><s><span style='text-decoration:line-through;'>下载cloudflare的ubuntu文件</span></s></li></ol></div><div class='sub-doc-tile' config='{}' info='{}'><p backgroundcolor='0' class='otl-paragraph' listlevel='0' style='text-align:left;' textalign='left'><code style='font-size:16px;'><s><span style='text-decoration:line-through;'>curl -L --output cloudflared.deb </span></s></code><a class='hyperlink' href='https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb' hreftitle='https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb' sync2href='true' target='_Blank'><code style='font-size:16px;'><s><span style='text-decoration:line-through;'>https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb</span></s></code></a></p></div><div class='sub-doc-tile' config='{}' info='{}'><p backgroundcolor='0' class='otl-paragraph' listlevel='0' style='text-align:left;' textalign='left'><span class='color_font' style='color:#C21C13;text-decoration:line-through underline;'><s><u><span style='color:#C21C13;text-decoration:line-through underline;'>注意：这里curl可能会碰到https无法下载的问题，建议把文件放到http（</span></u></s></span><span class='color_font' style='color:#C21C13;font-weight:bold;text-decoration:line-through underline;'><strong><s><u><span style='color:#C21C13;font-weight:bold;text-decoration:line-through underline;'>AList</span></u></s></strong></span><span class='color_font' style='color:#C21C13;text-decoration:line-through underline;'><s><u><span style='color:#C21C13;text-decoration:line-through underline;'>）下面</span></u></s></span></p></div><div class='sub-doc-tile' config='{}' info='{}'><ol><li backgroundcolor='0' class='otl-paragraph' listformat='{0}.' listlevel='0' listtype='ordered' listvalue='aribicNum' style='padding-left:1.4em;text-indent:-1.4em;text-align:left;' textalign='left'><s><span style='text-decoration:line-through;'>sudo dpkg -i cloudflared.deb </span></s></li></ol></div><div class='sub-doc-tile' config='{}' info='{}'><p backgroundcolor='0' class='otl-paragraph' listlevel='0' style='text-align:left;' textalign='left'><span class='color_font' style='color:#C21C13;text-decoration:line-through underline;'><s><u><span style='color:#C21C13;text-decoration:line-through underline;'>注意：这里可能会报错package architecture (amd64) does not match system (arm64)</span></u></s></span></p></div><div class='sub-doc-tile' config='{}' info='{}'><p backgroundcolor='0' class='otl-paragraph' listlevel='0' style='text-align:left;' textalign='left'><span class='color_font' style='color:#C21C13;text-decoration:line-through;'><s><span style='color:#C21C13;text-decoration:line-through;'>解决：sudo dpkg -i --force-architecture cloudflared.deb （</span></s></span><a class='hyperlink' href='https://github.com/kubernetes/minikube/issues/10001' hreftitle='点击参考' sync2href='false' target='_Blank'><span class='color_font' style='color:#C21C13;text-decoration:line-through;'><s><span style='color:#C21C13;text-decoration:line-through;'>点击参考</span></s></span></a><span class='color_font' style='color:#C21C13;text-decoration:line-through;'><s><span style='color:#C21C13;text-decoration:line-through;'>）</span></s></span></p></div><div class='sub-doc-tile' config='{}' info='{}'><ol><li backgroundcolor='0' class='otl-paragraph' listformat='{0}.' listlevel='0' listtype='ordered' listvalue='aribicNum' style='padding-left:1.4em;text-indent:-1.4em;text-align:left;' textalign='left'><s><span style='text-decoration:line-through;'>sudo cloudflared service install 你的密钥</span></s></li></ol></div><div class='sub-doc-tile' config='{}' info='{}'><p backgroundcolor='0' class='otl-paragraph' listlevel='0' style='text-align:left;' textalign='left'><span class='color_font' style='color:#C21C13;text-decoration:line-through;'><s><span style='color:#C21C13;text-decoration:line-through;'>成功会显示：</span></s></span><code style='font-size:16px;'><span class='color_font' style='color:#C21C13;text-decoration:line-through;'><s><span style='color:#C21C13;text-decoration:line-through;'>Illegal instruction</span></s></span></code></p></div></div></div></div><h2 backgroundcolor='0' class='otl-heading' level='2' style='text-indent:0em;padding-left:0em;text-align:left;' textalign='left'><span>网页版SSH内网穿透</span></h2><div class='sub-doc' extraattrs='{}' type='HighlightBlock'><div class='sub-doc-object' nodename='HighlightBlock' style='background-color: #FAF1E6;border-color: #FEC794;'><div class='sub-doc-layout-object' classname='left-content-box'><div class='sub-doc-tile' config='{}' info='{}'><div canbedelete='true' class='readonly-inline-container' nodename='HighlightBlock' static='true' traversable='true'><span class='otl-emoji' emoji='⭐' emoji_name='Star' emoji_type='base' unicode='U+2B50'>⭐</span></div></div></div><div class='sub-doc-layout-object' classname='right-content-box'><div class='sub-doc-tile' config='{}' info='{}'><ol><li backgroundcolor='0' class='otl-paragraph' listlevel='0' listtype='ordered' listvalue='aribicNum' style='padding-left:1.4em;text-indent:-1.4em;text-align:left;' textalign='left'><strong><span style='font-weight:bold;'>将服务器连接到 Cloudflare：</span></strong></li></ol></div><div class='sub-doc-tile' config='{}' info='{}'><ul><ul><li backgroundcolor='0' class='otl-paragraph' listlevel='1' listtype='bullet' listvalue='circle' style='padding-left:2.8em;text-indent:-1.4em;text-align:left;' textalign='left'><strong><span style='font-weight:bold;'>创建 Cloudflare Tunnel：</span></strong><span> 登录到 Cloudflare Zero Trust 仪表板，导航至“Networks” &gt; “Tunnels”，点击“Create a tunnel”。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://blog.mymaskking.dpdns.org//post/cloudflare-zuo-wang-luo-chuan-tou-%28-an-zhuo-shou-ji-an-zhuang-PC-huo-Linux%28-han-nei-wang-chuan-tou-%29%29.html">
+<meta property="og:image" content="https://avatars.githubusercontent.com/u/41733240?v=4">
+<title>cloudflare做网络穿透(安卓手机安装PC或Linux(含内网穿透))</title>
+
+<meta name='viewport' content='width=device-width, initial-scale=1.0'/><meta name='theme-color' content='#5d4fff'><meta name='description' content='爱捣鼓的小水木的个人博客，分享技术、生活和想法'>
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+<link href='https://blog.mymaskking.dpdns.org/css/blog.css' rel='stylesheet' /><link href='https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap' rel='stylesheet'>
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">cloudflare做网络穿透(安卓手机安装PC或Linux(含内网穿透))</h1>
+<div class="title-right">
+    <a href="https://blog.mymaskking.dpdns.org/" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/MyMaskKing/MyMaskKing.github.io/issues/6" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody">
+
+<div><div><h1><span>第二章：cloudflare做网络穿透</span></h1><div type="HighlightBlock"><div><div><div><div><span>⭐</span></div></div></div><div><div><ol><li><span>下载cloudflare的安装包</span></li></ol></div><div><p><code class="notranslate"><span>curl -L </span></code><a href="https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64"><code class="notranslate"><span>https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64</span></code></a><code class="notranslate"><span> -o /usr/local/bin/cloudflared</span></code></p></div><div><ol><li><span>赋予执行权限</span></li></ol></div><div><p><code class="notranslate"><span>chmod +x /usr/local/bin/cloudflared</span></code></p></div><div><ol><li><span>确认是否安装成功</span></li></ol></div><div><p><code class="notranslate"><span>cloudflared version</span></code></p></div><div><ol><li><span>执行</span></li></ol></div><div><p><code class="notranslate"><span>cloudflared service install 你的密钥</span></code></p></div><div><p></p></div><div><p><span><strong><span>卸载命令</span></strong></span><span>：</span><code class="notranslate"><span><span>cloudflared service uninstall</span></span></code></p></div><div><p><span><strong><span>Docker版看这里</span></strong></span></p></div><div><p><span><strong><span>参考这个链接</span></strong></span><span>：</span><a href="https://sspai.com/post/79278" rel="nofollow"><span>点我</span></a></p></div><div><p><strong><span>docker的附加参数：</span></strong></p></div><div><ul><li><span>--link alist:alist #容器间相互通信</span></li></ul></div><div><ul><li><span>--network host #容器内的应用就能直接访问宿主机的 localhost</span></li></ul></div><div><p><code class="notranslate"><span>docker run --link alist:alist cloudflare/cloudflared:latest tunnel --no-autoupdate run --token 你的token</span></code></p></div></div></div></div><p><span>已废弃部分</span></p><div type="HighlightBlock"><div><div><div><div><span>⭐</span></div></div></div><div><div><ol><li><s><span>下载cloudflare的ubuntu文件</span></s></li></ol></div><div><p><code class="notranslate"><s><span>curl -L --output cloudflared.deb </span></s></code><a href="https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb"><code class="notranslate"><s><span>https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb</span></s></code></a></p></div><div><p><span><s><span>注意：这里curl可能会碰到https无法下载的问题，建议把文件放到http（</span></s></span><span><strong><s><span>AList</span></s></strong></span><span><s><span>）下面</span></s></span></p></div><div><ol><li><s><span>sudo dpkg -i cloudflared.deb </span></s></li></ol></div><div><p><span><s><span>注意：这里可能会报错package architecture (amd64) does not match system (arm64)</span></s></span></p></div><div><p><span><s><span>解决：sudo dpkg -i --force-architecture cloudflared.deb （</span></s></span><a href="https://github.com/kubernetes/minikube/issues/10001" data-hovercard-type="issue" data-hovercard-url="/kubernetes/minikube/issues/10001/hovercard"><span><s><span>点击参考</span></s></span></a><span><s><span>）</span></s></span></p></div><div><ol><li><s><span>sudo cloudflared service install 你的密钥</span></s></li></ol></div><div><p><span><s><span>成功会显示：</span></s></span><code class="notranslate"><span><s><span>Illegal instruction</span></s></span></code></p></div></div></div></div><h2><span>网页版SSH内网穿透</span></h2><div type="HighlightBlock"><div><div><div><div><span>⭐</span></div></div></div><div><div><ol><li><strong><span>将服务器连接到 Cloudflare：</span></strong></li></ol></div><div><ul><ul><li><strong><span>创建 Cloudflare Tunnel：</span></strong><span> 登录到 Cloudflare Zero Trust 仪表板，导航至“Networks” &gt; “Tunnels”，点击“Create a tunnel”。选择“Cloudflared”作为连接器类型，输入隧道名称，然后点击“Save tunnel”。</span></li></ul></ul></div><div><ul><ul><li><strong><span>安装并运行 </span></strong><code class="notranslate"><strong><span>cloudflared</span></strong></code><strong><span>：</span></strong><span> 根据您的服务器操作系统，下载并安装 </span><code class="notranslate"><span>cloudflared</span></code><span>。在服务器上运行提供的命令以启动 </span><code class="notranslate"><span>cloudflared</span></code><span>，这将建立服务器与 Cloudflare 之间的隧道连接。</span></li></ul></ul></div><div><ul><ul><li><strong><span>配置公共主机名：</span></strong><span> 在隧道的“Public Hostnames”选项卡中，选择一个域名和子域名（例如 </span><a href="https://ssh.example.com/" rel="nofollow"><code class="notranslate"><span>ssh.example.com</span></code></a><span>），将其指向您的 SSH 服务（通常是 </span><code class="notranslate"><span>localhost:22</span></code><span>）。保存主机名设置。 </span></li></ul></ul></div><div><ol><li><strong><span>配置 Cloudflare Access 应用程序：(</span></strong><span><strong><span>下面的步骤一定要做！</span></strong></span><strong><span>)</span></strong></li></ol></div><div><ul><ul><li><strong><span>创建应用程序：</span></strong><span> 在 Cloudflare Zero Trust 仪表板中，转到“Access” &gt; “Applications”，点击“Add an application”，选择“Self-hosted”。</span></li></ul></ul></div><div><ul><ul><li><strong><span>设置应用程序详细信息：</span></strong><span> 输入应用程序名称，设置“Application domain”为之前配置的公共主机名（例如 </span><a href="https://ssh.example.com/" rel="nofollow"><code class="notranslate"><span>ssh.example.com</span></code></a><span>）。</span></li></ul></ul></div><div><ul><ul><li><strong><span>配置访问策略：</span></strong><span> 在“Policies”选项卡中，添加相应的访问策略，指定允许访问该应用程序的用户或组。(</span><span><strong><span>必须配置一个Everyone的mail策略，否则无法收到邮件)</span></strong></span></li></ul></ul></div><div><ul><ul><li><strong><span>启用浏览器渲染：</span></strong><span> 在“Advanced settings”下的“Browser rendering settings”中，将“Browser rendering”设置为“SSH”。保存应用程序设置。 </span></li></ul></ul></div><div><ol><li><strong><span>用户访问 SSH 终端：</span></strong></li></ol></div><div><ul><ul><li><strong><span>访问公共主机名：</span></strong><span> 用户在浏览器中访问配置的公共主机名（例如 </span><a href="https://ssh.example.com/" rel="nofollow"><code class="notranslate"><span>https://ssh.example.com</span></code></a><span>）。</span></li></ul></ul></div><div><ul><ul><li><strong><span>身份验证：</span></strong><span> 用户将根据之前配置的访问策略进行身份验证。</span></li></ul></ul></div><div><ul><ul><li><strong><span>Linux账户验证</span></strong><span>：输入alpine，密码alpine</span></li></ul></ul></div><div><ul><ul><li><strong><span>使用浏览器终端：</span></strong><span> 成功验证后，Cloudflare 将在浏览器中呈现一个 SSH 终端，用户可以直接在其中操作服务器，无需在客户端安装任何额外的软件或管理 SSH 密钥。 </span></li></ul></ul></div></div></div></div><h2><span>CF节点优选</span></h2><div type="HighlightBlock"><div><div><div><div><span>⭐</span></div></div></div><div><div><p><span>CloudFlare公共优选Cname域名地址1：</span><a href="https://www.wetest.vip/" rel="nofollow"><span>点我</span></a></p></div><div><p><span>CloudFlare公共优选Cname域名地址2：</span><a href="https://www.wetest.vip/" rel="nofollow"><span>点</span></a><a href="https://blog.nbvil.com/nat/saasip/" rel="nofollow"><span>我</span></a></p></div><div><p><span>CloudFlare优质IP：</span><a href="https://stock.hostmonit.com/CloudFlareYes" rel="nofollow"><span>点我</span></a></p></div><div><p><span>CloudFlare公共优选教程1：</span><a href="https://www.youtube.com/watch?v=uCgRb7KfANo" rel="nofollow"><span>点我</span></a></p></div><div><p><span>CloudFlare公共优选教程2：</span><a href="https://www.youtube.com/watch?v=oTwnwZEJpWo&amp;feature=youtu.be" rel="nofollow"><span>点我</span></a></p></div><div><p><span>CDN优选域名和IP教程：</span><a href="https://www.freedidi.com/10143.html" rel="nofollow"><span>点我</span></a></p></div><div><p><a href="https://www.itdog.cn/tcping/" rel="nofollow"><strong><span>在线TCP延迟测试</span></strong></a></p></div><div><p></p></div><div><p><span>域名价格表：</span><a href="https://www.baota.me/post-410.html" rel="nofollow"><span>点我</span></a></p></div></div></div></div>
+  | 节点优选流程如下
+-- | --
+步骤 | 主域名A | 加速域名B
+第一步： | 在CF的ZeroTrust的Tunnels中，把A,B都映射到alist网站上(alist.A和alist.B)
+第二步： |   | 1.回退源设置成【alist.B】2.自定义主机设置成【alist.A】
+第三步： | 第二步的2中会生成一些DNS解析，添加到A的DNS中(#1) | 设置一个优选节点到【fast.B】
+第四步： | 把【alist.A】指向到【fast.B】,关闭CF的代理 |  
+温馨提示： |   |  
+<h3><span>#1关于回退源中自定义主机的DNS认证的解决办法</span></h3><div type="HighlightBlock"><div><div><div><div><span>⭐</span></div></div></div><div><div><p><strong><span>解决灵感的帖子：</span></strong><a href="https://blog.tsinbei.com/archives/1267/" rel="nofollow"><strong><span>点我</span></strong></a></p></div><div><p><span>如果回退源中--&gt;自定义主机验证--&gt;主机名的状态(</span><span><strong><span>验证失败</span></strong></span><span>)</span></p></div><div><p><span>请：假设</span><span><strong><span>回退域名</span></strong></span><span>（</span><a href="https://callback.tsinbei.com/" rel="nofollow"><span>callback.tsinbei.com</span></a><span>）</span></p></div><div><p><span>       </span><span><strong><span>自定义主机域名</span></strong></span><span>（</span><a href="https://custom.tsinbei.com/" rel="nofollow"><span>custom.tsinbei.com</span></a><span>）(</span><span><strong><span>验证失败</span></strong></span><span>)</span></p></div><div><p><span>      那么</span><span><strong><span>自定义主机域名</span></strong></span><span><strong><span>中设置一个CNAME</span></strong></span><span> ：</span><code class="notranslate"><span><span>csutome</span></span></code><span>指向</span><a href="https://callback.tsinbei.com/" rel="nofollow"><code class="notranslate"><span>callback.tsinbei.com</span></code></a></p></div><div><p><span>温馨提示：</span><span><span>无论使用何种方法验证，验证成功后均可以删除验证记录（TXT 或 CNAME）并进行自选。经测试，同一个主机名验证成功一次后就不会再次验证。</span></span></p></div></div></div></div><h3><span>#2网页版SSH做CDN加速时候遇到的问题</span></h3><div type="HighlightBlock"><div><div><div><div><span>⭐</span></div></div></div><div><div><ol><li><span>在</span><strong><span>加速域名B</span></strong><span>的</span><strong><span>回退源</span></strong><span>设置了自定义主机</span><span><strong><span>ssh.A</span></strong></span></li></ol></div><div><ol><li><span><strong><span>主域名ssh.A</span></strong></span><strong><span>这里的cname</span></strong><span><strong><span>不是</span></strong></span><strong><span>指向</span></strong><span><strong><span>fast.B</span></strong></span></li></ol></div><div><ol><li><span><strong><span>主域名ssh.A</span></strong></span><strong><span>保持隧道</span></strong><strong><span>Tunnels</span></strong><strong><span>自动生成的配置(ssh.A)，并且小黄云CF代理要开着,否则ssh.A无法访问</span></strong></li></ol></div><div><ol><li><span><strong><span>并且ssh.A也要去做一个application</span></strong></span></li></ol></div></div></div></div><h3><span>#3自定义主机证书的自动续订的问题</span></h3><div type="HighlightBlock"><div><div><div><div><span>⭐</span></div></div></div><div><div><p><span>自定义主机(主域名)</span><span><strong><span>ssh.A下面</span></strong></span><span><strong><span>加一个CNAME</span></strong></span></p></div><div><h3><span><strong><span>自定义主机名的 DCV 委派</span></strong></span></h3></div><div><p><span>_</span><code class="notranslate"><span>acme-challenge.&lt;hostname&gt;</span></code><span> </span><code class="notranslate"><span>&lt;hostname&gt;.</span></code><code class="notranslate"><span><span>6ec077ddb0899695.dcv.cloudflare.com</span></span></code></p></div><div><p><span>CNAME的Key里面只需要写sub域名</span><span><strong><span>ssh</span></strong></span><span>，</span><span><span>cloudflare会自动补充完整域名的</span></span><span>，但是value里面要写</span><span><strong><span>ssh.A</span></strong></span></p></div><div><p><span>_</span><code class="notranslate"><span>acme-challenge</span></code><code class="notranslate"><span><strong><span>.ssh</span></strong></span></code><span> </span><code class="notranslate"><span><strong><span>ssh.A.</span></strong></span></code><code class="notranslate"><span>&lt;hostname&gt;.</span></code><code class="notranslate"><span><span>6ec077ddb0899695.dcv.cloudflare.com</span></span></code></p></div><div><p><span><span>温馨提示：实际内容请参考“</span></span><span><strong><span>自定义主机名的 DCV 委派</span></strong></span><span><span>”</span></span></p></div></div></div></div><h3><span>CF加速成功验证</span></h3><div type="HighlightBlock"><div><div><div><div><span>⭐</span></div></div></div><div><div><p><a href="https://www.itdog.cn/http/" rel="nofollow"><strong><span>在线网站测试</span></strong></a></p></div><div><p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/619040ac0e88aa9dff43140a02609600a0ab3380e76bce25001131578d281891/687474703a2f2f7777772e6b646f63732e636e2f6170692f76332f6f66666963652f636f70792f656b67334d484e49516b5a33547a56756155523065554a34536d5a5a4e6c4231526c6f324d45464e615764464e56465054474e586248703353485a44576a4a565a7a4670546b4e3559314e705a5864335331525756565a74636a6450556e52554b327453565556514b334a534e4642314e314e53515573355545353657464e7a55584576576b64455231425765464a6854586c6a626a564f57444e4a5448566a55575a48646a52696146706a5356646b5332686f656e6c52556d315154576b345a7a463057453830556a6c3151334a6d645564425930355157474e34656d4e544e47527462576847646b51315a6c4a725a6a4a436432746d4d484630535446425a46465354336f30614645795745316c643356564d4856574e3074455255354f623156755433524c576c4a3556306c7557444a4761466f7665456c5a543064594e455579636a4a4f6554466b5754424a54555a4651576443563234764f555655516b397a50513d3d2f6174746163682f6f626a6563742f584558354532413741425146453f"><img align="left" src="https://camo.githubusercontent.com/619040ac0e88aa9dff43140a02609600a0ab3380e76bce25001131578d281891/687474703a2f2f7777772e6b646f63732e636e2f6170692f76332f6f66666963652f636f70792f656b67334d484e49516b5a33547a56756155523065554a34536d5a5a4e6c4231526c6f324d45464e615764464e56465054474e586248703353485a44576a4a565a7a4670546b4e3559314e705a5864335331525756565a74636a6450556e52554b327453565556514b334a534e4642314e314e53515573355545353657464e7a55584576576b64455231425765464a6854586c6a626a564f57444e4a5448566a55575a48646a52696146706a5356646b5332686f656e6c52556d315154576b345a7a463057453830556a6c3151334a6d645564425930355157474e34656d4e544e47527462576847646b51315a6c4a725a6a4a436432746d4d484630535446425a46465354336f30614645795745316c643356564d4856574e3074455255354f623156755433524c576c4a3556306c7557444a4761466f7665456c5a543064594e455579636a4a4f6554466b5754424a54555a4651576443563234764f555655516b397a50513d3d2f6174746163682f6f626a6563742f584558354532413741425146453f" width="1625" data-canonical-src="http://www.kdocs.cn/api/v3/office/copy/ekg3MHNIQkZ3TzVuaUR0eUJ4SmZZNlB1Rlo2MEFNaWdFNVFPTGNXbHp3SHZDWjJVZzFpTkN5Y1NpZXd3S1RWVVZtcjdPUnRUK2tSVUVQK3JSNFB1N1NSQUs5UE56WFNzUXEvWkdER1BWeFJhTXljbjVOWDNJTHVjUWZHdjRiaFpjSVdkS2hoenlRUm1QTWk4ZzF0WE80Ujl1Q3JmdUdBY05QWGN4emNTNGRtbWhGdkQ1ZlJrZjJCd2tmMHF0STFBZFFST3o0aFEyWE1ld3VVMHVWN0tERU5Ob1VuT3RLWlJ5V0luWDJGaFoveElZT0dYNEUycjJOeTFkWTBJTUZFQWdCV24vOUVUQk9zPQ==/attach/object/XEX5E2A7ABQFE?" style="max-width: 100%;"></a></p></div><div><p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/b02f0dfbf2cd0c89fc5b51f2363fd668e59237b65319ee75e00a0efb800e1a17/687474703a2f2f7777772e6b646f63732e636e2f6170692f76332f6f66666963652f636f70792f656b67334d484e49516b5a33547a56756155523065554a34536d5a5a4e6c4231526c6f324d45464e615764464e56465054474e586248703353485a44576a4a565a7a4670546b4e3559314e705a5864335331525756565a74636a6450556e52554b327453565556514b334a534e4642314e314e53515573355545353657464e7a55584576576b64455231425765464a6854586c6a626a564f57444e4a5448566a55575a48646a52696146706a5356646b5332686f656e6c52556d315154576b345a7a463057453830556a6c3151334a6d645564425930355157474e34656d4e544e47527462576847646b51315a6c4a725a6a4a436432746d4d484630535446425a46465354336f30614645795745316c643356564d4856574e3074455255354f623156755433524c576c4a3556306c7557444a4761466f7665456c5a543064594e455579636a4a4f6554466b5754424a54555a4651576443563234764f555655516b397a50513d3d2f6174746163682f6f626a6563742f325a51354732413741414141453f"><img align="left" src="https://camo.githubusercontent.com/b02f0dfbf2cd0c89fc5b51f2363fd668e59237b65319ee75e00a0efb800e1a17/687474703a2f2f7777772e6b646f63732e636e2f6170692f76332f6f66666963652f636f70792f656b67334d484e49516b5a33547a56756155523065554a34536d5a5a4e6c4231526c6f324d45464e615764464e56465054474e586248703353485a44576a4a565a7a4670546b4e3559314e705a5864335331525756565a74636a6450556e52554b327453565556514b334a534e4642314e314e53515573355545353657464e7a55584576576b64455231425765464a6854586c6a626a564f57444e4a5448566a55575a48646a52696146706a5356646b5332686f656e6c52556d315154576b345a7a463057453830556a6c3151334a6d645564425930355157474e34656d4e544e47527462576847646b51315a6c4a725a6a4a436432746d4d484630535446425a46465354336f30614645795745316c643356564d4856574e3074455255354f623156755433524c576c4a3556306c7557444a4761466f7665456c5a543064594e455579636a4a4f6554466b5754424a54555a4651576443563234764f555655516b397a50513d3d2f6174746163682f6f626a6563742f325a51354732413741414141453f" width="1582" data-canonical-src="http://www.kdocs.cn/api/v3/office/copy/ekg3MHNIQkZ3TzVuaUR0eUJ4SmZZNlB1Rlo2MEFNaWdFNVFPTGNXbHp3SHZDWjJVZzFpTkN5Y1NpZXd3S1RWVVZtcjdPUnRUK2tSVUVQK3JSNFB1N1NSQUs5UE56WFNzUXEvWkdER1BWeFJhTXljbjVOWDNJTHVjUWZHdjRiaFpjSVdkS2hoenlRUm1QTWk4ZzF0WE80Ujl1Q3JmdUdBY05QWGN4emNTNGRtbWhGdkQ1ZlJrZjJCd2tmMHF0STFBZFFST3o0aFEyWE1ld3VVMHVWN0tERU5Ob1VuT3RLWlJ5V0luWDJGaFoveElZT0dYNEUycjJOeTFkWTBJTUZFQWdCV24vOUVUQk9zPQ==/attach/object/2ZQ5G2A7AAAAE?" style="max-width: 100%;"></a></p></div></div></div></div><h2><span>踩到的坑</span></h2><div type="HighlightBlock"><div><div><div><div><span>⭐</span></div></div></div><div><div><p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/25a20033bb9bef59f4fe7c8741a2d381c2527addef35ee5382a288b03e3b933b/687474703a2f2f7777772e6b646f63732e636e2f6170692f76332f6f66666963652f636f70792f656b67334d484e49516b5a33547a56756155523065554a34536d5a5a4e6c4231526c6f324d45464e615764464e56465054474e586248703353485a44576a4a565a7a4670546b4e3559314e705a5864335331525756565a74636a6450556e52554b327453565556514b334a534e4642314e314e53515573355545353657464e7a55584576576b64455231425765464a6854586c6a626a564f57444e4a5448566a55575a48646a52696146706a5356646b5332686f656e6c52556d315154576b345a7a463057453830556a6c3151334a6d645564425930355157474e34656d4e544e47527462576847646b51315a6c4a725a6a4a436432746d4d484630535446425a46465354336f30614645795745316c643356564d4856574e3074455255354f623156755433524c576c4a3556306c7557444a4761466f7665456c5a543064594e455579636a4a4f6554466b5754424a54555a4651576443563234764f555655516b397a50513d3d2f6174746163682f6f626a6563742f333746523457413741415142473f"><img align="left" src="https://camo.githubusercontent.com/25a20033bb9bef59f4fe7c8741a2d381c2527addef35ee5382a288b03e3b933b/687474703a2f2f7777772e6b646f63732e636e2f6170692f76332f6f66666963652f636f70792f656b67334d484e49516b5a33547a56756155523065554a34536d5a5a4e6c4231526c6f324d45464e615764464e56465054474e586248703353485a44576a4a565a7a4670546b4e3559314e705a5864335331525756565a74636a6450556e52554b327453565556514b334a534e4642314e314e53515573355545353657464e7a55584576576b64455231425765464a6854586c6a626a564f57444e4a5448566a55575a48646a52696146706a5356646b5332686f656e6c52556d315154576b345a7a463057453830556a6c3151334a6d645564425930355157474e34656d4e544e47527462576847646b51315a6c4a725a6a4a436432746d4d484630535446425a46465354336f30614645795745316c643356564d4856574e3074455255354f623156755433524c576c4a3556306c7557444a4761466f7665456c5a543064594e455579636a4a4f6554466b5754424a54555a4651576443563234764f555655516b397a50513d3d2f6174746163682f6f626a6563742f333746523457413741415142473f" width="1535" data-canonical-src="http://www.kdocs.cn/api/v3/office/copy/ekg3MHNIQkZ3TzVuaUR0eUJ4SmZZNlB1Rlo2MEFNaWdFNVFPTGNXbHp3SHZDWjJVZzFpTkN5Y1NpZXd3S1RWVVZtcjdPUnRUK2tSVUVQK3JSNFB1N1NSQUs5UE56WFNzUXEvWkdER1BWeFJhTXljbjVOWDNJTHVjUWZHdjRiaFpjSVdkS2hoenlRUm1QTWk4ZzF0WE80Ujl1Q3JmdUdBY05QWGN4emNTNGRtbWhGdkQ1ZlJrZjJCd2tmMHF0STFBZFFST3o0aFEyWE1ld3VVMHVWN0tERU5Ob1VuT3RLWlJ5V0luWDJGaFoveElZT0dYNEUycjJOeTFkWTBJTUZFQWdCV24vOUVUQk9zPQ==/attach/object/37FR4WA7AAQBG?" style="max-width: 100%;"></a></p></div><div><p><span>在</span><strong><span>cloudflare中配置公共主机名</span></strong><span>的时候，一定</span><span><strong><span>不要设置路径</span></strong></span><span>，</span><span><strong><span>否则可能会造成js,css无法正常返回</span></strong></span></p></div></div></div></div><h2><span>关于内网穿透的一些补充内容</span></h2><div type="HighlightBlock"><div><div><div><div><span>⭐</span></div></div></div><div><div><p><span>用</span><span><strong><span>cpolar</span></strong></span><span>也可以做</span><span><strong><span>内网穿透</span></strong></span><span><span>（不过没有试验过，教程如下）</span></span></p></div><div><p><span>图文教程：</span><a href="https://developer.aliyun.com/article/1487189?spm=5176.26934562.main.1.763bb724frQ2gg" rel="nofollow"><span>点我</span></a></p></div><div><p><span>油管视频：</span><a href="https://www.youtube.com/watch?v=nMsyAUfPshE&amp;t=246s" rel="nofollow"><span>点我</span></a></p></div><div><p><span>官方教程：</span><a href="https://www.cpolar.com/blog/cpolar-quick-start-tutorial-ubuntu-series" rel="nofollow"><span>点我</span></a></p></div><div><p><span>docker版安装：</span><a href="https://www.cpolar.com/blog/docker-container-installation-cpolar" rel="nofollow"><span>点我</span></a></p></div></div></div></div><h4><span><strong><span>cpolar的部署（Alpine服务器）</span></strong></span></h4><ol><li><span>查看AlpineLinux架构</span></li></ol><pre class="notranslate"><code lang="bash" class="notranslate"><span>lscpu</span></code></pre><ol><li><span>下载cpolar并解压</span></li></ol><blockquote><span>当前使用版本：</span><a href="https://wwvj.lanzoum.com/iHbEy2tefv7e" rel="nofollow">https://wwvj.lanzoum.com/iHbEy2tefv7e</a></blockquote><pre class="notranslate"><code lang="bash" class="notranslate"><span>curl -L https://www.cpolar.com/static/downloads/releases/3.3.12/cpolar-stable-linux-amd64.zip -o cpolar-stable-linux-amd64.zip
+unzip cpolar-stable-linux-amd64.zip 
+mv cpolar /usr/local/bin/</span></code></pre><ol><li><span>制作alpine服务（service）文件（cpolar的配置文件yml）</span></li></ol><blockquote><span>mkdir -p /etc/cpolar</span><br><span>vi /etc/cpolar/cpolar.yml</span></blockquote><pre class="notranslate"><code lang="bash" class="notranslate"><span># vi: set shiftwidth=2 tabstop=2 softtabstop=2 ai expandtab:
+authtoken: your_auth_token
+tunnels:
+  website:
+    addr: 8080
+    proto: http
+  ssh:
+    proto: tcp
+    addr: 22</span></code></pre><ol><li><span>制作alpine服务（service）文件（脚本）</span></li></ol><blockquote><span>touch /etc/init.d/cpolar</span><br><span>vi /etc/init.d/cpolar</span></blockquote><pre class="notranslate"><code lang="bash" class="notranslate"><span>#!/sbin/openrc-run
+</span></code><p><code class="notranslate">name="cpolar"<br>
+command="/usr/local/bin/cpolar"<br>
+command_args="--config /etc/cpolar/cpolar.yml -log /var/log/cpolar/access.log"<br>
+pidfile="/run/cpolar.pid"<br>
+depend() {<br>
+need net<br>
+before docker<br>
+}<br>
+start() {<br>
+ebegin "Starting cpolar"<br>
+start-stop-daemon --start --background --pidfile $pidfile --exec $command -- $command_args<br>
+eend $?<br>
+}<br>
+stop() {<br>
+ebegin "Stopping cpolar"<br>
+start-stop-daemon --stop --pidfile $pidfile<br>
+eend $?<br>
+}<br>
+</code></p></pre><blockquote><span>chmod +x /etc/init.d/cpolar</span></blockquote><ol><li><span>使用cpolar服务</span></li></ol><pre class="notranslate"><code lang="bash" class="notranslate"><span>rc-update add cpolar default<p></p>
+<p>rc-service cpolar status<br>
+#可使用选项</p>
+<h1>-start</h1>
+<h1>-restart</h1>
+<h1>-stop</h1>
+</span></code><h1><code class="notranslate">-status</code></h1></pre><ol><li><span>开启cpolar隧道</span></li></ol><pre class="notranslate"><code lang="bash" class="notranslate"><span>cpolar authtoken xxxxxxx</span></code></pre>&lt;blockquote backgroundcolor="3" style="padding-left:1em;text-indent:0em;text-align:left;background-color: #FFECEB; border-radius: 3px;
+<pre class="notranslate"><code class="notranslate">  box-shadow: -2px -2px #FFECEB, 2px 2px #FFECEB, 2px -2px #FFECEB, -2px 2px #FFECEB;
+  --current-bg-color: #FFECEB;" textalign="left"&gt;&lt;span&gt;检证命令：&lt;/span&gt;&lt;br style="mso-data-placement:same-cell;"&gt;&lt;code style="font-size:16px;"&gt;&lt;span&gt;cpolar http 8080&lt;/span&gt;&lt;/code&gt;&lt;/blockquote&gt;&lt;p backgroundcolor="0" class="otl-paragraph" style="text-align:left;" textalign="left"&gt;&lt;span class="color_font" style="color:#C21C13;font-size:22px;font-weight:bold;"&gt;&lt;strong&gt;&lt;span style="color:#C21C13;font-size:22px;font-weight:bold;"&gt;实验完毕，垃圾别用！！！&lt;/span&gt;&lt;/strong&gt;&lt;/span&gt;&lt;/p&gt;&lt;p style="height:auto;overflow:hidden;text-align:left;"&gt;&lt;img align="left" bordertype="0" fileid="387283028536" imgid="L5noSegAhbAY9sYO" oriheight="303" oriwidth="1698" rotate="0" sourcekey="7CEEE3Q7AAAFU" src="http://www.kdocs.cn/api/v3/office/copy/ekg3MHNIQkZ3TzVuaUR0eUJ4SmZZNlB1Rlo2MEFNaWdFNVFPTGNXbHp3SHZDWjJVZzFpTkN5Y1NpZXd3S1RWVVZtcjdPUnRUK2tSVUVQK3JSNFB1N1NSQUs5UE56WFNzUXEvWkdER1BWeFJhTXljbjVOWDNJTHVjUWZHdjRiaFpjSVdkS2hoenlRUm1QTWk4ZzF0WE80Ujl1Q3JmdUdBY05QWGN4emNTNGRtbWhGdkQ1ZlJrZjJCd2tmMHF0STFBZFFST3o0aFEyWE1ld3VVMHVWN0tERU5Ob1VuT3RLWlJ5V0luWDJGaFoveElZT0dYNEUycjJOeTFkWTBJTUZFQWdCV24vOUVUQk9zPQ==/attach/object/7CEEE3Q7AAAFU?" storageversion="1" userid="1545611636" width="1698" zoom="1"&gt;&lt;/p&gt;&lt;p backgroundcolor="0" class="otl-paragraph" style="text-align:left;" textalign="left"&gt;&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;&lt;!--EndFragment--&gt;
+</code></pre>
+
+第二章：cloudflare做网络穿透
+⭐1. 下载cloudflare的安装包
+curl -L https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o /usr/local/bin/cloudflared
+2. 赋予执行权限
+chmod +x /usr/local/bin/cloudflared
+3. 确认是否安装成功
+cloudflared version
+4. 执行
+cloudflared service install 你的密钥
+<p>卸载命令：cloudflared service uninstall<br>
+Docker版看这里<br>
+参考这个链接：<a href="https://sspai.com/post/79278" rel="nofollow">点我</a><br>
+docker的附加参数：<br>
+• --link alist:alist #容器间相互通信<br>
+• --network host #容器内的应用就能直接访问宿主机的 localhost<br>
+docker run --link alist:alist cloudflare/cloudflared:latest tunnel --no-autoupdate run --token 你的token<br>
+已废弃部分<br>
+⭐1. 下载cloudflare的ubuntu文件<br>
+curl -L --output cloudflared.deb <a href="https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb">https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb</a><br>
+注意：这里curl可能会碰到https无法下载的问题，建议把文件放到http（AList）下面<br>
+2. sudo dpkg -i cloudflared.deb<br>
+注意：这里可能会报错package architecture (amd64) does not match system (arm64)<br>
+解决：sudo dpkg -i --force-architecture cloudflared.deb （<a href="https://github.com/kubernetes/minikube/issues/10001" data-hovercard-type="issue" data-hovercard-url="/kubernetes/minikube/issues/10001/hovercard">点击参考</a>）<br>
+3. sudo cloudflared service install 你的密钥<br>
+成功会显示：Illegal instruction<br>
+网页版SSH内网穿透<br>
+⭐1. 将服务器连接到 Cloudflare：<br>
+◦ 创建 Cloudflare Tunnel： 登录到 Cloudflare Zero Trust 仪表板，导航至“Networks” &gt; “Tunnels”，点击“Create a tunnel”。选择“Cloudflared”作为连接器类型，输入隧道名称，然后点击“Save tunnel”。<br>
+◦ 安装并运行 cloudflared： 根据您的服务器操作系统，下载并安装 cloudflared。在服务器上运行提供的命令以启动 cloudflared，这将建立服务器与 Cloudflare 之间的隧道连接。<br>
+◦ 配置公共主机名： 在隧道的“Public Hostnames”选项卡中，选择一个域名和子域名（例如 <a href="https://ssh.example.com/" rel="nofollow">ssh.example.com</a>），将其指向您的 SSH 服务（通常是 localhost:22）。保存主机名设置。<br>
+2. 配置 Cloudflare Access 应用程序：(下面的步骤一定要做！)<br>
+◦ 创建应用程序： 在 Cloudflare Zero Trust 仪表板中，转到“Access” &gt; “Applications”，点击“Add an application”，选择“Self-hosted”。<br>
+◦ 设置应用程序详细信息： 输入应用程序名称，设置“Application domain”为之前配置的公共主机名（例如 <a href="https://ssh.example.com/" rel="nofollow">ssh.example.com</a>）。<br>
+◦ 配置访问策略： 在“Policies”选项卡中，添加相应的访问策略，指定允许访问该应用程序的用户或组。(必须配置一个Everyone的mail策略，否则无法收到邮件)<br>
+◦ 启用浏览器渲染： 在“Advanced settings”下的“Browser rendering settings”中，将“Browser rendering”设置为“SSH”。保存应用程序设置。<br>
+3. 用户访问 SSH 终端：<br>
+◦ 访问公共主机名： 用户在浏览器中访问配置的公共主机名（例如 <a href="https://ssh.example.com/%EF%BC%89%E3%80%82" rel="nofollow">https://ssh.example.com/）。</a><br>
+◦ 身份验证： 用户将根据之前配置的访问策略进行身份验证。<br>
+◦ Linux账户验证：输入alpine，密码alpine<br>
+◦ 使用浏览器终端： 成功验证后，Cloudflare 将在浏览器中呈现一个 SSH 终端，用户可以直接在其中操作服务器，无需在客户端安装任何额外的软件或管理 SSH 密钥。<br>
+CF节点优选<br>
+⭐CloudFlare公共优选Cname域名地址1：<a href="https://www.wetest.vip/" rel="nofollow">点我</a><br>
+CloudFlare公共优选Cname域名地址2：<a href="https://www.wetest.vip/" rel="nofollow">点</a><a href="https://blog.nbvil.com/nat/saasip/" rel="nofollow">我</a><br>
+CloudFlare优质IP：<a href="https://stock.hostmonit.com/CloudFlareYes" rel="nofollow">点我</a><br>
+CloudFlare公共优选教程1：<a href="https://www.youtube.com/watch?v=uCgRb7KfANo" rel="nofollow">点我</a><br>
+CloudFlare公共优选教程2：<a href="https://www.youtube.com/watch?v=oTwnwZEJpWo&amp;feature=youtu.be" rel="nofollow">点我</a><br>
+CDN优选域名和IP教程：<a href="https://www.freedidi.com/10143.html" rel="nofollow">点我</a><br>
+<a href="https://www.itdog.cn/tcping/" rel="nofollow">在线TCP延迟测试</a></p>
+<p>域名价格表：<a href="https://www.baota.me/post-410.html" rel="nofollow">点我</a></p>
+<p>节点优选流程如下</p>
+<p>步骤<br>
+主域名A<br>
+加速域名B</p>
+<p>第一步：<br>
+在CF的ZeroTrust的Tunnels中，把A,B都映射到alist网站上(alist.A和alist.B)</p>
+<p>第二步：</p>
+<p>1.回退源设置成【alist.B】<br>
+2.自定义主机设置成【alist.A】</p>
+<p>第三步：<br>
+第二步的2中会生成一些DNS解析，添加到A的DNS中(<a href="https://kdocs.cn/l/cheRD9wHnLXd?linkname=o71OFSy27a" rel="nofollow">#1</a>)<br>
+设置一个优选节点到【fast.B】</p>
+<p>第四步：<br>
+把【alist.A】指向到【fast.B】,关闭CF的代理</p>
+<p>温馨提示：</p>
+<p>#1关于回退源中自定义主机的DNS认证的解决办法<br>
+⭐解决灵感的帖子：<a href="https://blog.tsinbei.com/archives/1267/" rel="nofollow">点我</a><br>
+如果回退源中--&gt;自定义主机验证--&gt;主机名的状态(验证失败)<br>
+请：假设回退域名（<a href="https://callback.tsinbei.com/" rel="nofollow">callback.tsinbei.com</a>）<br>
+自定义主机域名（<a href="https://custom.tsinbei.com/" rel="nofollow">custom.tsinbei.com</a>）(验证失败)<br>
+那么自定义主机域名中设置一个CNAME ：csutome指向<a href="https://callback.tsinbei.com/" rel="nofollow">callback.tsinbei.com</a><br>
+温馨提示：无论使用何种方法验证，验证成功后均可以删除验证记录（TXT 或 CNAME）并进行自选。经测试，同一个主机名验证成功一次后就不会再次验证。<br>
+#2网页版SSH做CDN加速时候遇到的问题<br>
+⭐1. 在加速域名B的回退源设置了自定义主机ssh.A<br>
+2. 主域名ssh.A这里的cname不是指向fast.B<br>
+3. 主域名ssh.A保持隧道Tunnels自动生成的配置(ssh.A)，并且小黄云CF代理要开着,否则ssh.A无法访问<br>
+4. 并且ssh.A也要去做一个application<br>
+#3自定义主机证书的自动续订的问题<br>
+⭐自定义主机(主域名)ssh.A下面加一个CNAME<br>
+自定义主机名的 DCV 委派<br>
+_acme-challenge. .6ec077ddb0899695.dcv.cloudflare.com<br>
+CNAME的Key里面只需要写sub域名ssh，cloudflare会自动补充完整域名的，但是value里面要写ssh.A<br>
+_acme-challenge.ssh ssh.A..6ec077ddb0899695.dcv.cloudflare.com<br>
+温馨提示：实际内容请参考“自定义主机名的 DCV 委派”<br>
+CF加速成功验证<br>
+⭐<a href="https://www.itdog.cn/http/" rel="nofollow">在线网站测试</a><br>
+踩到的坑<br>
+⭐在cloudflare中配置公共主机名的时候，一定不要设置路径，否则可能会造成js,css无法正常返回<br>
+关于内网穿透的一些补充内容<br>
+⭐用cpolar也可以做内网穿透（不过没有试验过，教程如下）<br>
+图文教程：<a href="https://developer.aliyun.com/article/1487189?spm=5176.26934562.main.1.763bb724frQ2gg" rel="nofollow">点我</a><br>
+油管视频：<a href="https://www.youtube.com/watch?v=nMsyAUfPshE&amp;t=246s" rel="nofollow">点我</a><br>
+官方教程：<a href="https://www.cpolar.com/blog/cpolar-quick-start-tutorial-ubuntu-series" rel="nofollow">点我</a><br>
+docker版安装：<a href="https://www.cpolar.com/blog/docker-container-installation-cpolar" rel="nofollow">点我</a><br>
+cpolar的部署（Alpine服务器）</p>
+<ol>
+<li>查看AlpineLinux架构<br>
+lscpu2. 下载cpolar并解压<br>
+当前使用版本：<a href="https://wwvj.lanzoum.com/iHbEy2tefv7e" rel="nofollow">https://wwvj.lanzoum.com/iHbEy2tefv7e</a><br>
+curl -L <a href="https://www.cpolar.com/static/downloads/releases/3.3.12/cpolar-stable-linux-amd64.zip" rel="nofollow">https://www.cpolar.com/static/downloads/releases/3.3.12/cpolar-stable-linux-amd64.zip</a> -o cpolar-stable-linux-amd64.zip<br>
+unzip cpolar-stable-linux-amd64.zip<br>
+mv cpolar /usr/local/bin/3. 制作alpine服务（service）文件（cpolar的配置文件yml）<br>
+mkdir -p /etc/cpolar<br>
+vi /etc/cpolar/cpolar.yml</li>
+</ol>
+<h1>vi: set shiftwidth=2 tabstop=2 softtabstop=2 ai expandtab:</h1>
+<p>authtoken: your_auth_token<br>
+tunnels:<br>
+website:<br>
+addr: 8080<br>
+proto: http<br>
+ssh:<br>
+proto: tcp<br>
+addr: 224. 制作alpine服务（service）文件（脚本）<br>
+touch /etc/init.d/cpolar<br>
+vi /etc/init.d/cpolar<br>
+#!/sbin/openrc-run</p>
+<p>name="cpolar"<br>
+command="/usr/local/bin/cpolar"<br>
+command_args="--config /etc/cpolar/cpolar.yml -log /var/log/cpolar/access.log"<br>
+pidfile="/run/cpolar.pid"<br>
+depend() {<br>
+need net<br>
+before docker<br>
+}<br>
+start() {<br>
+ebegin "Starting cpolar"<br>
+start-stop-daemon --start --background --pidfile $pidfile --exec $command -- $command_args<br>
+eend $?<br>
+}<br>
+stop() {<br>
+ebegin "Stopping cpolar"<br>
+start-stop-daemon --stop --pidfile $pidfile<br>
+eend $?<br>
+}<br>
+chmod +x /etc/init.d/cpolar<br>
+5. 使用cpolar服务<br>
+rc-update add cpolar default</p>
+<p>rc-service cpolar status<br>
+#可使用选项</p>
+<h1>-start</h1>
+<h1>-restart</h1>
+<h1>-stop</h1>
+<h1>-status6. 开启cpolar隧道</h1>
+<p>cpolar authtoken xxxxxxx检证命令：<br>
+cpolar http 8080<br>
+实验完毕，垃圾别用！！！</p></div></div></div>
+<div style="font-size:small;margin-top:8px;float:right;">❤️ 转载文章请注明出处，谢谢！❤️</div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://blog.mymaskking.dpdns.org/">爱捣鼓的小水木的博客</a></div>
+<div id="footer2"><span id="filingNum"><a href="https://beian.miit.gov.cn/" target="_blank">浙ICP备20250412号</a> • </span>
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if("2025/04/12"!=""){
+    var startSite=new Date("2025/04/12");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","MyMaskKing/MyMaskKing.github.io");
+    script.setAttribute("issue-term","title");
+    
+    script.setAttribute("theme","dark");
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+
+
+</html>

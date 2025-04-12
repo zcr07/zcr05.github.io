@@ -340,10 +340,10 @@ function setupBackgroundEvents() {
     });
     
     // 定期检查背景动画是否存在
-    setInterval(function() {
-        ensureBackgroundElement();
-        enhanceBackgroundAnimation();
-    }, 2000);
+    // setInterval(function() {
+    //     ensureBackgroundElement();
+    //     enhanceBackgroundAnimation();
+    // }, 2000);
 }
 
 // 主题切换功能

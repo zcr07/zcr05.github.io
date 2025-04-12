@@ -1042,3 +1042,103 @@ main > div > div:hover a,
 .Box-row:hover::before, .d-flex:hover::before, #indexPostsList > div:hover::before {
   box-shadow: 0 0 25px rgba(126, 87, 255, 0.5);
 }
+
+/* 添加响应式基础样式，确保内容在任何设备上都能正确显示 */
+* {
+  box-sizing: border-box;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+/* 确保所有内容区域具有合适的宽度和自动折行 */
+.Box-row, .d-flex, #indexPostsList > div, tr.post-item, .post-item, 
+.container-lg > div.container-lg > div.Box,
+.container-lg > div.container-lg > div > div,
+#blog-container > div,
+main > div > div,
+[id*="post"] {
+  max-width: 100% !important;
+  width: 100% !important;
+  overflow: hidden !important;
+  white-space: normal !important;
+  text-overflow: ellipsis !important;
+}
+
+/* 确保列表项内的文本和链接正确折行 */
+.Box-row a, .d-flex a, #indexPostsList > div a,
+tr.post-item a, .post-item a,
+.Box-row p, .d-flex p, #indexPostsList > div p,
+tr.post-item p, .post-item p,
+.Box-row h1, .Box-row h2, .Box-row h3, 
+.Box-row h4, .Box-row h5, .Box-row h6,
+.Box-row span, .d-flex span {
+  max-width: 100% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: normal !important;
+}
+
+/* 在小屏幕设备上调整列表悬停效果 */
+@media (max-width: 768px) {
+  .Box-row:hover, .d-flex:hover, #indexPostsList > div:hover, tr.post-item:hover, 
+  .post-item:hover,
+  .container-lg > div.container-lg > div.Box:hover,
+  .container-lg > div.container-lg > div > div:hover,
+  #blog-container > div:hover,
+  main > div > div:hover,
+  [id*="post"]:hover {
+    transform: translateY(-3px) !important;
+    transform: translateX(0) !important;
+    padding-left: 16px !important; /* 恢复正常内边距 */
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  
+  /* 修复移动设备上的内边距 */
+  .Box-row, .d-flex, #indexPostsList > div, tr.post-item, .post-item,
+  .container-lg > div.container-lg > div.Box,
+  .container-lg > div.container-lg > div > div,
+  #blog-container > div,
+  main > div > div,
+  [id*="post"] {
+    padding: 12px !important;
+    margin: 10px 0 !important;
+  }
+  
+  /* 调整标题大小在移动设备上更合适 */
+  .Box-row h1, .Box-row h2, .Box-row h3, 
+  .Box-row h4, .Box-row h5, .Box-row h6,
+  .Box-row a.Link--primary {
+    font-size: 95% !important;
+  }
+  
+  /* 确保内容容器居中且不超出屏幕 */
+  #content, .container, .container-lg, .container-md, .container-sm, .container-xl {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  
+  /* 移动设备上调整标签显示 */
+  .Label, .tags, .tag, .LabelName {
+    display: inline-block !important;
+    padding: 2px 6px !important;
+    font-size: 10px !important;
+    margin: 2px !important;
+  }
+}
+
+/* 解决IOS设备上的滚动问题 */
+@supports (-webkit-overflow-scrolling: touch) {
+  body, html {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .Box-row, .d-flex, #indexPostsList > div {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+}

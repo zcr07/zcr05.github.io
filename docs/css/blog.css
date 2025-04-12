@@ -8,7 +8,7 @@
   --accent-color: #00dcdc;
   --bg-primary: #0a0a20;
   --bg-secondary: #12122a;
-  --global-bg: #ddd6ff; /* 更接近图片的淡紫色背景 */
+  --global-bg: #ddd6ff; /* 保留淡紫色背景 */
   --text-primary: #f0f0f0;
   --text-secondary: #b0b0b0;
   --border-radius: 8px;
@@ -20,7 +20,7 @@
   --footer-text-dark-color: #d3d3f9;
   --text-color: #333;
   --text-secondary-color: #c4c4c4;
-  --light-global-bg: #ddd6ff; /* 更接近图片的淡紫色背景 */
+  --light-global-bg: #ddd6ff; /* 淡紫色背景 */
   
   /* 动画相关变量 */
   --gradient-animation-speed: 15s;
@@ -79,7 +79,7 @@ body {
   width: 100%;
   height: 100%;
   background: 
-    linear-gradient(135deg, rgba(221, 214, 255, 0.9), rgba(200, 190, 255, 0.7)); /* 更接近图片的淡紫色渐变 */
+    linear-gradient(135deg, rgba(221, 214, 255, 0.9), rgba(200, 190, 255, 0.7)); /* 保留淡紫色渐变 */
   z-index: -998;
   pointer-events: none;
 }
@@ -96,13 +96,7 @@ html[data-color-mode="dark"] #fixed-background::before {
 /* 亮色模式变体 */
 html[data-color-mode="light"] #fixed-background::before {
   background: 
-    radial-gradient(circle at 80% 10%, rgba(126, 87, 255, 0.2), transparent 40%),
-    radial-gradient(circle at 20% 30%, rgba(0, 220, 220, 0.2), transparent 40%),
-    radial-gradient(circle at 70% 65%, rgba(255, 79, 154, 0.2), transparent 50%),
-    radial-gradient(circle at 10% 85%, rgba(126, 87, 255, 0.2), transparent 30%),
-    repeating-linear-gradient(45deg, rgba(200, 210, 255, 0.4) 0%, rgba(220, 230, 255, 0.4) 10%),
-    linear-gradient(135deg, #d0e0ff 0%, #e8edff 100%) !important;
-  background-attachment: fixed !important;
+    linear-gradient(135deg, rgba(221, 214, 255, 0.9), rgba(200, 190, 255, 0.7)); /* 保留淡紫色渐变 */
 }
 
 /* 添加媒体查询以确保在移动设备上正常显示 */
@@ -144,7 +138,11 @@ html[data-color-mode="light"] #fixed-background::before {
 
 /* 标题样式 */
 h1, h2, h3, h4, h5, h6 {
-  color: var(--text-color);
+  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
   font-weight: 700;
 }
 
@@ -226,11 +224,13 @@ a:not(.LabelName a):not(.btn):hover:after {
   box-shadow: 0 0 15px rgba(126, 87, 255, 0.5);
 }
 
-/* 确保没有动画效果干扰 */
-* {
-  animation: none !important;
-  backface-visibility: visible !important;
-  transform-style: flat !important;
+/* Box基础样式 */
+.Box, .Box-body {
+  border-radius: 8px !important;
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  transition: all 0.3s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
 }
 
 /* 文字清晰度增强 */
@@ -284,6 +284,21 @@ a:not(.LabelName a):not(.btn):hover:after {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
+/* 博客标题样式优化 */
+.postTitle {
+  background: linear-gradient(to right, var(--primary-color), var(--secondary-color), var(--accent-color));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+  animation: gradient 5s ease infinite;
+  letter-spacing: 0.5px;
+  padding: 0.5rem 0;
+  text-shadow: none;
+  font-family: "PingFang SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+}
+
 /* 动画效果 */
 @keyframes gradient {
   0% { background-position: 0% center; }
@@ -301,6 +316,7 @@ a:not(.LabelName a):not(.btn):hover:after {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  animation: gradient 5s ease infinite;
 }
 
 /* 列表项基础样式 */
@@ -339,41 +355,6 @@ table > tbody > tr:hover, .Box:hover {
   z-index: 2 !important;
 }
 
-/* 暗色模式列表样式 */
-html[data-color-mode="dark"] .Box-row,
-html[data-color-mode="dark"] .d-flex, 
-html[data-color-mode="dark"] #indexPostsList > div, 
-html[data-color-mode="dark"] tr.post-item,
-html[data-color-mode="dark"] .post-item,
-html[data-color-mode="dark"] .tech-box-row,
-html[data-color-mode="dark"] body > div.container-lg > div.container-lg > div.Box,
-html[data-color-mode="dark"] body > div.container-lg > div.container-lg > div > div,
-html[data-color-mode="dark"] #blog-container > div,
-html[data-color-mode="dark"] main > div > div,
-html[data-color-mode="dark"] table > tbody > tr,
-html[data-color-mode="dark"] .Box {
-  background-color: rgba(18, 18, 42, 0.8) !important;
-  border: 1px solid rgba(126, 87, 255, 0.3) !important;
-  border-left: 3px solid transparent !important;
-}
-
-/* 暗色模式列表悬停样式 */
-html[data-color-mode="dark"] .Box-row:hover,
-html[data-color-mode="dark"] .d-flex:hover, 
-html[data-color-mode="dark"] #indexPostsList > div:hover, 
-html[data-color-mode="dark"] tr.post-item:hover,
-html[data-color-mode="dark"] .post-item:hover,
-html[data-color-mode="dark"] .tech-box-row:hover,
-html[data-color-mode="dark"] body > div.container-lg > div.container-lg > div.Box:hover,
-html[data-color-mode="dark"] body > div.container-lg > div.container-lg > div > div:hover,
-html[data-color-mode="dark"] #blog-container > div:hover,
-html[data-color-mode="dark"] main > div > div:hover,
-html[data-color-mode="dark"] table > tbody > tr:hover,
-html[data-color-mode="dark"] .Box:hover {
-  background-color: rgba(25, 25, 50, 0.9) !important;
-  border-left: 6px solid #7e57ff !important;
-}
-
 /* 主题过渡效果 */
 .theme-transition {
   transition: all 0.5s ease;
@@ -398,11 +379,12 @@ html[data-color-mode="dark"] .Box:hover {
 .btn-invisible svg {
   vertical-align: middle !important;
   transition: all 0.3s ease !important;
+  fill: currentColor !important; /* 确保SVG颜色与父元素一致 */
 }
 
 /* 暗色模式样式 */
 html[data-color-mode="dark"] {
-  background-color: var(--global-bg) !important;
+  background-color: var(--bg-primary) !important;
 }
 
 html[data-color-mode="dark"] body {
@@ -430,7 +412,10 @@ html[data-color-mode="dark"] .Box-row:hover {
 }
 
 html[data-color-mode="dark"] .blogTitle {
-  color: var(--text-primary) !important;
+  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 html[data-color-mode="dark"] .btn-invisible {
@@ -440,6 +425,20 @@ html[data-color-mode="dark"] .btn-invisible {
 html[data-color-mode="dark"] .btn-invisible:hover {
   background-color: rgba(126, 87, 255, 0.2) !important;
   color: white !important;
+}
+
+/* SVG 图标样式恢复 */
+svg {
+  fill: currentColor !important;
+}
+
+svg path {
+  fill: currentColor !important;
+}
+
+.btn-invisible svg,
+.header-nav-item svg {
+  color: inherit !important;
 }
 
 /* 亮色模式样式 */

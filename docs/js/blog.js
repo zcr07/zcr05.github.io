@@ -94,26 +94,17 @@ function forceFixAllLabels() {
         container.style.cssText = 'display: flex !important; flex-wrap: wrap !important; gap: 6px !important; visibility: visible !important; opacity: 1 !important;';
     });
     
-    // 强制处理所有标签 - 只修复布局相关属性，不修改颜色
+    // 强制处理所有标签 - 只修复可见性相关属性
     var allLabels = document.querySelectorAll('.Label, .LabelName');
     allLabels.forEach(function(label) {
-        // 只设置布局和可见性属性，不设置背景色
-        label.style.display = 'inline-block';
-        label.style.margin = '0 4px 4px 0';
+        // 只设置可见性属性，不设置大小和样式
         label.style.visibility = 'visible';
         label.style.opacity = '1';
-        label.style.position = 'relative';
-        label.style.zIndex = '10';
         
         // 处理标签中的链接
         var links = label.querySelectorAll('a');
         links.forEach(function(link) {
-            // 只设置布局属性，不设置颜色
-            link.style.display = 'block';
-            link.style.width = '100%';
-            link.style.height = '100%';
-            link.style.position = 'relative';
-            link.style.zIndex = '20';
+            // 只设置点击相关属性
             link.style.pointerEvents = 'auto';
             
             // 强制处理点击事件，确保链接可点击
@@ -215,26 +206,16 @@ function fixTagStyles() {
         container.style.cssText = 'display: flex !important; flex-wrap: wrap !important; gap: 6px !important; visibility: visible !important; opacity: 1 !important;';
     });
     
-    // 处理所有标签元素 - 只修复布局相关属性
+    // 处理所有标签元素 - 只修复可见性相关属性
     var labels = document.querySelectorAll('.Label, .LabelName');
     labels.forEach(label => {
-        // 设置标签强制布局样式，不涉及颜色
-        label.style.display = 'inline-block';
-        label.style.margin = '0 4px 4px 0';
+        // 只设置可见性属性
         label.style.visibility = 'visible';
         label.style.opacity = '1';
-        label.style.position = 'relative';
-        label.style.zIndex = '10';
         
-        // 处理标签中的链接 - 只修复布局和点击相关属性
+        // 处理标签中的链接 - 只修复点击相关属性
         var labelLinks = label.querySelectorAll('a');
         labelLinks.forEach(link => {
-            link.style.display = 'block';
-            link.style.padding = '2px 12px';
-            link.style.width = '100%';
-            link.style.height = '100%';
-            link.style.position = 'relative';
-            link.style.zIndex = '20';
             link.style.pointerEvents = 'auto';
             
             // 强制添加点击事件处理
@@ -248,24 +229,12 @@ function fixTagStyles() {
                 link.setAttribute('data-event-fixed', 'true');
             }
         });
-        
-        // 删除修复日期标签的代码
-        // if (label.classList.contains('LabelTime')) {
-        //     label.style.background = 'linear-gradient(45deg, var(--secondary-color), #ff6b6b) !important';
-        // }
     });
     
-    // 修复标签页中的标签布局 - 只修复布局相关属性
+    // 修复标签页中的标签布局 - 只修复容器相关属性
     var tagLabelContainer = document.getElementById('taglabel');
     if (tagLabelContainer) {
-        tagLabelContainer.style.cssText = 'display: flex !important; flex-wrap: wrap !important; gap: 8px !important; margin: 0 0 15px !important; padding: 5px !important;';
-        
-        var tagLabels = tagLabelContainer.querySelectorAll('.Label');
-        tagLabels.forEach(tagLabel => {
-            tagLabel.style.margin = '0';
-            tagLabel.style.cursor = 'pointer';
-            tagLabel.style.display = 'inline-block';
-        });
+        tagLabelContainer.style.cssText = 'display: flex !important; flex-wrap: wrap !important; gap: 8px !important; visibility: visible !important; opacity: 1 !important;';
     }
 }
 
@@ -390,25 +359,19 @@ function fixTagsImmediately() {
     // 强制标签容器使用flex布局
     var labelContainers = document.querySelectorAll('.listLabels, .flexLabels, #taglabel');
     labelContainers.forEach(function(container) {
-        container.style.cssText = 'display: flex !important; flex-wrap: wrap !important; flex-direction: row !important; gap: 6px !important; margin: 5px 0 !important;';
+        container.style.cssText = 'display: flex !important; flex-wrap: wrap !important; flex-direction: row !important; gap: 6px !important; visibility: visible !important; opacity: 1 !important;';
     });
     
-    // 强制标签使用inline-flex - 只保留布局相关属性
+    // 强制标签可见 - 只设置可见性
     var labels = document.querySelectorAll('.Label, .LabelName');
     labels.forEach(function(label) {
-        label.style.display = 'inline-flex';
-        label.style.flex = '0 0 auto';
-        label.style.margin = '0';
-        label.style.borderRadius = '20px';
-        label.style.overflow = 'hidden';
+        label.style.visibility = 'visible';
+        label.style.opacity = '1';
         
-        // 处理标签中的链接 - 只保留布局和点击相关属性
+        // 处理标签中的链接 - 只保留点击相关设置
         var links = label.querySelectorAll('a');
         links.forEach(function(link) {
-            link.style.display = 'block';
-            link.style.padding = '2px 10px';
-            link.style.width = '100%';
-            link.style.height = '100%';
+            link.style.pointerEvents = 'auto';
             
             // 确保链接可点击
             link.addEventListener('click', function(e) {

@@ -128,11 +128,8 @@ function createTOC() {
     topLink.addEventListener('click', function(e) {
         e.preventDefault();
         
-        // 平滑滚动到顶部
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
+        // 重置所有可能存在的滚动容器
+        resetAllScrollbars();
         
         // 移除所有激活状态
         document.querySelectorAll('.toc-link').forEach(link => {
@@ -143,15 +140,6 @@ function createTOC() {
         const firstTocLink = document.querySelector('.toc-link');
         if (firstTocLink) {
             firstTocLink.classList.add('active');
-            
-            // 将目录滚动回顶部
-            const tocContainer = document.querySelector('.toc-content');
-            if (tocContainer) {
-                tocContainer.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            }
         }
         
         // 清除URL中的哈希值
@@ -326,6 +314,18 @@ function highlightTOCOnScroll() {
         const firstTocLink = document.querySelector('.toc-link');
         if (firstTocLink) {
             firstTocLink.classList.add('active');
+            
+            // 当页面在顶部时，确保所有滚动条回到顶部
+            const tocContainer = document.querySelector('.toc-content');
+            if (tocContainer) {
+                tocContainer.scrollTop = 0;
+            }
+            
+            // 重置其他可能存在的滚动条
+            const tocElement = document.getElementById('article-toc');
+            if (tocElement) {
+                tocElement.scrollTop = 0;
+            }
         }
     }
 }
@@ -723,15 +723,15 @@ document.addEventListener("DOMContentLoaded", function() {
     
     // 创建目录
     createTOC();
+    
+    // 确保所有滚动条都重置到顶部
+    setTimeout(resetAllScrollbars, 300);
 });
 
 // 页面完全加载后再次检查，确保所有内容已渲染
 window.addEventListener("load", function() {
     // 再次强制滚动到顶部，确保在所有资源加载完毕后仍然在顶部
-    window.scrollTo({
-        top: 0,
-        behavior: 'auto'
-    });
+    resetAllScrollbars();
     
     setTimeout(function() {
         // 确保目录已创建
@@ -739,10 +739,62 @@ window.addEventListener("load", function() {
             createTOC();
         }
         
-        // 第三次确认滚动到顶部
-        window.scrollTo({
-            top: 0,
-            behavior: 'auto'
-        });
+        // 再次重置所有滚动条
+        resetAllScrollbars();
     }, 500);
-}); 
+});
+
+// 重置所有页面滚动条的函数
+function resetAllScrollbars() {
+    // 1. 重置主窗口滚动条
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+    
+    // 2. 重置目录内容滚动条 - 立即生效
+    const tocContainer = document.querySelector('.toc-content');
+    if (tocContainer) {
+        // 方法1: 直接设置scrollTop
+        tocContainer.scrollTop = 0;
+        
+        // 方法2: 确保第一个目录项可见
+        const firstTocLink = document.querySelector('.toc-link');
+        if (firstTocLink) {
+            try {
+                // 使用兼容性更好的方式
+                firstTocLink.scrollIntoView(true);
+            } catch(e) {
+                console.log('scrollIntoView失败');
+            }
+        }
+    }
+    
+    // 3. 重置整个目录容器的滚动条（如果有）
+    const tocElement = document.getElementById('article-toc');
+    if (tocElement) {
+        tocElement.scrollTop = 0;
+    }
+    
+    // 4. 重置文章容器的滚动条（如果有）
+    const postBody = document.getElementById('postBody');
+    if (postBody) {
+        postBody.scrollTop = 0;
+    }
+    
+    // 5. 重置内容容器的滚动条（如果有）
+    const contentContainer = document.getElementById('content');
+    if (contentContainer) {
+        contentContainer.scrollTop = 0;
+    }
+    
+    // 6. 延迟再次尝试滚动重置，确保生效
+    setTimeout(() => {
+        if (tocContainer) tocContainer.scrollTop = 0;
+        if (tocElement) tocElement.scrollTop = 0;
+        
+        // 尝试重置toc容器本身
+        const toc = document.querySelector('.toc');
+        if (toc) toc.scrollTop = 0;
+    }, 50);
+} 

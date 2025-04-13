@@ -800,52 +800,101 @@ window.addEventListener('hashchange', function() {
     }
 });
 
-// 显示/隐藏移动端目录
+// 改进移动端目录的切换逻辑
 function toggleMobileToc(show) {
+    console.log('[TOC调试] 尝试切换移动端目录显示状态，参数:', show);
+    
+    // 获取移动端TOC和按钮
     const toc = document.querySelector('.mobile-toc');
     const btn = document.querySelector('.mobile-toc-btn');
     
     if (!toc) {
-        console.log('目录不存在，这是不应该发生的情况，因为我们已经预先创建了目录');
+        console.error('[TOC错误] 移动端目录元素不存在，无法切换显示状态');
         return;
     }
     
-    // 如果指定了show参数，按指定参数处理，否则切换状态
-    const shouldShow = (show !== undefined) ? show : (toc.style.display === 'none' || toc.style.opacity === '0');
+    if (!btn) {
+        console.warn('[TOC警告] 移动端目录按钮不存在');
+    }
     
+    // 取得当前可见状态（通过多个属性综合判断）
+    const isVisible = window.getComputedStyle(toc).opacity !== '0' && 
+                      window.getComputedStyle(toc).visibility !== 'hidden';
+                      
+    console.log('[TOC调试] 目录当前状态:', isVisible ? '可见' : '隐藏', 
+                '(opacity:', window.getComputedStyle(toc).opacity, 
+                ', visibility:', window.getComputedStyle(toc).visibility, 
+                ', display:', window.getComputedStyle(toc).display, ')');
+    
+    // 根据参数或当前状态决定是否显示
+    const shouldShow = show !== undefined ? show : !isVisible;
+    console.log('[TOC调试] 目录将被设置为:', shouldShow ? '显示' : '隐藏');
+    
+    // 执行显示或隐藏
     if (shouldShow) {
-        // 显示目录
-        console.log('显示移动端目录');
+        console.log('[TOC调试] 显示移动端目录');
+        // 显示TOC
         toc.style.display = 'block';
-        
-        // 强制重排
-        toc.offsetHeight;
-        
-        // 设置显示样式
-        toc.style.opacity = '1';
-        toc.style.transform = 'scale(1)';
+        // 使用setTimeout确保过渡效果正常
+        setTimeout(() => {
+            toc.style.opacity = '1';
+            toc.style.visibility = 'visible';
+            toc.style.transform = 'translateY(0)';
+            console.log('[TOC调试] 目录显示动画已触发');
+        }, 10);
         
         // 更新按钮样式
         if (btn) {
             btn.innerHTML = '×';
+            btn.classList.add('active');
             btn.style.background = 'linear-gradient(135deg, #ff4f9a, #7e57ff)';
+            console.log('[TOC调试] 按钮样式已更新为激活状态');
         }
     } else {
-        // 隐藏目录
-        console.log('隐藏移动端目录');
+        console.log('[TOC调试] 隐藏移动端目录');
+        // 隐藏TOC，先设置透明度和变换
         toc.style.opacity = '0';
-        toc.style.transform = 'scale(0.95)';
+        toc.style.visibility = 'hidden';
+        toc.style.transform = 'translateY(20px)';
+        console.log('[TOC调试] 目录隐藏动画已触发');
         
-        // 延迟设置display: none
+        // 在过渡结束后设置display:none
         setTimeout(() => {
-            toc.style.display = 'none';
-        }, 300);
+            if (window.getComputedStyle(toc).opacity === '0') {
+                toc.style.display = 'none';
+                console.log('[TOC调试] 目录已完全隐藏，设置为display:none');
+            } else {
+                console.log('[TOC调试] 目录隐藏过渡未完成，opacity:', window.getComputedStyle(toc).opacity);
+            }
+        }, 300);  // 与CSS过渡时间匹配
         
         // 更新按钮样式
         if (btn) {
             btn.innerHTML = '≡';
+            btn.classList.remove('active');
             btn.style.background = 'linear-gradient(135deg, #7e57ff, #ff4f9a)';
+            console.log('[TOC调试] 按钮样式已更新为非激活状态');
         }
+    }
+    
+    // 点击空白区域关闭目录
+    if (shouldShow) {
+        // 添加一个一次性的document点击事件，点击空白处关闭TOC
+        function closeOnClickOutside(e) {
+            // 检查点击的是否为TOC区域外的元素
+            if (!toc.contains(e.target) && e.target !== btn) {
+                console.log('[TOC调试] 检测到点击TOC外区域，关闭目录');
+                toggleMobileToc(false);
+                document.removeEventListener('click', closeOnClickOutside);
+                console.log('[TOC调试] 已移除点击外部关闭事件监听器');
+            }
+        }
+        
+        // 延迟一点添加事件，防止当前点击立即触发
+        setTimeout(() => {
+            document.addEventListener('click', closeOnClickOutside);
+            console.log('[TOC调试] 已添加点击外部关闭事件监听器');
+        }, 10);
     }
 }
 
@@ -860,6 +909,14 @@ function initializeTOC() {
         console.log('检测到移动设备，使用简化的目录');
         // 防止重复生成
         if (document.getElementById('article-toc')) return;
+        
+        // 移除可能已存在的所有TOC组件，避免冲突
+        const existingMobileToc = document.querySelector('.mobile-toc');
+        if (existingMobileToc) existingMobileToc.remove();
+        
+        const existingMobileBtn = document.querySelector('.mobile-toc-btn');
+        if (existingMobileBtn) existingMobileBtn.remove();
+        
         // 先创建目录内容，再创建按钮，确保目录在按钮创建时就已经存在
         createMobileToc();
         createMobileTocButton();
@@ -874,6 +931,14 @@ function initializeTOC() {
         addExtraFixStyles();
     } else {
         console.log('检测到桌面设备，使用原始目录');
+        
+        // 移除可能已存在的移动端目录
+        const mobileToc = document.querySelector('.mobile-toc');
+        if (mobileToc) mobileToc.remove();
+        
+        const mobileBtn = document.querySelector('.mobile-toc-btn');
+        if (mobileBtn) mobileBtn.remove();
+        
         // 使用原始的createTOC函数创建目录
         createTOC();
     }
@@ -899,30 +964,25 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // 页面完全加载后再次检查
 window.addEventListener("load", function() {
-    // 再次强制滚动到顶部，确保在所有资源加载完毕后仍然在顶部
+    // 强制滚动到顶部
     resetAllScrollbars();
     
-    // 确保目录已初始化
-    setTimeout(function() {
-        if (window.innerWidth <= 1024) {
-            // 移动设备上检查目录是否已创建
-            if (!document.querySelector('.mobile-toc')) {
-                console.log('移动端目录未创建，创建目录内容和按钮');
-                createMobileToc();
-                createMobileTocButton();
-                addExtraFixStyles();
-            }
-        } else {
-            // 桌面设备上检查目录是否已创建
-        if (!document.getElementById('article-toc')) {
-                console.log('桌面端目录未创建，创建目录');
-            createTOC();
-            }
-        }
-        
-        // 再次重置所有滚动条
-        resetAllScrollbars();
-    }, 500);
+    // 简单检查目录是否已初始化
+    const postBody = document.getElementById('postBody');
+    if (!postBody) return;
+    
+    const isMobile = window.innerWidth <= 1300;
+    const hasMobileToc = document.querySelector('.mobile-toc');
+    const hasDesktopToc = document.getElementById('article-toc');
+    
+    if (isMobile && !hasMobileToc) {
+        console.log('移动端目录不存在，创建移动端目录');
+        createMobileToc();
+        createMobileTocButton();
+    } else if (!isMobile && !hasDesktopToc) {
+        console.log('桌面端目录不存在，创建桌面端目录');
+        createTOC();
+    }
 });
 
 // 添加额外修复样式
@@ -971,7 +1031,7 @@ function addExtraFixStyles() {
 
 // 彻底重写移动端目录按钮及显示逻辑
 function createMobileTocButton() {
-    console.log('创建独立的移动端目录按钮');
+    console.log('创建移动端目录按钮');
     
     // 移除可能已存在的TOC按钮
     const existingBtn = document.querySelector('.mobile-toc-btn');
@@ -979,42 +1039,144 @@ function createMobileTocButton() {
         existingBtn.remove();
     }
     
-    // 创建简单的移动端目录按钮
+    // 创建按钮元素
     const btn = document.createElement('button');
     btn.className = 'mobile-toc-btn';
+    btn.id = 'mobile-toc-btn';
     btn.innerHTML = '≡';
     btn.setAttribute('aria-label', '文章目录');
+    btn.setAttribute('type', 'button');
     
-    // 应用样式
-    Object.assign(btn.style, {
-        position: 'fixed',
-        bottom: '20px',
-        right: '20px',
-        width: '50px',
-        height: '50px',
-        borderRadius: '50%',
-        background: 'linear-gradient(135deg, #7e57ff, #ff4f9a)',
-        color: 'white',
-        fontSize: '28px',
-        border: 'none',
-        boxShadow: '0 3px 15px rgba(0, 0, 0, 0.3)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        cursor: 'pointer',
-        zIndex: '10000'
-    });
+    // 使用内联样式确保按钮可见
+    btn.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #7e57ff, #ff4f9a);
+        color: white;
+        font-size: 28px;
+        border: none;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 10000;
+        transition: all 0.3s ease;
+    `;
     
-    // 绑定点击事件
-    btn.addEventListener('click', function() {
-        toggleMobileToc();
-    });
+    // 移除现有的点击外部关闭目录的事件处理程序
+    document.removeEventListener('click', handleClickOutside);
+    
+    // 使用addEventListener，确保事件绑定正确
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('目录按钮被点击 - addEventListener');
+        
+        // 获取当前目录元素
+        const toc = document.querySelector('.mobile-toc');
+        if (!toc) {
+            console.log('目录元素不存在，无法切换');
+            return;
+        }
+        
+        // 确定当前是否可见
+        const isVisible = window.getComputedStyle(toc).display !== 'none' && 
+                          parseFloat(window.getComputedStyle(toc).opacity) > 0;
+        
+        console.log('目录当前状态:', isVisible ? '可见' : '隐藏', 
+                   '(opacity:', window.getComputedStyle(toc).opacity, 
+                   ', display:', window.getComputedStyle(toc).display, ')');
+        
+        // 切换目录显示状态
+        if (isVisible) {
+            hideMobileToc(toc, btn);
+        } else {
+            showMobileToc(toc, btn);
+        }
+    }, true); // 捕获阶段处理，确保在任何情况下都能处理点击事件
     
     // 添加到body
     document.body.appendChild(btn);
-    console.log('移动端目录按钮已创建');
+    console.log('移动端目录按钮已创建并添加到页面');
     
     return btn;
+}
+
+// 显示移动端目录
+function showMobileToc(toc, btn) {
+    // 显示目录
+    toc.style.display = 'block';
+    
+    // 强制重排以确保过渡效果
+    toc.offsetHeight;
+    
+    // 设置显示样式
+    toc.style.opacity = '1';
+    toc.style.transform = 'scale(1)';
+    
+    // 更新按钮样式
+    if (btn) {
+        btn.innerHTML = '×';
+        btn.style.background = 'linear-gradient(135deg, #ff4f9a, #7e57ff)';
+    }
+    
+    // 先清除之前可能存在的外部点击监听器
+    document.removeEventListener('click', handleClickOutside);
+    
+    // 添加点击外部关闭的事件监听，使用setTimeout避免当前点击事件被立即捕获
+    setTimeout(() => {
+        document.addEventListener('click', handleClickOutside);
+        console.log('已添加点击外部区域关闭目录的事件监听器');
+    }, 100);
+    
+    console.log('目录已显示:',
+               '(opacity:', window.getComputedStyle(toc).opacity,
+               ', display:', window.getComputedStyle(toc).display, ')');
+}
+
+// 隐藏移动端目录
+function hideMobileToc(toc, btn) {
+    // 隐藏目录
+    toc.style.opacity = '0';
+    toc.style.transform = 'scale(0.95)';
+    
+    // 更新按钮样式
+    if (btn) {
+        btn.innerHTML = '≡';
+        btn.style.background = 'linear-gradient(135deg, #7e57ff, #ff4f9a)';
+    }
+    
+    // 移除点击外部关闭的事件监听
+    document.removeEventListener('click', handleClickOutside);
+    
+    // 延迟隐藏目录元素
+    setTimeout(() => {
+        if (parseFloat(window.getComputedStyle(toc).opacity) === 0) {
+            toc.style.display = 'none';
+            console.log('目录已隐藏:', 
+                       '(opacity:', window.getComputedStyle(toc).opacity, 
+                       ', display:', window.getComputedStyle(toc).display, ')');
+        }
+    }, 300);
+}
+
+// 处理点击外部区域关闭目录
+function handleClickOutside(e) {
+    const toc = document.querySelector('.mobile-toc');
+    const btn = document.getElementById('mobile-toc-btn');
+    
+    if (!toc || !btn) return;
+    
+    // 确保点击的不是目录本身或目录按钮
+    if (!toc.contains(e.target) && e.target !== btn) {
+        console.log('检测到点击外部区域，关闭目录');
+        hideMobileToc(toc, btn);
+    }
 }
 
 // 创建简化的移动端目录
@@ -1056,6 +1218,11 @@ function createMobileToc() {
         transition: 'transform 0.3s, opacity 0.3s',
         transform: 'scale(0.95)',
         opacity: '0'
+    });
+    
+    // 添加阻止冒泡的点击事件，防止点击目录内容导致目录被关闭
+    toc.addEventListener('click', function(e) {
+        e.stopPropagation();
     });
     
     // 添加标题
@@ -1106,6 +1273,7 @@ function createMobileToc() {
         // 绑定点击事件
         link.addEventListener('click', function(e) {
             e.preventDefault();
+            e.stopPropagation(); // 防止冒泡
             
             // 滚动到对应标题
             const target = document.getElementById(heading.id);
@@ -1115,7 +1283,10 @@ function createMobileToc() {
                 window.scrollTo({top: y, behavior: 'smooth'});
                 
                 // 关闭目录
-                toggleMobileToc(false);
+                const btn = document.getElementById('mobile-toc-btn');
+                if (btn) {
+                    hideMobileToc(toc, btn);
+                }
             }
         });
         
@@ -1136,9 +1307,17 @@ function createMobileToc() {
         color: '#7e57ff'
     });
     
-    topBtn.addEventListener('click', function() {
+    topBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation(); // 防止冒泡
+        
         window.scrollTo({top: 0, behavior: 'smooth'});
-        toggleMobileToc(false);
+        
+        // 关闭目录
+        const btn = document.getElementById('mobile-toc-btn');
+        if (btn) {
+            hideMobileToc(toc, btn);
+        }
     });
     
     toc.appendChild(topBtn);

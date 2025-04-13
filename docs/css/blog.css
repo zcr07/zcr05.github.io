@@ -1142,3 +1142,24 @@ tr.post-item p, .post-item p,
     transform: translateZ(0);
   }
 }
+/* 在移动设备上调整title-right布局 */
+@media (max-width: 768px) {
+  .title-right {
+    justify-content: center;
+    margin-top: 10px;
+  }
+  
+  .title-right > * {
+    margin: 4px;
+  }
+  
+  .title-right > div[style="display:contents"] > * {
+    margin: 4px;
+  }
+  
+  .title-right .subnav-search {
+    width: 100%;
+    margin-bottom: 10px;
+    order: -1;
+  }
+}

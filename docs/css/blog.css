@@ -1024,6 +1024,34 @@ html[data-color-mode="dark"] #content > div:first-child:hover {
   box-shadow: 0 8px 25px rgba(126, 87, 255, 0.3);
 }
 
+/* 自动模式下的个人介绍样式 */
+html[data-color-mode="auto"] #content > div:first-child {
+  color: #0098ff
+}
+
+@media (prefers-color-scheme: dark) {
+  html[data-color-mode="auto"] #content > div:first-child {
+    background-color: rgba(18, 18, 42, 0.7);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    color: #0098ff
+  }
+  
+  html[data-color-mode="auto"] #content > div:first-child:hover {
+    background-color: rgba(25, 25, 55, 0.8);
+    box-shadow: 0 8px 25px rgba(126, 87, 255, 0.3);
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  html[data-color-mode="auto"] #content > div:first-child {
+    color: #0098ff
+  }
+  
+  html[data-color-mode="auto"] #content > div:first-child:hover {
+    box-shadow: 0 8px 25px rgba(126, 87, 255, 0.2);
+  }
+}
+
 /* 列表导航容器样式 */
 .SideNav {
   max-width: var(--max-width);

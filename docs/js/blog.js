@@ -168,6 +168,18 @@ function modeSwitch() {
     setTimeout(forceApplyListStyles, 300);
 }
 
+// 检测是否为移动设备
+function isMobileDevice() {
+    return (window.innerWidth <= 768) || 
+           (navigator.userAgent.match(/Android/i) ||
+            navigator.userAgent.match(/webOS/i) ||
+            navigator.userAgent.match(/iPhone/i) ||
+            navigator.userAgent.match(/iPad/i) ||
+            navigator.userAgent.match(/iPod/i) ||
+            navigator.userAgent.match(/BlackBerry/i) ||
+            navigator.userAgent.match(/Windows Phone/i));
+}
+
 // 简化的列表样式函数
 function forceApplyListStyles() {
     // 创建新样式
@@ -258,39 +270,64 @@ function forceApplyListStyles() {
                 -moz-osx-font-smoothing: grayscale !important;
                 text-rendering: optimizeLegibility !important;
             }
+            
+            /* 移动设备响应式样式 */
+            @media (max-width: 768px) {
+                .Box-row, .d-flex, #indexPostsList > div, tr.post-item, .post-item, 
+                body > div.container-lg > div.container-lg > div.Box,
+                body > div.container-lg > div.container-lg > div > div,
+                #blog-container > div,
+                main > div > div,
+                [id*="post"] {
+                    padding: 12px !important;
+                    margin: 10px 0 !important;
+                }
+                
+                .Box-row:hover, .d-flex:hover, #indexPostsList > div:hover, tr.post-item:hover, 
+                .post-item:hover,
+                body > div.container-lg > div.container-lg > div.Box:hover,
+                body > div.container-lg > div.container-lg > div > div:hover,
+                #blog-container > div:hover,
+                main > div > div:hover,
+                [id*="post"]:hover {
+                    padding-left: 12px !important;
+                    border-left-width: 3px !important;
+                }
+            }
         `;
         document.head.appendChild(listStyle);
     }
 }
 
-// 增强列表项悬停效果
+// 增强列表项悬停效果 - 修改以支持移动设备
 function enhanceListHoverEffects() {
     // 选择所有列表项
     const listItems = document.querySelectorAll('.Box-row, .d-flex, #indexPostsList > div, tr.post-item, .post-item');
+    const isMobile = isMobileDevice();
     
     listItems.forEach(item => {
         // 鼠标移入效果
         item.addEventListener('mouseenter', function() {
             // 查找内部元素并应用变换
             
-            // 标题效果
+            // 标题效果 - 移动设备上减小变换
             const headings = this.querySelectorAll('h1, h2, h3, h4, a.Link--primary');
             headings.forEach(heading => {
-                heading.style.transform = 'translateX(5px)';
+                heading.style.transform = isMobile ? 'translateX(2px)' : 'translateX(5px)';
                 heading.style.textShadow = '0 1px 2px rgba(0, 0, 0, 0.1)';
             });
             
-            // 段落效果
+            // 段落效果 - 移动设备上减小或禁用某些效果
             const paragraphs = this.querySelectorAll('p');
             paragraphs.forEach(p => {
-                p.style.transform = 'scale(1.02)';
-                p.style.letterSpacing = '0.02em';
+                p.style.transform = isMobile ? 'scale(1.01)' : 'scale(1.02)';
+                p.style.letterSpacing = isMobile ? '0.01em' : '0.02em';
             });
             
-            // 图片效果
+            // 图片效果 - 移动设备上更微妙
             const images = this.querySelectorAll('img');
             images.forEach(img => {
-                img.style.transform = 'scale(1.05)';
+                img.style.transform = isMobile ? 'scale(1.02)' : 'scale(1.05)';
                 img.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
                 img.style.filter = 'brightness(1.1)';
                 img.style.borderRadius = '8px';
@@ -301,15 +338,15 @@ function enhanceListHoverEffects() {
             viewCounts.forEach(count => {
                 count.style.color = 'var(--secondary-color)';
                 count.style.fontWeight = 'bold';
-                count.style.transform = 'scale(1.1)';
+                count.style.transform = isMobile ? 'scale(1.05)' : 'scale(1.1)';
                 count.style.textShadow = '0 0 5px rgba(255, 79, 154, 0.3)';
                 count.style.transition = 'all 0.3s ease';
             });
             
-            // SVG图标效果
+            // SVG图标效果 - 移动设备上禁用旋转
             const svgs = this.querySelectorAll('svg');
             svgs.forEach(svg => {
-                svg.style.transform = 'scale(1.1) rotate(5deg)';
+                svg.style.transform = isMobile ? 'scale(1.05)' : 'scale(1.1) rotate(5deg)';
                 svg.style.filter = 'drop-shadow(0 2px 3px rgba(0, 0, 0, 0.2))';
             });
         });
@@ -357,6 +394,29 @@ function enhanceListHoverEffects() {
                 svg.style.filter = '';
             });
         });
+        
+        // 为移动设备添加触摸开始事件
+        if (isMobile) {
+            item.addEventListener('touchstart', function() {
+                // 模拟鼠标悬停效果
+                const event = new MouseEvent('mouseenter', {
+                    bubbles: true,
+                    cancelable: true,
+                    view: window
+                });
+                this.dispatchEvent(event);
+                
+                // 设置延时后恢复原状态
+                setTimeout(() => {
+                    const leaveEvent = new MouseEvent('mouseleave', {
+                        bubbles: true,
+                        cancelable: true,
+                        view: window
+                    });
+                    this.dispatchEvent(leaveEvent);
+                }, 1000); // 1秒后恢复
+            });
+        }
     });
 }
 

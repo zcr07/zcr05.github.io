@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 从localStorage获取主题设置
     var savedTheme = localStorage.getItem('meek_theme');
-    if (savedTheme == "dark") {
+    if (savedTheme) {
         document.documentElement.setAttribute('data-color-mode', savedTheme);
     } else {
         // 默认使用亮色主题

@@ -336,14 +336,68 @@ table {
   border: 5px solid transparent;
 }
 
-/* 标题样式 */
+/* 标题样式增强 - 移除全局样式 */
 h1, h2, h3, h4, h5, h6 {
+  /* 移除全局样式，保留必要的基础样式 */
+  scroll-margin-top: 80px;
+  scroll-behavior: smooth;
+}
+
+/* 标题锚点添加空间用于显示跳转后位置 */
+h1::before, h2::before, h3::before, h4::before, h5::before, h6::before {
+  content: "";
+  display: block;
+  height: 80px;
+  margin-top: -80px;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* 仅对content内的标题应用样式 */
+#content h1, #content h2, #content h3, #content h4, #content h5, #content h6 {
+  display: block !important;
+  width: 100% !important;
+  white-space: normal !important;
+  overflow-wrap: break-word !important;
+  word-wrap: break-word !important;
+  word-break: break-word !important;
+  hyphens: auto !important;
+  max-width: 100% !important;
+  line-height: 1.5 !important;
+  margin: 1.5em 0 0.8em 0 !important;
+  padding-bottom: 0.3em !important;
+  clear: both !important;
+  /* 让标题有锚点定位时能够正确显示，不被顶栏遮挡 */
+  scroll-margin-top: 80px !important;
+  position: relative !important;
+  /* 恢复标题渐变样式 */
+  font-weight: 700 !important;
   background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  display: inline-block;
-  font-weight: 700;
+  border-bottom: 1px solid rgba(126, 87, 255, 0.2) !important;
+}
+
+/* 不同级别标题样式差异化 - 仅对content内的标题 */
+#content h1 {
+  font-size: 2em !important;
+  margin-top: 2em !important;
+  border-bottom: 1px solid rgba(126, 87, 255, 0.3) !important;
+}
+
+#content h2 {
+  font-size: 1.5em !important;
+  margin-top: 1.8em !important;
+}
+
+#content h3 {
+  font-size: 1.25em !important;
+  border-bottom: none !important;
+}
+
+#content h4, #content h5, #content h6 {
+  border-bottom: none !important;
 }
 
 /* 链接样式 */
@@ -1162,4 +1216,22 @@ tr.post-item p, .post-item p,
     margin-bottom: 10px;
     order: -1;
   }
+}
+
+/* 文章正文内容换行 */
+#postBody, #postBody * {
+  white-space: normal !important;
+  overflow-wrap: break-word !important;
+  word-wrap: break-word !important;
+  word-break: break-word !important;
+  max-width: 100% !important;
+}
+
+/* 文章链接自动换行 */
+#postBody a, a.post-link, .Box-row a, .d-flex a, #indexPostsList > div a {
+  white-space: normal !important;
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+  display: inline-block !important;
+  max-width: 100% !important;
 }

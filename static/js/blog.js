@@ -9,8 +9,8 @@ document.addEventListener('DOMContentLoaded', function() {
     createStaticBackground();
     
     // 从localStorage获取主题设置
-    var savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
+    var savedTheme = localStorage.getItem('meek_theme');
+    if (savedTheme == "dark") {
         document.documentElement.setAttribute('data-color-mode', savedTheme);
     } else {
         // 默认使用亮色主题
@@ -144,7 +144,7 @@ function modeSwitch() {
     
     // 设置新主题
     html.setAttribute('data-color-mode', newTheme);
-    localStorage.setItem('theme', newTheme);
+    localStorage.setItem('meek_theme', newTheme);
     
     // 更新主题图标
     var themeSwitch = document.getElementById('themeSwitch');

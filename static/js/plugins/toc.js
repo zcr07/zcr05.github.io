@@ -5,9 +5,6 @@
  */
 
 function createTOC() {
-    // 检查是否在文章页面
-    var postBody = document.getElementById('postBody');
-    if (!postBody) return;
     
     // 防止重复生成
     if (document.getElementById('article-toc')) return;
@@ -854,10 +851,15 @@ function toggleMobileToc(show) {
 
 // 检测设备并初始化相应的目录
 function initializeTOC() {
+    // 检查是否在文章页面
+    var postBody = document.getElementById('postBody');
+    if (!postBody) return;
+
     // 检查是否为移动设备
-    if (window.innerWidth <= 992) {
+    if (window.innerWidth <= 1300) {
         console.log('检测到移动设备，使用简化的目录');
-        
+        // 防止重复生成
+        if (document.getElementById('article-toc')) return;
         // 先创建目录内容，再创建按钮，确保目录在按钮创建时就已经存在
         createMobileToc();
         createMobileTocButton();

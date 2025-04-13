@@ -1202,34 +1202,3 @@ function resetAllScrollbars() {
         if (toc) toc.scrollTop = 0;
     }, 50);
 }
-
-// 修改创建TOC切换按钮函数
-function createTOCToggle(tocElement) {
-    // 仅在移动设备上才需要创建切换按钮
-    if (window.innerWidth <= 992) {
-        const tocToggle = document.createElement('button');
-        tocToggle.className = 'toc-toggle';
-        tocToggle.setAttribute('aria-label', '切换目录显示');
-        tocToggle.setAttribute('title', '切换目录显示');
-        
-        // 将切换按钮添加到文档中
-        document.querySelector('.right-side-toc').appendChild(tocToggle);
-        
-        // 添加点击事件
-        tocToggle.addEventListener('click', function() {
-            tocElement.classList.toggle('hidden');
-            tocToggle.classList.toggle('active');
-            
-            // 保存用户偏好到localStorage
-            const isHidden = tocElement.classList.contains('hidden');
-            localStorage.setItem('tocHidden', isHidden.toString());
-        });
-        
-        // 从localStorage读取用户偏好
-        const savedHidden = localStorage.getItem('tocHidden');
-        if (savedHidden === 'true') {
-            tocElement.classList.add('hidden');
-            tocToggle.classList.add('active');
-        }
-    }
-} 

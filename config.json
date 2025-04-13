@@ -31,7 +31,7 @@
     "style": "<link href='https://blog.mymaskking.dpdns.org/css/blog.css' rel='stylesheet' /><link href='https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap' rel='stylesheet'>",
     "head": "<meta name='viewport' content='width=device-width, initial-scale=1.0'/><meta name='theme-color' content='#5d4fff'><meta name='description' content='爱捣鼓的小水木的个人博客，分享技术、生活和想法'>",
     "allHead": "<script src='https://blog.mymaskking.dpdns.org/js/blog.js'></script>",
-    "script":"<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script><script src='https://blog.meekdai.com/Gmeek/plugins/lightbox.js'></script>",
+    "script":"<script src='https://blog.meekdai.com/Gmeek/plugins/lightbox.js'></script>",
     "indexStyle": "<link href='https://blog.mymaskking.dpdns.org/css/blog.css' rel='stylesheet' />",
     "showPostSource": 1,
     "rssSplit": "sentence",

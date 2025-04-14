@@ -5,13 +5,17 @@ on:
     paths:
       - 'issues/*.md'
 
+permissions:
+  contents: read
+  issues: write
+
 jobs:
   create_issues:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
-      - name: Read markdown files and create issues
+      - name: Create issues from markdown
         run: |
           for file in issues/*.md; do
             TITLE=$(head -n 1 "$file" | sed 's/^# //')
@@ -19,4 +23,4 @@ jobs:
             gh issue create -R ${{ github.repository }} -t "$TITLE" -b "$BODY"
           done
         env:
-          GH_TOKEN: ${{ secrets.issue-publisher }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -45,3 +45,10 @@ jobs:
           done
         env:
           GH_TOKEN: ${{ github.token }}
+
+      - name: 🔁 Trigger Build Gmeek Workflow
+        run: |
+          echo "🚀 正在触发 Build Gmeek workflow..."
+          gh workflow run "Build Gmeek"
+        env:
+          GH_TOKEN: ${{ github.token }}

@@ -33,10 +33,14 @@ jobs:
             echo "检查删除文件: $file"
             # 移除可能的引号
             file=$(echo "$file" | sed 's/^"//;s/"$//')
-            if [[ "$file" == issues/* && "$file" == *.md ]]; then
-              echo "🗑️ 检测到删除的md文件: $file"
+            # 解码转义序列
+            decoded_file=$(printf '%b' "$file")
+            echo "解码后的文件路径: $decoded_file"
+            
+            if [[ "$decoded_file" == issues/* && "$decoded_file" == *.md ]]; then
+              echo "🗑️ 检测到删除的md文件: $decoded_file"
               # 保存到删除文件列表
-              echo "$file" >> /tmp/deleted_md_files.txt
+              echo "$decoded_file" >> /tmp/deleted_md_files.txt
             fi
           done
           
@@ -87,10 +91,14 @@ jobs:
             echo "检查新增/修改文件: $file"
             # 移除可能的引号
             file=$(echo "$file" | sed 's/^"//;s/"$//')
-            if [[ "$file" == issues/* && "$file" == *.md ]]; then
-              echo "📝 检测到新增或修改的md文件: $file"
+            # 解码转义序列
+            decoded_file=$(printf '%b' "$file")
+            echo "解码后的文件路径: $decoded_file"
+            
+            if [[ "$decoded_file" == issues/* && "$decoded_file" == *.md ]]; then
+              echo "📝 检测到新增或修改的md文件: $decoded_file"
               # 保存到修改文件列表
-              echo "$file" >> /tmp/modified_md_files.txt
+              echo "$decoded_file" >> /tmp/modified_md_files.txt
             fi
           done
           
@@ -123,13 +131,28 @@ jobs:
             exit 0
           fi
           
-          # 将新增或修改的md文件写入文件列表
-          # 已经写入了 /tmp/modified_md_files.txt
+          # 将新增或修改的md文件写入文件列表 - 确保文件真实存在
+          > /tmp/final_md_files.txt
+          while IFS= read -r file; do
+            if [[ -f "$file" ]]; then
+              echo "$file" >> /tmp/final_md_files.txt
+              echo "✅ 确认文件存在: $file"
+            else
+              echo "⚠️ 文件不存在，跳过: $file"
+            fi
+          done < <(echo "$MODIFIED_MD_FILES")
+          
+          # 检查最终文件列表是否为空
+          if [[ ! -s "/tmp/final_md_files.txt" ]]; then
+            echo "⚠️ 所有文件均不存在，中止程序"
+            echo "HAS_MD_FILES=false" >> $GITHUB_ENV
+            exit 0
+          fi
           
           # 设置环境变量指向文件列表
-          echo "ISSUES_FILES_LIST=/tmp/modified_md_files.txt" >> $GITHUB_ENV
+          echo "ISSUES_FILES_LIST=/tmp/final_md_files.txt" >> $GITHUB_ENV
           echo "HAS_MD_FILES=true" >> $GITHUB_ENV
-          echo "📂 本次将处理的md文件: $(cat /tmp/modified_md_files.txt)"
+          echo "📂 本次将处理的md文件: $(cat /tmp/final_md_files.txt)"
 
       - name: 📄 处理每个md文件
         id: process_files

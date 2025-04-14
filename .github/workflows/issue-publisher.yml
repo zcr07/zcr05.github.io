@@ -51,4 +51,4 @@ jobs:
           echo "🚀 正在触发 Build Gmeek workflow..."
           gh workflow run "Build Gmeek"
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}

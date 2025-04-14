@@ -16,21 +16,32 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 2  # 允许 git diff 比较最近两次提交
 
       - name: Install GitHub CLI and jq
         run: |
           sudo apt-get update
           sudo apt-get install -y gh jq
 
-      - name: Create or update GitHub Issues from markdown
+      - name: Create or update GitHub Issues from markdown changes
         run: |
-          echo "📂 开始处理 issues/*.md 文件"
-          shopt -s nullglob  # 防止没有 .md 文件时报错
+          echo "📂 获取本次提交变更的 issues/*.md 文件"
+          CHANGED_FILES=$(git diff --name-only HEAD^ HEAD | grep '^issues/.*\.md$' || true)
 
-          for file in issues/*.md; do
+          if [[ -z "$CHANGED_FILES" ]]; then
+            echo "✅ 本次提交没有变更任何 issues/*.md 文件，跳过处理"
+            exit 0
+          fi
+
+          for file in $CHANGED_FILES; do
+            if [[ ! -f "$file" ]]; then
+              echo "⚠️ $file 已被删除，跳过"
+              continue
+            fi
+
             TITLE=$(basename "$file" .md | sed 's/[-_]/ /g')
 
-            # 提取标签行和主体内容
             FIRST_LINE=$(head -n 1 "$file")
             if [[ "$FIRST_LINE" == ISSUE_LABELS:* ]]; then
               LABELS=$(echo "$FIRST_LINE" | sed 's/^ISSUE_LABELS:[[:space:]]*//')
@@ -41,11 +52,11 @@ jobs:
               BODY=$(cat "$file")
             fi
 
-            # 自动创建缺失的标签
+            # 自动创建缺失标签
             if [[ -n "$LABELS" ]]; then
               IFS=',' read -ra LABEL_ARR <<< "$LABELS"
               for label in "${LABEL_ARR[@]}"; do
-                CLEAN_LABEL=$(echo "$label" | xargs)  # 去除空格
+                CLEAN_LABEL=$(echo "$label" | xargs)
                 echo "🏷️ 确保标签 '$CLEAN_LABEL' 存在"
                 gh label create "$CLEAN_LABEL" --description "Auto-created label" --color "ededed" 2>/dev/null || true
               done

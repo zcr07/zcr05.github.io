@@ -18,8 +18,10 @@ jobs:
       - name: Create issues from markdown
         run: |
           for file in issues/*.md; do
-            TITLE=$(head -n 1 "$file" | sed 's/^# //')
-            BODY=$(tail -n +2 "$file")
+            FILENAME=$(basename "$file" .md)
+            TITLE="$FILENAME"
+            BODY=$(cat "$file")
+            echo "📄 创建 Issue: $TITLE"
             gh issue create -R ${{ github.repository }} -t "$TITLE" -b "$BODY"
           done
         env:

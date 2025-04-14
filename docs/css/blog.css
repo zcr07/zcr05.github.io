@@ -1275,11 +1275,35 @@ tr.post-item p, .post-item p,
   #blog-container > div:hover,
   main > div > div:hover,
   [id*="post"]:hover {
-    transform: translateY(-3px) !important;
-    transform: translateX(0) !important;
-    padding-left: 16px !important; /* 恢复正常内边距 */
+    transform: none !important;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08) !important;
+    padding-left: 16px !important;
     margin-left: 0 !important;
     margin-right: 0 !important;
+  }
+  
+  /* 禁用移动设备上的内容移动效果 */
+  .Box-row:hover a, .d-flex:hover a, #indexPostsList > div:hover a,
+  tr.post-item:hover a, .post-item:hover a,
+  .container-lg > div.container-lg > div.Box:hover a,
+  .container-lg > div.container-lg > div > div:hover a,
+  #blog-container > div:hover a,
+  main > div > div:hover a,
+  [id*="post"]:hover a {
+    transform: none !important;
+    transition: none !important;
+  }
+  
+  /* 禁用移动设备上的元素hover效果 */
+  #content > div:first-child:hover {
+    transform: none !important;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05) !important;
+  }
+  
+  /* 禁用在移动设备上的标签hover效果 */
+  .LabelName:hover {
+    transform: none !important;
+    box-shadow: none !important;
   }
   
   /* 修复移动设备上的内边距 */
@@ -1314,6 +1338,28 @@ tr.post-item p, .post-item p,
     padding: 2px 6px !important;
     font-size: 10px !important;
     margin: 2px !important;
+  }
+  
+  /* 添加移动设备优化 */
+  body, html {
+    -webkit-overflow-scrolling: touch;
+    overflow-x: hidden;
+  }
+  
+  /* 移除可能导致晃动的动画和效果 */
+  * {
+    animation: none !important;
+    transition: color 0.3s ease, background-color 0.3s ease !important;
+    transform: none !important;
+  }
+  
+  /* 修复背景动画可能导致的晃动 */
+  body::before, body::after, 
+  #fixed-background::before, #fixed-background::after {
+    animation: none !important;
+    transform: none !important;
+    transition: none !important;
+    background-attachment: scroll !important;
   }
 }
 

@@ -1,4 +1,4 @@
-name: Publish Markdown as GitHub Issue
+name: Publish Issues and Trigger Build
 
 on:
   push:
@@ -10,7 +10,7 @@ permissions:
   issues: write
 
 jobs:
-  create_or_update_issues:
+  publish_issues:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,10 +20,12 @@ jobs:
       - name: Install GitHub CLI and jq
         run: |
           sudo apt-get update
-          sudo apt-get install -y jq gh
+          sudo apt-get install -y gh jq
 
-      - name: Create or update issues from markdown
+      - name: Create or update GitHub Issues
         run: |
+          echo "📂 开始处理 issues/*.md 文件"
+
           for file in issues/*.md; do
             TITLE=$(basename "$file" .md | sed 's/[-_]/ /g')
             BODY=$(cat "$file")

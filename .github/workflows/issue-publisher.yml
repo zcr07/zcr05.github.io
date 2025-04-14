@@ -71,12 +71,11 @@ jobs:
               echo "查找issue结果: $ISSUE_NUMBER"
               
               if [[ -n "$ISSUE_NUMBER" ]]; then
-                echo "🗑️ 找到对应issue #$ISSUE_NUMBER，准备删除..."
+                echo "🗑️ 找到对应issue #$ISSUE_NUMBER，准备关闭..."
                 
-                # GitHub API不支持直接删除issue，改为使用gh CLI将issue锁定并关闭
-                echo "📌 关闭并锁定issue..."
-                gh issue close "$ISSUE_NUMBER" --reason "completed" --comment "此issue对应的文件已被删除，自动关闭并锁定。"
-                gh issue lock "$ISSUE_NUMBER" --reason "resolved"
+                # GitHub API不支持直接删除issue，改为使用gh CLI将issue关闭(不锁定)
+                echo "📌 关闭issue..."
+                gh issue close "$ISSUE_NUMBER" --reason "completed" --comment "此issue对应的文件已被删除，自动关闭。"
                 
                 echo "✅ 已完成issue #$ISSUE_NUMBER 的处理"
                 DELETE_PERFORMED=true
@@ -234,11 +233,20 @@ jobs:
             echo "📋 提取正文内容长度：$(wc -c < /tmp/issue_body.md) 字节"
 
             # 检查是否已有同名 issue
-            ISSUE_NUMBER=$(gh issue list --state all --search "$TITLE in:title" --json number,title | jq -r ".[] | select(.title==\"$TITLE\") | .number")
-            echo "🔍 检查是否已有同名 issue: '$TITLE'，找到 issue number: $ISSUE_NUMBER"
-
+            ISSUE_NUMBER=$(gh issue list --state all --search "$TITLE in:title" --json number,title,state | jq -r ".[] | select(.title==\"$TITLE\") | .number")
+            
             # 如果找到 issue，则更新，否则创建新的 issue
             if [[ -n "$ISSUE_NUMBER" ]]; then
+              # 获取issue状态
+              ISSUE_STATE=$(gh issue view "$ISSUE_NUMBER" --json state | jq -r '.state')
+              echo "🔍 检查是否已有同名 issue: '$TITLE'，找到 issue number: $ISSUE_NUMBER，状态: $ISSUE_STATE"
+              
+              # 如果issue是关闭状态，先重新打开
+              if [[ "$ISSUE_STATE" == "CLOSED" ]]; then
+                echo "🔓 重新打开已关闭的issue #$ISSUE_NUMBER"
+                gh issue reopen "$ISSUE_NUMBER"
+              fi
+              
               echo "♻️ 更新已存在的 issue #$ISSUE_NUMBER"
               
               # 更新issue内容

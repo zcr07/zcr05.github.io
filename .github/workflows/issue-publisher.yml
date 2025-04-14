@@ -198,11 +198,11 @@ jobs:
             echo "📋 从文件名提取标题：$TITLE"
             
             # 从文件内容获取标签
-            LABELS=$(grep -E '^ISSUE_LABELS:' "$FILE" | sed 's/^ISSUE_LABELS:[[:space:]]*//' || echo "documentation")
+            LABELS=$(grep -E '^ISSUE_LABELS:' "$FILE" | sed 's/^ISSUE_LABELS:[[:space:]]*//' || echo "文档")
             
             # 如果没有找到标签，使用默认标签
             if [[ -z "$LABELS" ]]; then
-              LABELS="documentation"
+              LABELS="文档"
             fi
             echo "📋 提取标签：$LABELS"
             

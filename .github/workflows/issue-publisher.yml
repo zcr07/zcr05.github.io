@@ -27,19 +27,24 @@ jobs:
           PREVIOUS_SHA=$(git rev-parse HEAD~1)
           echo "🔧 前一次提交 SHA: $PREVIOUS_SHA"
 
-          # 处理删除的文件 - 避免使用grep处理中文文件名
+          # 处理删除的文件 - 使用--name-status来获取文件变更状态
           echo "📋 获取删除的文件..."
-          git diff --diff-filter=D --name-only $PREVIOUS_SHA $GITHUB_SHA > /tmp/all_deleted_files.txt
+          git diff --name-status $PREVIOUS_SHA $GITHUB_SHA > /tmp/all_changes.txt
+          cat /tmp/all_changes.txt
           
           # 手动检查是否有删除的md文件
           DELETED_MD_FILES=""
-          while IFS= read -r file; do
-            # 检查文件是否以issues/开头并以.md结尾
-            if [[ "$file" == issues/* && "$file" == *.md ]]; then
-              DELETED_MD_FILES+="$file"$'\n'
-              echo "🗑️ 检测到删除的md文件: $file"
+          while IFS= read -r line; do
+            # 解析变更类型和文件名
+            TYPE=$(echo "$line" | cut -f1)
+            FILE=$(echo "$line" | cut -f2-)
+            
+            # 处理删除的文件
+            if [[ "$TYPE" == "D" && "$FILE" == issues/* && "$FILE" == *.md ]]; then
+              DELETED_MD_FILES+="$FILE"$'\n'
+              echo "🗑️ 检测到删除的md文件: $FILE"
             fi
-          done < /tmp/all_deleted_files.txt
+          done < /tmp/all_changes.txt
           # 去除末尾空行
           DELETED_MD_FILES=$(echo "$DELETED_MD_FILES" | sed '/^$/d')
           echo "📂 删除的md文件: $DELETED_MD_FILES"
@@ -81,19 +86,22 @@ jobs:
             echo "✅ 没有删除任何md文件"
           fi
 
-          # 获取本次提交中新增或修改的文件 - 避免使用grep处理中文文件名
+          # 获取本次提交中新增或修改的文件 - 使用相同的变更文件列表
           echo "📋 获取新增或修改的文件..."
-          git diff --diff-filter=AM --name-only $PREVIOUS_SHA $GITHUB_SHA > /tmp/all_modified_files.txt
           
           # 手动检查是否有新增或修改的md文件
           MODIFIED_MD_FILES=""
-          while IFS= read -r file; do
-            # 检查文件是否以issues/开头并以.md结尾
-            if [[ "$file" == issues/* && "$file" == *.md ]]; then
-              MODIFIED_MD_FILES+="$file"$'\n'
-              echo "📝 检测到新增或修改的md文件: $file"
+          while IFS= read -r line; do
+            # 解析变更类型和文件名
+            TYPE=$(echo "$line" | cut -f1)
+            FILE=$(echo "$line" | cut -f2-)
+            
+            # 处理新增或修改的文件
+            if [[ ("$TYPE" == "A" || "$TYPE" == "M") && "$FILE" == issues/* && "$FILE" == *.md ]]; then
+              MODIFIED_MD_FILES+="$FILE"$'\n'
+              echo "📝 检测到新增或修改的md文件: $FILE (类型: $TYPE)"
             fi
-          done < /tmp/all_modified_files.txt
+          done < /tmp/all_changes.txt
           # 去除末尾空行
           MODIFIED_MD_FILES=$(echo "$MODIFIED_MD_FILES" | sed '/^$/d')
           echo "📂 新增或修改的md文件: $MODIFIED_MD_FILES"

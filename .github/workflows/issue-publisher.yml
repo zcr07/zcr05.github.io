@@ -10,73 +10,88 @@ permissions:
   issues: write
 
 jobs:
-  publish_issues:
+  issue-publisher:
     runs-on: ubuntu-latest
-
     steps:
-      - name: 📥 Checkout Repo
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 2  # 确保能访问上一个提交
+      - name: Checkout code
+        uses: actions/checkout@v2
 
       - name: 📂 获取本次提交变更的 issues/*.md 文件
         id: get_changed_files
         run: |
           echo "🔍 当前 GITHUB_SHA: $GITHUB_SHA"
+          echo "📋 当前提交变更文件列表："
+          # 打印当前变更的文件
+          git diff-tree --no-commit-id --name-only -r "$GITHUB_SHA"
           
-          # 获取变更的文件，并处理 Unicode 文件名
-          CHANGED_FILES=$(git diff-tree --no-commit-id --name-only -r "$GITHUB_SHA" | \
-                          LC_ALL=C grep -P '^issues/.*\.md$' || true)
-
+          # 获取变更的 .md 文件
+          CHANGED_FILES=$(git diff-tree --no-commit-id --name-only -r "$GITHUB_SHA" | grep -E '^issues/.*\.md$' || true)
+          
           echo "📂 本次获取到的md文件：$CHANGED_FILES"
           
+          # 输出获取到的文件到环境变量，供后续步骤使用
           echo "CHANGED_FILES<<EOF" >> $GITHUB_ENV
           echo "$CHANGED_FILES" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
-      - name: 📝 创建或更新 Issues
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: 🔧 调试当前工作目录及文件
         run: |
-          echo "📂 开始处理 issues/*.md 文件"
-
+          echo "📂 当前工作目录：$(pwd)"
+          echo "📂 当前工作目录下文件列表："
+          ls -la
+          
+      - name: 📝 处理变更的 issue 文件
+        if: ${{ env.CHANGED_FILES != '' }}
+        run: |
+          # 输出变更文件的日志
+          echo "📂 处理以下变更的 issue 文件："
+          echo "$CHANGED_FILES"
+          
+          # 遍历变更的文件
           for file in $CHANGED_FILES; do
-            echo "📄 处理文件: $file"
-
-            TITLE=$(basename "$file" .md | sed 's/[-_]/ /g')
-            echo "🔍 检查是否已有同名 issue: '$TITLE'"
-
+            echo "🔍 正在处理文件: $file"
+            
+            # 提取标题和标签
+            TITLE=$(head -n 1 "$file" | sed 's/^# //')
+            BODY=$(tail -n +2 "$file")
+            
             # 提取标签
-            LABELS_LINE=$(grep '^ISSUE_LABELS:' "$file" || true)
-            if [[ -n "$LABELS_LINE" ]]; then
-              LABELS=$(echo "$LABELS_LINE" | sed 's/^ISSUE_LABELS:[[:space:]]*//' | tr ',' '\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | paste -sd, -)
-              echo "🏷️ 获取到的标签：'$LABELS'"
+            LABELS=$(grep -E '^ISSUE_LABELS:' "$file" | sed 's/^ISSUE_LABELS:[[:space:]]*//')
+            
+            echo "📋 读取到的标题: $TITLE"
+            echo "📋 读取到的标签: $LABELS"
+            
+            # 如果没有标签，跳过
+            if [[ -n "$LABELS" ]]; then
+              echo "📋 标签列表: $LABELS"
             else
-              LABELS=""
-              echo "🏷️ 没有找到 ISSUE_LABELS，跳过添加标签"
+              echo "❌ 没有标签，跳过标签设置"
             fi
 
-            BODY=$(grep -v '^ISSUE_LABELS:' "$file")
-
+            # 检查 issue 是否已存在
             ISSUE_NUMBER=$(gh issue list \
               --state all \
               --search "$TITLE in:title" \
               --json number,title \
               | jq -r ".[] | select(.title==\"$TITLE\") | .number")
-
+            
             if [[ -n "$ISSUE_NUMBER" ]]; then
               echo "♻️ 更新已存在的 issue #$ISSUE_NUMBER"
+              gh issue edit "$ISSUE_NUMBER" --body "$BODY"
+              
+              # 更新标签
               if [[ -n "$LABELS" ]]; then
-                gh issue edit "$ISSUE_NUMBER" --body "$BODY" --add-label "$LABELS"
-              else
-                gh issue edit "$ISSUE_NUMBER" --body "$BODY"
+                echo "🔧 更新标签为: $LABELS"
+                gh issue edit "$ISSUE_NUMBER" --add-label "$LABELS"
               fi
             else
               echo "🆕 创建新的 issue: $TITLE"
+              gh issue create -t "$TITLE" -b "$BODY"
+              
+              # 添加标签
               if [[ -n "$LABELS" ]]; then
-                gh issue create -t "$TITLE" -b "$BODY" -l "$LABELS"
-              else
-                gh issue create -t "$TITLE" -b "$BODY"
+                echo "🔧 为新 issue 添加标签: $LABELS"
+                gh issue edit "$ISSUE_NUMBER" --add-label "$LABELS"
               fi
             fi
 

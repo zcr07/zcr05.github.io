@@ -9,60 +9,67 @@ permissions:
   contents: read
   issues: write
 
-jobs:
-  publish_issues:
+jjobs:
+  sync-issues:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: 🧾 Checkout Repository
         uses: actions/checkout@v3
         with:
-          fetch-depth: 2  # 允许 git diff 比较最近两次提交
+          fetch-depth: 2  # 为 git diff 提供前一次提交信息
 
-      - name: Install GitHub CLI and jq
+      - name: 🐛 显示调试信息
         run: |
-          sudo apt-get update
-          sudo apt-get install -y gh jq
+          echo "🔧 当前分支：" $(git rev-parse --abbrev-ref HEAD)
+          echo "🕒 最近提交："
+          git log -2 --oneline
+          echo "📁 当前文件列表："
+          ls -R
 
-      - name: Create or update GitHub Issues from markdown changes
+      - name: 📂 获取本次提交变更的 issues/*.md 文件
+        id: get_changed_files
         run: |
-          echo "📂 获取本次提交变更的 issues/*.md 文件"
-          git fetch origin main  # 或 origin master，看你的主分支名
-          CHANGED_FILES_TMP=$(git diff --name-only origin/main...HEAD)
-          CHANGED_FILES=$(echo '$CHANGED_FILES_TMP' | grep '^issues/.*\.md$' || true)
-          echo "📂 本次获取到的md文件：'$CHANGED_FILES'"
-          if [[ -z "$CHANGED_FILES" ]]; then
-            echo "✅ 本次提交没有变更任何 issues/*.md 文件，跳过处理"
-            exit 0
+          BRANCH=$(git rev-parse --abbrev-ref HEAD)
+          echo "🔍 当前分支：$BRANCH"
+
+          if [[ "$BRANCH" == "main" ]]; then
+            CHANGED_FILES=$(git diff --name-only HEAD^ | grep '^issues/.*\.md$' || true)
+          else
+            git fetch origin main
+            CHANGED_FILES=$(git diff --name-only origin/main...HEAD | grep '^issues/.*\.md$' || true)
           fi
 
+          echo "📂 本次获取到的md文件：$CHANGED_FILES"
+
+          echo "CHANGED_FILES<<EOF" >> $GITHUB_ENV
+          echo "$CHANGED_FILES" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: 📝 创建或更新 Issues
+        if: env.CHANGED_FILES != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "📦 正在处理 md 文件："
+          echo "$CHANGED_FILES"
+
           for file in $CHANGED_FILES; do
-            if [[ ! -f "$file" ]]; then
-              echo "⚠️ $file 已被删除，跳过"
-              continue
-            fi
+            echo "📄 准备处理：$file"
 
-            TITLE=$(basename "$file" .md | sed 's/[-_]/ /g')
-
+            # 提取标签（可选）
             FIRST_LINE=$(head -n 1 "$file")
             if [[ "$FIRST_LINE" == ISSUE_LABELS:* ]]; then
-              LABELS=$(echo "$FIRST_LINE" | sed 's/^ISSUE_LABELS:[[:space:]]*//')
+              LABELS=$(echo "$FIRST_LINE" | sed 's/^ISSUE_LABELS:[[:space:]]*//' | tr -d '\r')
               BODY=$(tail -n +2 "$file")
-              echo "🔍 检查获取到的标签：'$LABELS'"
+              echo "🏷️ 检查获取到的标签：'$LABELS'"
             else
               LABELS=""
               BODY=$(cat "$file")
+              echo "ℹ️ 未设置标签"
             fi
 
-            # 自动创建缺失标签
-            if [[ -n "$LABELS" ]]; then
-              IFS=',' read -ra LABEL_ARR <<< "$LABELS"
-              for label in "${LABEL_ARR[@]}"; do
-                CLEAN_LABEL=$(echo "$label" | xargs)
-                echo "🏷️ 确保标签 '$CLEAN_LABEL' 存在"
-                gh label create "$CLEAN_LABEL" --description "Auto-created label" --color "ededed" 2>/dev/null || true
-              done
-            fi
+            TITLE=$(basename "$file" .md | sed 's/[-_]/ /g')
 
             echo "🔍 检查是否已有同名 issue: '$TITLE'"
             ISSUE_NUMBER=$(gh issue list \
@@ -74,20 +81,18 @@ jobs:
             if [[ -n "$ISSUE_NUMBER" ]]; then
               echo "♻️ 更新已存在的 issue #$ISSUE_NUMBER"
               if [[ -n "$LABELS" ]]; then
-                gh issue edit "$ISSUE_NUMBER" --body "$BODY" --add-label "$LABELS"
+                gh issue edit "$ISSUE_NUMBER" --body "$BODY" --add-label "$LABELS" || echo "⚠️ 标签添加失败，可能标签不存在"
               else
                 gh issue edit "$ISSUE_NUMBER" --body "$BODY"
               fi
             else
               echo "🆕 创建新的 issue: $TITLE"
               if [[ -n "$LABELS" ]]; then
-                gh issue create -t "$TITLE" -b "$BODY" --label "$LABELS"
+                gh issue create -t "$TITLE" -b "$BODY" --label "$LABELS" || echo "⚠️ 标签创建失败，可能标签不存在"
               else
                 gh issue create -t "$TITLE" -b "$BODY"
               fi
             fi
 
-            echo "✅ 完成处理: $TITLE"
+            echo "✅ 完成：$TITLE"
           done
-        env:
-          GH_TOKEN: ${{ github.token }}

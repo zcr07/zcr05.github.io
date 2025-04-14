@@ -31,41 +31,42 @@ jobs:
           echo "📋 当前提交变更文件列表："
           git diff --name-only $PREVIOUS_SHA $GITHUB_SHA
 
-          # 获取当前提交的变更文件列表，直接保存到临时文件，避免管道处理导致中文文件名丢失
-          git diff --name-only $PREVIOUS_SHA $GITHUB_SHA > /tmp/changed_files.txt
+          # 直接处理issues目录下所有md文件
+          echo "📋 查找issues目录下的所有md文件..."
+          ISSUES_FILES=$(find issues -name "*.md" -type f)
+          echo "📂 找到的md文件: $ISSUES_FILES"
           
-          # 在临时文件中查找issues目录下的md文件
-          CHANGED_FILES=$(cat /tmp/changed_files.txt | grep -E '^issues/.*\.md$' || true)
-          
-          # 如果上面的方法匹配不到，直接使用简单的字符串匹配
-          if [[ -z "$CHANGED_FILES" ]]; then
-            echo "尝试使用备用方法匹配文件..."
-            CHANGED_FILES=$(cat /tmp/changed_files.txt | grep "issues/" | grep ".md" || true)
-          fi
-
-          echo "📂 本次获取到的md文件：$CHANGED_FILES"
-
-          # 如果没有文件变更，跳过后续操作
-          if [[ -z "$CHANGED_FILES" ]]; then
-            echo "✅ 本次提交没有变更任何 issues/*.md 文件，跳过处理"
+          # 如果没有找到文件，则退出
+          if [[ -z "$ISSUES_FILES" ]]; then
+            echo "✅ 没有找到任何issues/*.md文件，跳过处理"
             exit 0
           fi
+          
+          # 将找到的文件写入文件列表
+          echo "$ISSUES_FILES" > /tmp/issues_files_list.txt
+          
+          # 设置环境变量指向文件列表
+          echo "ISSUES_FILES_LIST=/tmp/issues_files_list.txt" >> $GITHUB_ENV
 
-          # 输出变更文件列表到 GitHub Actions 环境变量
-          echo "CHANGED_FILES<<EOF" >> $GITHUB_ENV
-          echo "$CHANGED_FILES" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-
-      - name: 📄 处理每个变更的md文件
+      - name: 📄 处理每个md文件
         id: process_files
         run: |
-          # 从环境变量中获取变更的md文件列表
-          CHANGED_FILES="${{ env.CHANGED_FILES }}"
-
-          echo "📂 处理变更的md文件：$CHANGED_FILES"
-
-          for FILE in $CHANGED_FILES; do
+          # 读取包含文件列表的文件
+          echo "📂 读取md文件列表"
+          if [[ ! -f "${{ env.ISSUES_FILES_LIST }}" ]]; then
+            echo "❌ 文件列表不存在"
+            exit 1
+          fi
+          
+          # 遍历文件列表中的每个文件
+          while IFS= read -r FILE; do
             echo "🔍 处理文件：$FILE"
+            
+            # 检查文件是否存在
+            if [[ ! -f "$FILE" ]]; then
+              echo "⚠️ 文件不存在：$FILE，跳过处理"
+              continue
+            fi
 
             # 从md文件中提取标题
             TITLE=$(head -n 1 "$FILE" | sed 's/^# //')
@@ -78,6 +79,12 @@ jobs:
             # 从md文件中提取标签
             LABELS=$(grep -E '^ISSUE_LABELS:' "$FILE" | sed 's/^ISSUE_LABELS:[[:space:]]*//')
             echo "📋 提取标签：$LABELS"
+            
+            # 如果标签为空，使用默认标签
+            if [[ -z "$LABELS" ]]; then
+              LABELS="documentation"
+              echo "📋 使用默认标签：$LABELS"
+            fi
 
             # 检查是否已有同名 issue
             ISSUE_NUMBER=$(gh issue list --state all --search "$TITLE in:title" --json number,title | jq -r ".[] | select(.title==\"$TITLE\") | .number")
@@ -93,4 +100,4 @@ jobs:
             fi
 
             echo "✅ 完成：$TITLE"
-          done
+          done < "${{ env.ISSUES_FILES_LIST }}"

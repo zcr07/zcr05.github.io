@@ -85,18 +85,18 @@ jobs:
             echo "📋 提取标签：$LABELS"
             
             # 处理标签，将逗号分隔的标签转换为多个--add-label参数
-            LABEL_PARAMS=""
-            IFS=',' read -ra LABEL_ARRAY <<< "$LABELS"
-            for label in "${LABEL_ARRAY[@]}"; do
+            LABEL_ARRAY=()
+            IFS=',' read -ra TEMP_ARRAY <<< "$LABELS"
+            for label in "${TEMP_ARRAY[@]}"; do
               # 去除标签两端的空格
-              label=$(echo "$label" | xargs)
-              LABEL_PARAMS+=" --add-label \"$label\""
+              LABEL_ARRAY+=("$(echo "$label" | xargs)")
             done
-            echo "📋 标签参数：$LABEL_PARAMS"
+            echo "📋 解析的标签：${LABEL_ARRAY[*]}"
             
             # 从文件中提取正文内容（跳过标签行）
-            BODY=$(grep -v '^ISSUE_LABELS:' "$FILE")
-            echo "📋 提取正文内容长度：$(echo "$BODY" | wc -c) 字节"
+            # 将内容保存到临时文件，避免Shell命令注入和特殊字符问题
+            grep -v '^ISSUE_LABELS:' "$FILE" > /tmp/issue_body.md
+            echo "📋 提取正文内容长度：$(wc -c < /tmp/issue_body.md) 字节"
 
             # 检查是否已有同名 issue
             ISSUE_NUMBER=$(gh issue list --state all --search "$TITLE in:title" --json number,title | jq -r ".[] | select(.title==\"$TITLE\") | .number")
@@ -105,18 +105,28 @@ jobs:
             # 如果找到 issue，则更新，否则创建新的 issue
             if [[ -n "$ISSUE_NUMBER" ]]; then
               echo "♻️ 更新已存在的 issue #$ISSUE_NUMBER"
-              # 首先获取现有标签
-              CURRENT_LABELS=$(gh issue view $ISSUE_NUMBER --json labels | jq -r '.labels[].name')
-              # 移除所有现有标签
-              for current_label in $CURRENT_LABELS; do
-                gh issue edit $ISSUE_NUMBER --remove-label "$current_label"
+              
+              # 更新issue内容
+              gh issue edit "$ISSUE_NUMBER" --body-file /tmp/issue_body.md
+              
+              # 首先移除所有标签
+              CURRENT_LABELS=$(gh issue view "$ISSUE_NUMBER" --json labels | jq -r '.labels[].name')
+              if [[ -n "$CURRENT_LABELS" ]]; then
+                echo "🏷️ 移除现有标签..."
+                for current_label in $CURRENT_LABELS; do
+                  gh issue edit "$ISSUE_NUMBER" --remove-label "$current_label"
+                done
+              fi
+              
+              # 添加新标签
+              echo "🏷️ 添加新标签..."
+              for label in "${LABEL_ARRAY[@]}"; do
+                gh issue edit "$ISSUE_NUMBER" --add-label "$label"
               done
-              # 添加新标签和更新内容
-              eval "gh issue edit $ISSUE_NUMBER --body \"$BODY\" $LABEL_PARAMS"
             else
               echo "🆕 创建新的 issue: $TITLE"
-              # 对于创建操作，使用--label参数
-              gh issue create -t "$TITLE" -b "$BODY" --label "$LABELS"
+              # 对于创建操作，使用--label参数和body-file
+              gh issue create -t "$TITLE" --body-file /tmp/issue_body.md --label "${LABEL_ARRAY[*]}"
             fi
 
             echo "✅ 完成：$TITLE"

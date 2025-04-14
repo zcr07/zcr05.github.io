@@ -252,19 +252,20 @@ jobs:
               # 更新issue内容
               gh issue edit "$ISSUE_NUMBER" --body-file /tmp/issue_body.md
               
-              # 首先移除所有标签
+              # 获取issue现有标签
               CURRENT_LABELS=$(gh issue view "$ISSUE_NUMBER" --json labels | jq -r '.labels[].name')
-              if [[ -n "$CURRENT_LABELS" ]]; then
-                echo "🏷️ 移除现有标签..."
-                for current_label in $CURRENT_LABELS; do
-                  gh issue edit "$ISSUE_NUMBER" --remove-label "$current_label"
-                done
-              fi
+              echo "🏷️ 现有标签: $CURRENT_LABELS"
               
-              # 添加新标签
+              # 添加md文件中的新标签
               echo "🏷️ 添加新标签..."
               for label in "${LABEL_ARRAY[@]}"; do
-                gh issue edit "$ISSUE_NUMBER" --add-label "$label"
+                # 检查标签是否已存在于issue中
+                if ! echo "$CURRENT_LABELS" | grep -q "^$label$"; then
+                  echo "🏷️ 添加新标签: $label"
+                  gh issue edit "$ISSUE_NUMBER" --add-label "$label"
+                else
+                  echo "🏷️ 标签已存在: $label"
+                fi
               done
             else
               echo "🆕 创建新的 issue: $TITLE"

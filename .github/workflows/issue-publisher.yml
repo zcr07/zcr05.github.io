@@ -31,8 +31,17 @@ jobs:
           echo "📋 当前提交变更文件列表："
           git diff --name-only $PREVIOUS_SHA $GITHUB_SHA
 
-          # 获取当前提交的变更文件列表，并过滤出 issues/*.md 文件
-          CHANGED_FILES=$(git diff --name-only $PREVIOUS_SHA $GITHUB_SHA | grep -E '^issues/.*\.md$' || true)
+          # 获取当前提交的变更文件列表，直接保存到临时文件，避免管道处理导致中文文件名丢失
+          git diff --name-only $PREVIOUS_SHA $GITHUB_SHA > /tmp/changed_files.txt
+          
+          # 在临时文件中查找issues目录下的md文件
+          CHANGED_FILES=$(cat /tmp/changed_files.txt | grep -E '^issues/.*\.md$' || true)
+          
+          # 如果上面的方法匹配不到，直接使用简单的字符串匹配
+          if [[ -z "$CHANGED_FILES" ]]; then
+            echo "尝试使用备用方法匹配文件..."
+            CHANGED_FILES=$(cat /tmp/changed_files.txt | grep "issues/" | grep ".md" || true)
+          fi
 
           echo "📂 本次获取到的md文件：$CHANGED_FILES"
 

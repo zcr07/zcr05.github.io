@@ -21,12 +21,16 @@ jobs:
         run: |
           echo "🔍 当前 GITHUB_SHA: $GITHUB_SHA"
 
+          # 获取当前提交的父提交
+          BASE_SHA=$(git merge-base $GITHUB_SHA HEAD)
+          echo "🔧 当前提交的父提交 SHA: $BASE_SHA"
+
           # 输出当前提交的 diff 列表
           echo "📋 当前提交变更文件列表："
-          git diff --name-only $GITHUB_SHA^ $GITHUB_SHA
+          git diff --name-only $BASE_SHA $GITHUB_SHA
 
           # 获取当前提交的变更文件列表，并过滤出 issues/*.md 文件
-          CHANGED_FILES=$(git diff --name-only $GITHUB_SHA^ $GITHUB_SHA | grep -E '^issues/.*\.md$' || true)
+          CHANGED_FILES=$(git diff --name-only $BASE_SHA $GITHUB_SHA | grep -E '^issues/.*\.md$' || true)
 
           echo "📂 本次获取到的md文件：$CHANGED_FILES"
 

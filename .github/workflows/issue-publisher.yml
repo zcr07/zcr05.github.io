@@ -27,6 +27,44 @@ jobs:
           PREVIOUS_SHA=$(git rev-parse HEAD~1)
           echo "🔧 前一次提交 SHA: $PREVIOUS_SHA"
 
+          # 获取当前提交中删除的md文件列表
+          echo "📋 检查是否删除了md文件..."
+          DELETED_FILES=$(git diff --diff-filter=D --name-only $PREVIOUS_SHA $GITHUB_SHA | grep -E '^issues/.*\.md$' || true)
+          echo "📂 删除的md文件: $DELETED_FILES"
+          
+          if [[ -n "$DELETED_FILES" ]]; then
+            # 保存删除的文件列表
+            echo "$DELETED_FILES" > /tmp/deleted_files.txt
+            
+            # 处理每个删除的文件
+            while IFS= read -r FILE; do
+              echo "🔍 处理删除的文件：$FILE"
+              
+              # 从文件名获取标题
+              FILENAME=$(basename "$FILE")
+              TITLE="${FILENAME%.md}"
+              echo "📋 从文件名提取标题：$TITLE"
+              
+              # 查找标题对应的issue
+              ISSUE_NUMBER=$(gh issue list --state all --search "$TITLE in:title" --json number,title | jq -r ".[] | select(.title==\"$TITLE\") | .number")
+              
+              if [[ -n "$ISSUE_NUMBER" ]]; then
+                echo "🗑️ 找到对应issue #$ISSUE_NUMBER，准备删除..."
+                
+                # 删除issue（使用GitHub REST API，因为CLI没有直接删除issue的功能）
+                curl -X DELETE -H "Authorization: token ${{ github.token }}" \
+                     -H "Accept: application/vnd.github.v3+json" \
+                     "https://api.github.com/repos/${{ github.repository }}/issues/$ISSUE_NUMBER"
+                
+                echo "✅ 已成功删除issue #$ISSUE_NUMBER"
+              else
+                echo "⚠️ 未找到与'$TITLE'对应的issue，无需删除"
+              fi
+            done < /tmp/deleted_files.txt
+          else
+            echo "✅ 没有删除任何md文件"
+          fi
+
           # 输出当前提交的 diff 列表
           echo "📋 当前提交变更文件列表："
           git diff --name-only $PREVIOUS_SHA $GITHUB_SHA

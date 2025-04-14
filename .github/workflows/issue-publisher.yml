@@ -50,6 +50,8 @@ jobs:
 
       - name: 📄 处理每个md文件
         id: process_files
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           # 读取包含文件列表的文件
           echo "📂 读取md文件列表"
@@ -67,24 +69,24 @@ jobs:
               echo "⚠️ 文件不存在：$FILE，跳过处理"
               continue
             fi
-
-            # 从md文件中提取标题
-            TITLE=$(head -n 1 "$FILE" | sed 's/^# //')
-            echo "📋 提取标题：$TITLE"
-
-            # 从md文件中提取正文内容
-            BODY=$(tail -n +2 "$FILE")
-            echo "📋 提取正文：$BODY"
-
-            # 从md文件中提取标签
-            LABELS=$(grep -E '^ISSUE_LABELS:' "$FILE" | sed 's/^ISSUE_LABELS:[[:space:]]*//')
-            echo "📋 提取标签：$LABELS"
             
-            # 如果标签为空，使用默认标签
+            # 从文件名获取标题（移除扩展名和路径）
+            FILENAME=$(basename "$FILE")
+            TITLE="${FILENAME%.md}"
+            echo "📋 从文件名提取标题：$TITLE"
+            
+            # 从文件内容获取标签
+            LABELS=$(grep -E '^ISSUE_LABELS:' "$FILE" | sed 's/^ISSUE_LABELS:[[:space:]]*//' || echo "documentation")
+            
+            # 如果没有找到标签，使用默认标签
             if [[ -z "$LABELS" ]]; then
               LABELS="documentation"
-              echo "📋 使用默认标签：$LABELS"
             fi
+            echo "📋 提取标签：$LABELS"
+            
+            # 从文件中提取正文内容（跳过标签行）
+            BODY=$(grep -v '^ISSUE_LABELS:' "$FILE")
+            echo "📋 提取正文内容长度：$(echo "$BODY" | wc -c) 字节"
 
             # 检查是否已有同名 issue
             ISSUE_NUMBER=$(gh issue list --state all --search "$TITLE in:title" --json number,title | jq -r ".[] | select(.title==\"$TITLE\") | .number")

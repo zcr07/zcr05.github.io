@@ -22,13 +22,22 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y gh jq
 
-      - name: Create or update GitHub Issues
+      - name: Create or update GitHub Issues from markdown
         run: |
           echo "📂 开始处理 issues/*.md 文件"
 
           for file in issues/*.md; do
             TITLE=$(basename "$file" .md | sed 's/[-_]/ /g')
-            BODY=$(cat "$file")
+
+            # 读取第一行标签（如果有）
+            FIRST_LINE=$(head -n 1 "$file")
+            if [[ "$FIRST_LINE" == ISSUE_LABELS:* ]]; then
+              LABELS=$(echo "$FIRST_LINE" | sed 's/^ISSUE_LABELS:[[:space:]]*//')
+              BODY=$(tail -n +2 "$file")
+            else
+              LABELS=""
+              BODY=$(cat "$file")
+            fi
 
             echo "🔍 检查是否已有同名 issue: '$TITLE'"
             ISSUE_NUMBER=$(gh issue list \
@@ -39,10 +48,18 @@ jobs:
 
             if [[ -n "$ISSUE_NUMBER" ]]; then
               echo "♻️ 更新已存在的 issue #$ISSUE_NUMBER"
-              gh issue edit "$ISSUE_NUMBER" --body "$BODY"
+              if [[ -n "$LABELS" ]]; then
+                gh issue edit "$ISSUE_NUMBER" --body "$BODY" --add-label "$LABELS"
+              else
+                gh issue edit "$ISSUE_NUMBER" --body "$BODY"
+              fi
             else
               echo "🆕 创建新的 issue: $TITLE"
-              gh issue create -t "$TITLE" -b "$BODY"
+              if [[ -n "$LABELS" ]]; then
+                gh issue create -t "$TITLE" -b "$BODY" --label "$LABELS"
+              else
+                gh issue create -t "$TITLE" -b "$BODY"
+              fi
             fi
           done
         env:

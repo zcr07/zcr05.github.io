@@ -75,8 +75,8 @@ jobs:
                 
                 # GitHub API不支持直接删除issue，改为使用gh CLI将issue锁定并关闭
                 echo "📌 关闭并锁定issue..."
-                gh issue close "$ISSUE_NUMBER" --reason "完成" --comment "此issue对应的文件已被删除，自动关闭并锁定。"
-                gh issue lock "$ISSUE_NUMBER" --reason "解决"
+                gh issue close "$ISSUE_NUMBER" --reason "completed" --comment "此issue对应的文件已被删除，自动关闭并锁定。"
+                gh issue lock "$ISSUE_NUMBER" --reason "resolved"
                 
                 echo "✅ 已完成issue #$ISSUE_NUMBER 的处理"
                 DELETE_PERFORMED=true

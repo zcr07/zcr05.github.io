@@ -40,6 +40,7 @@ jobs:
             fi
 
             echo "🔍 检查是否已有同名 issue: '$TITLE'"
+            echo "🔍 检查获取到的标签：'$LABELS'"
             ISSUE_NUMBER=$(gh issue list \
               --state all \
               --search "$TITLE in:title" \

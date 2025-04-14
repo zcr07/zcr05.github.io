@@ -27,7 +27,8 @@ jobs:
       - name: Create or update GitHub Issues from markdown changes
         run: |
           echo "📂 获取本次提交变更的 issues/*.md 文件"
-          CHANGED_FILES_TMP=$(git diff --name-only HEAD^ HEAD)
+          git fetch origin main  # 或 origin master，看你的主分支名
+          CHANGED_FILES_TMP=$(git diff --name-only origin/main...HEAD)
           CHANGED_FILES=$(echo '$CHANGED_FILES_TMP' | grep '^issues/.*\.md$' || true)
           echo "📂 本次获取到的md文件：'$CHANGED_FILES'"
           if [[ -z "$CHANGED_FILES" ]]; then

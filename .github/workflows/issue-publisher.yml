@@ -23,13 +23,13 @@ jobs:
         id: get_changed_files
         run: |
           echo "🔍 当前 GITHUB_SHA: $GITHUB_SHA"
-          echo "📋 当前提交变更文件列表："
-          git diff-tree --no-commit-id --name-only -r "$GITHUB_SHA"
-
-          CHANGED_FILES=$(git diff-tree --no-commit-id --name-only -r "$GITHUB_SHA" | grep '^issues/.*\.md$' || true)
+          
+          # 获取变更的文件，并处理 Unicode 文件名
+          CHANGED_FILES=$(git diff-tree --no-commit-id --name-only -r "$GITHUB_SHA" | \
+                          LC_ALL=C grep -P '^issues/.*\.md$' || true)
 
           echo "📂 本次获取到的md文件：$CHANGED_FILES"
-
+          
           echo "CHANGED_FILES<<EOF" >> $GITHUB_ENV
           echo "$CHANGED_FILES" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
@@ -79,6 +79,6 @@ jobs:
                 gh issue create -t "$TITLE" -b "$BODY"
               fi
             fi
-            
+
             echo "✅ 完成：$TITLE"
           done

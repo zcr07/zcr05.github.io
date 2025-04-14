@@ -465,6 +465,68 @@ h1::before, h2::before, h3::before, h4::before, h5::before, h6::before {
   border-bottom: 1px solid rgba(126, 87, 255, 0.2) !important;
 }
 
+/* 标题中的链接样式 */
+#content h1 a, #content h2 a, #content h3 a, #content h4 a, #content h5 a, #content h6 a {
+  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-decoration: none;
+  font-weight: inherit;
+  border-bottom: 1px dotted var(--primary-color);
+  transition: all 0.3s ease;
+}
+
+#content h1 a:hover, #content h2 a:hover, #content h3 a:hover, 
+#content h4 a:hover, #content h5 a:hover, #content h6 a:hover {
+  background: linear-gradient(to right, var(--secondary-color), var(--accent-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  border-bottom: 1px solid var(--secondary-color);
+}
+
+/* 不同主题模式下标题链接的样式 */
+html[data-color-mode="dark"] #content h1 a, 
+html[data-color-mode="dark"] #content h2 a, 
+html[data-color-mode="dark"] #content h3 a,
+html[data-color-mode="dark"] #content h4 a, 
+html[data-color-mode="dark"] #content h5 a, 
+html[data-color-mode="dark"] #content h6 a {
+  border-bottom: 1px dotted rgba(126, 87, 255, 0.5);
+}
+
+html[data-color-mode="light"] #content h1 a, 
+html[data-color-mode="light"] #content h2 a, 
+html[data-color-mode="light"] #content h3 a,
+html[data-color-mode="light"] #content h4 a, 
+html[data-color-mode="light"] #content h5 a, 
+html[data-color-mode="light"] #content h6 a {
+  border-bottom: 1px dotted rgba(126, 87, 255, 0.7);
+}
+
+/* 自动模式下的标题链接样式 */
+@media (prefers-color-scheme: dark) {
+  html[data-color-mode="auto"] #content h1 a, 
+  html[data-color-mode="auto"] #content h2 a, 
+  html[data-color-mode="auto"] #content h3 a,
+  html[data-color-mode="auto"] #content h4 a, 
+  html[data-color-mode="auto"] #content h5 a, 
+  html[data-color-mode="auto"] #content h6 a {
+    border-bottom: 1px dotted rgba(126, 87, 255, 0.5);
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  html[data-color-mode="auto"] #content h1 a, 
+  html[data-color-mode="auto"] #content h2 a, 
+  html[data-color-mode="auto"] #content h3 a,
+  html[data-color-mode="auto"] #content h4 a, 
+  html[data-color-mode="auto"] #content h5 a, 
+  html[data-color-mode="auto"] #content h6 a {
+    border-bottom: 1px dotted rgba(126, 87, 255, 0.7);
+  }
+}
+
 /* 不同级别标题样式差异化 - 仅对content内的标题 */
 #content h1 {
   font-size: 2em !important;

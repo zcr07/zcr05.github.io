@@ -21,16 +21,15 @@ jobs:
         run: |
           echo "🔍 当前 GITHUB_SHA: $GITHUB_SHA"
 
-          # 打印当前提交前后的变更文件
+          # 输出当前提交的 diff 列表
           echo "📋 当前提交变更文件列表："
-          git diff --name-only HEAD^ HEAD
-          
-          # 使用 git diff 获取变更的 issues/*.md 文件
-          CHANGED_FILES=$(git diff --name-only HEAD^ HEAD | grep -E '^issues/.*\.md$' || true)
+          git diff --name-only $GITHUB_SHA^ $GITHUB_SHA
 
-          # 输出获取到的 md 文件列表
+          # 获取当前提交的变更文件列表，并过滤出 issues/*.md 文件
+          CHANGED_FILES=$(git diff --name-only $GITHUB_SHA^ $GITHUB_SHA | grep -E '^issues/.*\.md$' || true)
+
           echo "📂 本次获取到的md文件：$CHANGED_FILES"
-          
+
           # 如果没有文件变更，跳过后续操作
           if [[ -z "$CHANGED_FILES" ]]; then
             echo "✅ 本次提交没有变更任何 issues/*.md 文件，跳过处理"

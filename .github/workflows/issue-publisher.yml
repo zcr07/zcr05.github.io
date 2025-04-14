@@ -10,19 +10,38 @@ permissions:
   issues: write
 
 jobs:
-  create_issues:
+  create_or_update_issues:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
 
-      - name: Create issues from markdown
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install GitHub CLI and jq
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq gh
+
+      - name: Create or update issues from markdown
         run: |
           for file in issues/*.md; do
-            FILENAME=$(basename "$file" .md)
-            TITLE="$FILENAME"
+            TITLE=$(basename "$file" .md | sed 's/[-_]/ /g')
             BODY=$(cat "$file")
-            echo "📄 创建 Issue: $TITLE"
-            gh issue create -R ${{ github.repository }} -t "$TITLE" -b "$BODY"
+
+            echo "🔍 检查是否已有同名 issue: '$TITLE'"
+            ISSUE_NUMBER=$(gh issue list \
+              --state all \
+              --search "$TITLE in:title" \
+              --json number,title \
+              | jq -r ".[] | select(.title==\"$TITLE\") | .number")
+
+            if [[ -n "$ISSUE_NUMBER" ]]; then
+              echo "♻️ 更新已存在的 issue #$ISSUE_NUMBER"
+              gh issue edit "$ISSUE_NUMBER" --body "$BODY"
+            else
+              echo "🆕 创建新的 issue: $TITLE"
+              gh issue create -t "$TITLE" -b "$BODY"
+            fi
           done
         env:
           GH_TOKEN: ${{ github.token }}

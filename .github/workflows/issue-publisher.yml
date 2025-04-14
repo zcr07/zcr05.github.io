@@ -27,7 +27,7 @@ jobs:
       - name: Create or update GitHub Issues from markdown changes
         run: |
           echo "📂 获取本次提交变更的 issues/*.md 文件"
-          CHANGED_FILES_TMP=$(git diff --name-only HEAD^ HEAD | grep '^issues/.*\.md$' || true)
+          CHANGED_FILES_TMP=$(git diff --name-only HEAD^ HEAD)
           CHANGED_FILES=$(echo '$CHANGED_FILES_TMP' | grep '^issues/.*\.md$' || true)
           if [[ -z "$CHANGED_FILES" ]]; then
             echo "✅ 本次提交没有变更任何 issues/*.md 文件，跳过处理"

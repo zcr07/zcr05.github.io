@@ -27,35 +27,30 @@ jobs:
           PREVIOUS_SHA=$(git rev-parse HEAD~1)
           echo "🔧 前一次提交 SHA: $PREVIOUS_SHA"
 
-          # 处理删除的文件 - 使用--name-status来获取文件变更状态
+          # 处理删除的文件 - 使用单独命令获取删除的文件
           echo "📋 获取删除的文件..."
-          git diff --name-status $PREVIOUS_SHA $GITHUB_SHA > /tmp/all_changes.txt
-          cat /tmp/all_changes.txt
-          
-          # 手动检查是否有删除的md文件
-          DELETED_MD_FILES=""
-          while IFS= read -r line; do
-            # 解析变更类型和文件名
-            TYPE=$(echo "$line" | cut -f1)
-            FILE=$(echo "$line" | cut -f2-)
-            
-            # 处理删除的文件
-            if [[ "$TYPE" == "D" && "$FILE" == issues/* && "$FILE" == *.md ]]; then
-              DELETED_MD_FILES+="$FILE"$'\n'
-              echo "🗑️ 检测到删除的md文件: $FILE"
+          git diff --diff-filter=D --name-only $PREVIOUS_SHA $GITHUB_SHA | while read -r file; do
+            echo "检查删除文件: $file"
+            # 移除可能的引号
+            file=$(echo "$file" | sed 's/^"//;s/"$//')
+            if [[ "$file" == issues/* && "$file" == *.md ]]; then
+              echo "🗑️ 检测到删除的md文件: $file"
+              # 保存到删除文件列表
+              echo "$file" >> /tmp/deleted_md_files.txt
             fi
-          done < /tmp/all_changes.txt
-          # 去除末尾空行
-          DELETED_MD_FILES=$(echo "$DELETED_MD_FILES" | sed '/^$/d')
+          done
+          
+          # 如果删除文件列表存在，读取它
+          DELETED_MD_FILES=""
+          if [[ -f "/tmp/deleted_md_files.txt" ]]; then
+            DELETED_MD_FILES=$(cat /tmp/deleted_md_files.txt)
+          fi
           echo "📂 删除的md文件: $DELETED_MD_FILES"
           
           # 检查是否有删除操作
           DELETE_PERFORMED=false
           
           if [[ -n "$DELETED_MD_FILES" ]]; then
-            # 保存删除的文件列表
-            echo "$DELETED_MD_FILES" > /tmp/deleted_files.txt
-            
             # 处理每个删除的文件
             while IFS= read -r FILE; do
               echo "🔍 处理删除的文件：$FILE"
@@ -81,29 +76,29 @@ jobs:
               else
                 echo "⚠️ 未找到与'$TITLE'对应的issue，无需删除"
               fi
-            done < /tmp/deleted_files.txt
+            done < <(echo "$DELETED_MD_FILES")
           else
             echo "✅ 没有删除任何md文件"
           fi
 
-          # 获取本次提交中新增或修改的文件 - 使用相同的变更文件列表
+          # 获取本次提交中新增或修改的文件 - 使用单独命令获取新增或修改的文件
           echo "📋 获取新增或修改的文件..."
-          
-          # 手动检查是否有新增或修改的md文件
-          MODIFIED_MD_FILES=""
-          while IFS= read -r line; do
-            # 解析变更类型和文件名
-            TYPE=$(echo "$line" | cut -f1)
-            FILE=$(echo "$line" | cut -f2-)
-            
-            # 处理新增或修改的文件
-            if [[ ("$TYPE" == "A" || "$TYPE" == "M") && "$FILE" == issues/* && "$FILE" == *.md ]]; then
-              MODIFIED_MD_FILES+="$FILE"$'\n'
-              echo "📝 检测到新增或修改的md文件: $FILE (类型: $TYPE)"
+          git diff --diff-filter=AM --name-only $PREVIOUS_SHA $GITHUB_SHA | while read -r file; do
+            echo "检查新增/修改文件: $file"
+            # 移除可能的引号
+            file=$(echo "$file" | sed 's/^"//;s/"$//')
+            if [[ "$file" == issues/* && "$file" == *.md ]]; then
+              echo "📝 检测到新增或修改的md文件: $file"
+              # 保存到修改文件列表
+              echo "$file" >> /tmp/modified_md_files.txt
             fi
-          done < /tmp/all_changes.txt
-          # 去除末尾空行
-          MODIFIED_MD_FILES=$(echo "$MODIFIED_MD_FILES" | sed '/^$/d')
+          done
+          
+          # 如果修改文件列表存在，读取它
+          MODIFIED_MD_FILES=""
+          if [[ -f "/tmp/modified_md_files.txt" ]]; then
+            MODIFIED_MD_FILES=$(cat /tmp/modified_md_files.txt)
+          fi
           echo "📂 新增或修改的md文件: $MODIFIED_MD_FILES"
           
           # 如果只执行了删除操作，并且没有任何新增或修改的md文件，则中止程序
@@ -129,12 +124,12 @@ jobs:
           fi
           
           # 将新增或修改的md文件写入文件列表
-          echo "$MODIFIED_MD_FILES" > /tmp/issues_files_list.txt
+          # 已经写入了 /tmp/modified_md_files.txt
           
           # 设置环境变量指向文件列表
-          echo "ISSUES_FILES_LIST=/tmp/issues_files_list.txt" >> $GITHUB_ENV
+          echo "ISSUES_FILES_LIST=/tmp/modified_md_files.txt" >> $GITHUB_ENV
           echo "HAS_MD_FILES=true" >> $GITHUB_ENV
-          echo "📂 本次将处理的md文件: $(cat /tmp/issues_files_list.txt)"
+          echo "📂 本次将处理的md文件: $(cat /tmp/modified_md_files.txt)"
 
       - name: 📄 处理每个md文件
         id: process_files

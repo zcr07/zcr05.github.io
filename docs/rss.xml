@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>爱捣鼓的小水木的博客</title><link>https://blog.mymaskking.dpdns.org/</link><description>一个等着裁员的java程序猿，每天无所事事，只想搞钱，喜欢钻研各种实用的技能，讨厌天天做工作上的项目，对自己毫无实用价值。&lt;BR/&gt;&lt;div class='listLabels'&gt;&lt;span class='Label LabelName'style='background-color:#efe1e1'&gt;&lt;object&gt;&lt;a style='color:#000000'href='https://v.douyin.com/UFXv95UxBbQ/'data-click-setup='true'&gt;抖音&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#a2eeef'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://kdocs.cn/l/clf4xOs5a3Q1'data-click-setup='true'&gt;WPS万能文档&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#ff0c0c'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://www.youtube.com/channel/UCeHFivb01FfFIL7kciY6KFg'data-click-setup='true'&gt;YouTobe&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelTime'style='background-color:#ff4f9a'&gt;&lt;a style='color:#fff'href='https://b23.tv/rGe89DU' data-click-setup='true'&gt;哔哩哔哩&lt;/a&gt;&lt;/span&gt;&lt;/div&gt;</description><copyright>爱捣鼓的小水木的博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/41733240?v=4</url><title>avatar</title><link>https://blog.mymaskking.dpdns.org/</link></image><lastBuildDate>Mon, 14 Apr 2025 14:15:52 +0000</lastBuildDate><managingEditor>爱捣鼓的小水木的博客</managingEditor><ttl>60</ttl><webMaster>爱捣鼓的小水木的博客</webMaster><item><title>Gmeek个人博客(增强版)</title><link>https://blog.mymaskking.dpdns.org//post/Gmeek-ge-ren-bo-ke-%28-zeng-qiang-ban-%29.html</link><description># **基于** [**Gmeek**](https://github.com/Meekdai/Gmeek)**的个人博客做了很多改善**
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>爱捣鼓的小水木的博客</title><link>https://blog.mymaskking.dpdns.org/</link><description>一个等着裁员的java程序猿，每天无所事事，只想搞钱，喜欢钻研各种实用的技能，讨厌天天做工作上的项目，对自己毫无实用价值。&lt;BR/&gt;&lt;div class='listLabels'&gt;&lt;span class='Label LabelName'style='background-color:#efe1e1'&gt;&lt;object&gt;&lt;a style='color:#000000'href='https://v.douyin.com/UFXv95UxBbQ/'data-click-setup='true'&gt;抖音&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#a2eeef'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://kdocs.cn/l/clf4xOs5a3Q1'data-click-setup='true'&gt;WPS万能文档&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#ff0c0c'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://www.youtube.com/channel/UCeHFivb01FfFIL7kciY6KFg'data-click-setup='true'&gt;YouTobe&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelTime'style='background-color:#ff4f9a'&gt;&lt;a style='color:#fff'href='https://b23.tv/rGe89DU' data-click-setup='true'&gt;哔哩哔哩&lt;/a&gt;&lt;/span&gt;&lt;/div&gt;</description><copyright>爱捣鼓的小水木的博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/41733240?v=4</url><title>avatar</title><link>https://blog.mymaskking.dpdns.org/</link></image><lastBuildDate>Mon, 14 Apr 2025 14:32:56 +0000</lastBuildDate><managingEditor>爱捣鼓的小水木的博客</managingEditor><ttl>60</ttl><webMaster>爱捣鼓的小水木的博客</webMaster><item><title>Gmeek个人博客(增强版)</title><link>https://blog.mymaskking.dpdns.org//post/Gmeek-ge-ren-bo-ke-%28-zeng-qiang-ban-%29.html</link><description># **基于** [**Gmeek**](https://github.com/Meekdai/Gmeek)**的个人博客做了很多改善**
 
 ## UI改善
 
@@ -701,26 +701,7 @@ rc-update add docker boot
 
 ## **手机的系统架构是什么？如何看？**
 
-&gt; 手机的 CPU 通常使用 ARM 架构（如 ARMv7, ARMv8）或较少见的 x86 架构。</description><guid isPermaLink="true">https://blog.mymaskking.dpdns.org//post/an-zhuo-shou-ji-an-zhuang-PC-huo-Linux%28-han-nei-wang-chuan-tou-%29.html</guid><pubDate>Sat, 12 Apr 2025 21:35:08 +0000</pubDate></item><item><title>关于魔法网络的解决</title><link>https://blog.mymaskking.dpdns.org//post/guan-yu-mo-fa-wang-luo-de-jie-jue.html</link><description># 免费域名注册
-
-⭐
-
-**可挂载Cloudflare**
-
-[ggff.net](https://ggff.net/)域名：[https://customer.l53.net/](https://customer.l53.net/)
-
-DPDNS.ORG域名：[https://dash.domain.digitalplat.org/panel/main](https://dash.domain.digitalplat.org/panel/main)
-
-[ip-ddns.com](https://ip-ddns.com/)域名：[https://www.cloudns.net/main/dashboard/dns/](https://www.cloudns.net/main/dashboard/dns/)
-
-**未来可挂载Cloudflare**
-
-zone.id域名：[https://my.zone.id/subdomains](https://my.zone.id/subdomains)
-
-# 域名解析检测
-
-⭐
-
+&gt; 手机的 CPU 通常使用 ARM 架构（如 ARMv7, ARMv8）或较少见的 x86 架构。</description><guid isPermaLink="true">https://blog.mymaskking.dpdns.org//post/an-zhuo-shou-ji-an-zhuang-PC-huo-Linux%28-han-nei-wang-chuan-tou-%29.html</guid><pubDate>Sat, 12 Apr 2025 21:35:08 +0000</pubDate></item><item><title>关于魔法网络的解决</title><link>https://blog.mymaskking.dpdns.org//post/guan-yu-mo-fa-wang-luo-de-jie-jue.html</link><description>
 -   **域名的DNS检测**：[https://myssl.com/dns_check.html#dns_check](https://myssl.com/dns_check.html#dns_check)
 
 ![](http://www.kdocs.cn/api/v3/office/copy/YnJLSHY1ZmFodGN6R2tLMitlTWRNU2VnUGNnZkU1L0NVZVE2NGRQRlhodnhJZytsTFNxdG9xQngwYjNVM0pwTTBSTmJJVWtmamxIWEE1TWcrVm1SZEdlOE82OFlOOEs5eGdIUGFXbDhFYyt1WEtUQlNLbUc3YUQ1Q1ZYQ0Z3RTZjUUd5OEVsV1hvTFV1WGthVklxaTArcmpWa1liYnRyTng3NXJnbkxsMThTNWlEOXBxT1NyQXZCQ3piUThZRXFLb1NwMldLbkRFTk1LL3BXVGI3YmJ3c0QyRkd4UmtBaEFYMDZTcDVsNFh6Y1JxeFhVSUZYeUhZSGljcHBmUGlReGNaVXNWcUVNa2o0PQ==/attach/object/GAXX2ZA7ADQHI?)
@@ -730,7 +711,6 @@ zone.id域名：[https://my.zone.id/subdomains](https://my.zone.id/subdomains)
 ![](http://www.kdocs.cn/api/v3/office/copy/YnJLSHY1ZmFodGN6R2tLMitlTWRNU2VnUGNnZkU1L0NVZVE2NGRQRlhodnhJZytsTFNxdG9xQngwYjNVM0pwTTBSTmJJVWtmamxIWEE1TWcrVm1SZEdlOE82OFlOOEs5eGdIUGFXbDhFYyt1WEtUQlNLbUc3YUQ1Q1ZYQ0Z3RTZjUUd5OEVsV1hvTFV1WGthVklxaTArcmpWa1liYnRyTng3NXJnbkxsMThTNWlEOXBxT1NyQXZCQ3piUThZRXFLb1NwMldLbkRFTk1LL3BXVGI3YmJ3c0QyRkd4UmtBaEFYMDZTcDVsNFh6Y1JxeFhVSUZYeUhZSGljcHBmUGlReGNaVXNWcUVNa2o0PQ==/attach/object/4IHH4ZA7ABAAE?)
 
 -   **虚拟信息生成器1：**[https://www.meiguodizhi.com/jp-address](https://www.meiguodizhi.com/jp-address)
-
 -   **虚拟信息生成器2：**[https://www.shenfendaquan.com/](https://www.shenfendaquan.com/)
 
 ![](http://www.kdocs.cn/api/v3/office/copy/YnJLSHY1ZmFodGN6R2tLMitlTWRNU2VnUGNnZkU1L0NVZVE2NGRQRlhodnhJZytsTFNxdG9xQngwYjNVM0pwTTBSTmJJVWtmamxIWEE1TWcrVm1SZEdlOE82OFlOOEs5eGdIUGFXbDhFYyt1WEtUQlNLbUc3YUQ1Q1ZYQ0Z3RTZjUUd5OEVsV1hvTFV1WGthVklxaTArcmpWa1liYnRyTng3NXJnbkxsMThTNWlEOXBxT1NyQXZCQ3piUThZRXFLb1NwMldLbkRFTk1LL3BXVGI3YmJ3c0QyRkd4UmtBaEFYMDZTcDVsNFh6Y1JxeFhVSUZYeUhZSGljcHBmUGlReGNaVXNWcUVNa2o0PQ==/attach/object/AXRICZA7ABAA6?)
@@ -740,108 +720,7 @@ zone.id域名：[https://my.zone.id/subdomains](https://my.zone.id/subdomains)
 ![](http://www.kdocs.cn/api/v3/office/copy/YnJLSHY1ZmFodGN6R2tLMitlTWRNU2VnUGNnZkU1L0NVZVE2NGRQRlhodnhJZytsTFNxdG9xQngwYjNVM0pwTTBSTmJJVWtmamxIWEE1TWcrVm1SZEdlOE82OFlOOEs5eGdIUGFXbDhFYyt1WEtUQlNLbUc3YUQ1Q1ZYQ0Z3RTZjUUd5OEVsV1hvTFV1WGthVklxaTArcmpWa1liYnRyTng3NXJnbkxsMThTNWlEOXBxT1NyQXZCQ3piUThZRXFLb1NwMldLbkRFTk1LL3BXVGI3YmJ3c0QyRkd4UmtBaEFYMDZTcDVsNFh6Y1JxeFhVSUZYeUhZSGljcHBmUGlReGNaVXNWcUVNa2o0PQ==/attach/object/KMHI6ZA7ACQE6?)
 
 -   **临时邮箱**[**https://temp-mail.org/zh**](https://temp-mail.org/zh)**(注意每次打开都要使用隐私模式)**
-
-# 域名解析
-
-⭐
-
--   **cloudflare域名解析**：[https://dash.cloudflare.com/login](https://dash.cloudflare.com/login)
-
--   [**He.net**](https://he.net/) **DNS域名解析：**[https://ipv6.he.net/certification/login.php?redir=%2Fcertification%2Fcert-main.php](https://ipv6.he.net/certification/login.php?redir=%2Fcertification%2Fcert-main.php)
-
--   **华为云国际版域名解析**：[https://console-intl.huaweicloud.com/dns/?agencyId=7c10feef2ef147f6b06149e7b0e6a172&amp;region=ap-southeast-1&amp;locale=zh-cn#/dns/publiczones](https://console-intl.huaweicloud.com/dns/?agencyId=7c10feef2ef147f6b06149e7b0e6a172&amp;region=ap-southeast-1&amp;locale=zh-cn#/dns/publiczones)
-
-# 接码平台
-
-⭐
-
--   **SMS_MAN(接码平台)：**[https://sms-man.com/cn](https://sms-man.com/cn)
-
--   **老牌接码平台：**[https://sms-activate.org/cn#](https://sms-activate.org/cn#)
-
-# Cloudflare节点优选
-
-⭐
-
--   **CloudFlare 公共 Cname 域名：**[https://www.wetest.vip/page/cloudflare/cname.html](https://www.wetest.vip/page/cloudflare/cname.html)
-
--   **CloudFlare公共优选Cname域名地址1：**[点我](https://www.wetest.vip/)
-
--   **CloudFlare公共优选Cname域名地址2：**[点](https://www.wetest.vip/)[我](https://blog.nbvil.com/nat/saasip/)
-
--   **CloudFlare优质IP：**[点我](https://stock.hostmonit.com/CloudFlareYes)
-
-# 好玩的docker应用
-
-⭐
-
-[https://github.com/coracoo/awesome_docker_cn?tab=readme-ov-file#docker%E7%AE%A1%E7%90%86](https://github.com/coracoo/awesome_docker_cn?tab=readme-ov-file#docker%E7%AE%A1%E7%90%86)
-
-[https://github.com/itgoyo/awesome-docker](https://github.com/itgoyo/awesome-docker)
-
-## portainer(docker容器管理:已汉化)
-
-```
-version: '3.1'
-services:
-  portainer:
-    image: 6053537/portainer-ce
-    container_name: portainer
-    ports:
-      - 9000:9000
-      - 8000:8000
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./data:/data
-    restart: unless-stopped
-```
-
-```
-docker-compose -f mogu_portainer.yml up -d
-```
-
-&gt; 12位密码设置：cyj123456789
-
-## Halo个人博客（需要的内存太大，放弃）
-
-&gt; 参考链接：[https://blog.vlinyu.com/archives/docker-compose-blog-halo](https://blog.vlinyu.com/archives/docker-compose-blog-halo)
-
-```
-version: '3'
-
-services:
-  halo:
-    image: halohub/halo:1.6.0
-    container_name: halo
-    restart: on-failure:3
-    volumes:
-      - ./data:/root/.halo
-  #    - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-    ports:
-      - '8000:8090'                 # 访问端口
-    environment:
-      - SERVER_PORT=8090
-      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.h2.Driver
-      - SPRING_DATASOURCE_URL=jdbc:h2:file:~/.halo/db/halo  # 数据保存位置，默认
-      - SPRING_DATASOURCE_USERNAME=admin
-      - SPRING_DATASOURCE_PASSWORD=o#DwN&amp;JSa56
-      - HALO_ADMIN_PATH=admin       # 管理页面访问地址https://your-domain/{admin-path}
-      - HALO_CACHE=level           # 缓存方式memory(内存)/level(本地)/redis（需配置redis）
-      - JAVA_OPTS=-Xms256m -Xmx1024m
-    networks:
-      - mynet
-
-networks:                           # 连接外部网络，方便内部代理
-  mynet:
-#    external: true
-```
-
-## Gmeek个人博客（基于github）
-
-&gt; 教学视频：[点我](https://www.bilibili.com/video/BV1GM4m1m7ZD/?vd_source=aafb688695496c16d63c4b9e07f211b3)  
-&gt; github官方网址：[点我](https://github.com/Meekdai/Gmeek)
 &lt;!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEwNTA3NTEyMzFdfQ==
+eyJoaXN0b3J5IjpbLTE5ODc5ODExMDJdfQ==
 --&gt;
 。</description><guid isPermaLink="true">https://blog.mymaskking.dpdns.org//post/guan-yu-mo-fa-wang-luo-de-jie-jue.html</guid><pubDate>Sat, 12 Apr 2025 14:52:41 +0000</pubDate></item></channel></rss>

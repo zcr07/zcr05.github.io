@@ -483,6 +483,7 @@ h1::before, h2::before, h3::before, h4::before, h5::before, h6::before {
   -webkit-background-clip: text;
   background-clip: text;
   border-bottom: 1px solid var(--secondary-color);
+  transform: none !important; /* 防止链接浮动 */
 }
 
 /* 不同主题模式下标题链接的样式 */
@@ -1474,4 +1475,29 @@ tr.post-item p, .post-item p,
   overflow-wrap: break-word !important;
   display: inline-block !important;
   max-width: 100% !important;
+}
+
+/* 防止博客内容标题链接在悬停时出现浮动效果 */
+.Box-row:hover a, .d-flex:hover a, #indexPostsList > div:hover a,
+tr.post-item:hover a, .post-item:hover a,
+.container-lg > div.container-lg > div.Box:hover a,
+.container-lg > div.container-lg > div > div:hover a,
+#blog-container > div:hover a,
+main > div > div:hover a,
+[id*="post"]:hover a {
+  transform: translateX(5px);
+  transition: transform 0.3s ease;
+}
+
+/* 确保标题中的链接不会浮动 */
+.Box-row:hover h1 a, .Box-row:hover h2 a, .Box-row:hover h3 a, 
+.Box-row:hover h4 a, .Box-row:hover h5 a, .Box-row:hover h6 a,
+#indexPostsList > div:hover h1 a, #indexPostsList > div:hover h2 a, #indexPostsList > div:hover h3 a,
+#indexPostsList > div:hover h4 a, #indexPostsList > div:hover h5 a, #indexPostsList > div:hover h6 a,
+.d-flex:hover h1 a, .d-flex:hover h2 a, .d-flex:hover h3 a,
+.d-flex:hover h4 a, .d-flex:hover h5 a, .d-flex:hover h6 a,
+#content h1 a, #content h2 a, #content h3 a, 
+#content h4 a, #content h5 a, #content h6 a {
+  transform: none !important;
+  transition: color 0.3s ease, border-bottom 0.3s ease !important;
 }

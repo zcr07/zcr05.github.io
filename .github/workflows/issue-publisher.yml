@@ -25,22 +25,33 @@ jobs:
       - name: Create or update GitHub Issues from markdown
         run: |
           echo "📂 开始处理 issues/*.md 文件"
+          shopt -s nullglob  # 防止没有 .md 文件时报错
 
           for file in issues/*.md; do
             TITLE=$(basename "$file" .md | sed 's/[-_]/ /g')
 
-            # 读取第一行标签（如果有）
+            # 提取标签行和主体内容
             FIRST_LINE=$(head -n 1 "$file")
             if [[ "$FIRST_LINE" == ISSUE_LABELS:* ]]; then
               LABELS=$(echo "$FIRST_LINE" | sed 's/^ISSUE_LABELS:[[:space:]]*//')
               BODY=$(tail -n +2 "$file")
+              echo "🔍 检查获取到的标签：'$LABELS'"
             else
               LABELS=""
               BODY=$(cat "$file")
             fi
 
+            # 自动创建缺失的标签
+            if [[ -n "$LABELS" ]]; then
+              IFS=',' read -ra LABEL_ARR <<< "$LABELS"
+              for label in "${LABEL_ARR[@]}"; do
+                CLEAN_LABEL=$(echo "$label" | xargs)  # 去除空格
+                echo "🏷️ 确保标签 '$CLEAN_LABEL' 存在"
+                gh label create "$CLEAN_LABEL" --description "Auto-created label" --color "ededed" 2>/dev/null || true
+              done
+            fi
+
             echo "🔍 检查是否已有同名 issue: '$TITLE'"
-            echo "🔍 检查获取到的标签：'$LABELS'"
             ISSUE_NUMBER=$(gh issue list \
               --state all \
               --search "$TITLE in:title" \
@@ -62,6 +73,8 @@ jobs:
                 gh issue create -t "$TITLE" -b "$BODY"
               fi
             fi
+
+            echo "✅ 完成处理: $TITLE"
           done
         env:
           GH_TOKEN: ${{ github.token }}

@@ -6,7 +6,10 @@ on:
     types: [opened, edited]
   schedule:
     - cron: "0 16 * * *"
-    
+  workflow_run:
+    workflows: ["Publish Issues"]  # 必须与你的第一个 workflow 的 name 一致
+    types:
+      - completed
 jobs:
   build:
     name: Generate blog

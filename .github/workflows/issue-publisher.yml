@@ -27,10 +27,26 @@ jobs:
           PREVIOUS_SHA=$(git rev-parse HEAD~1)
           echo "🔧 前一次提交 SHA: $PREVIOUS_SHA"
 
-          # 获取当前提交中删除的md文件列表
-          echo "📋 检查是否删除了md文件..."
-          DELETED_FILES=$(git diff --diff-filter=D --name-only $PREVIOUS_SHA $GITHUB_SHA | grep -E '^issues/.*\.md$' || true)
-          echo "📂 删除的md文件: $DELETED_FILES"
+          # 步骤1: 获取git diff结果
+          echo "📋 步骤1: 获取git diff结果..."
+          ALL_DELETED_FILES=$(git diff --diff-filter=D --name-only $PREVIOUS_SHA $GITHUB_SHA)
+          echo "📂 所有删除的文件(git diff结果): $ALL_DELETED_FILES"
+          
+          # 将结果保存到文件
+          echo "$ALL_DELETED_FILES" > /tmp/all_deleted_files.txt
+          
+          # 步骤2: 用grep过滤出issues/*.md文件
+          echo "📋 步骤2: 用grep过滤issues/*.md文件..."
+          if [[ -s "/tmp/all_deleted_files.txt" ]]; then
+            DELETED_FILES=$(grep -E '^issues/.*\.md$' /tmp/all_deleted_files.txt || echo "")
+            echo "📂 删除的md文件(grep过滤后): $DELETED_FILES"
+          else
+            echo "📂 没有任何删除的文件，跳过grep过滤"
+            DELETED_FILES=""
+          fi
+          
+          # 检查是否有删除操作
+          DELETE_PERFORMED=false
           
           if [[ -n "$DELETED_FILES" ]]; then
             # 保存删除的文件列表
@@ -57,6 +73,7 @@ jobs:
                      "https://api.github.com/repos/${{ github.repository }}/issues/$ISSUE_NUMBER"
                 
                 echo "✅ 已成功删除issue #$ISSUE_NUMBER"
+                DELETE_PERFORMED=true
               else
                 echo "⚠️ 未找到与'$TITLE'对应的issue，无需删除"
               fi
@@ -67,36 +84,65 @@ jobs:
 
           # 输出当前提交的 diff 列表
           echo "📋 当前提交变更文件列表："
-          git diff --name-only $PREVIOUS_SHA $GITHUB_SHA
+          CHANGES=$(git diff --name-only $PREVIOUS_SHA $GITHUB_SHA)
+          echo "$CHANGES"
+          
+          # 检查是否有新增或修改的md文件
+          NEW_OR_MODIFIED_MD_FILES=$(echo "$CHANGES" | grep -E '^issues/.*\.md$' || echo "")
+          
+          # 如果只执行了删除操作，并且没有任何新增或修改的md文件，则中止程序
+          if [[ "$DELETE_PERFORMED" == "true" && -z "$NEW_OR_MODIFIED_MD_FILES" ]]; then
+            echo "✅ 已完成删除操作，没有新增或修改的md文件，中止程序"
+            echo "HAS_MD_FILES=false" >> $GITHUB_ENV
+            exit 0
+          fi
+
+          # 检查issues目录是否存在
+          if [[ ! -d "issues" ]]; then
+            echo "⚠️ issues目录不存在，可能已被删除"
+            echo "✅ 处理完毕，退出"
+            echo "HAS_MD_FILES=false" >> $GITHUB_ENV
+            exit 0
+          fi
 
           # 直接处理issues目录下所有md文件
           echo "📋 查找issues目录下的所有md文件..."
-          ISSUES_FILES=$(find issues -name "*.md" -type f)
-          echo "📂 找到的md文件: $ISSUES_FILES"
+          ISSUES_FILES=$(find issues -name "*.md" -type f 2>/dev/null || echo "")
           
-          # 如果没有找到文件，则退出
           if [[ -z "$ISSUES_FILES" ]]; then
             echo "✅ 没有找到任何issues/*.md文件，跳过处理"
+            echo "HAS_MD_FILES=false" >> $GITHUB_ENV
             exit 0
           fi
+          
+          echo "📂 找到的md文件: $ISSUES_FILES"
           
           # 将找到的文件写入文件列表
           echo "$ISSUES_FILES" > /tmp/issues_files_list.txt
           
           # 设置环境变量指向文件列表
           echo "ISSUES_FILES_LIST=/tmp/issues_files_list.txt" >> $GITHUB_ENV
+          echo "HAS_MD_FILES=true" >> $GITHUB_ENV
 
       - name: 📄 处理每个md文件
         id: process_files
+        if: env.HAS_MD_FILES == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          # 读取包含文件列表的文件
-          echo "📂 读取md文件列表"
+          # 检查文件列表是否存在
           if [[ ! -f "${{ env.ISSUES_FILES_LIST }}" ]]; then
-            echo "❌ 文件列表不存在"
-            exit 1
+            echo "❌ 文件列表不存在，跳过处理"
+            exit 0
           fi
+          
+          # 检查文件列表是否为空
+          if [[ ! -s "${{ env.ISSUES_FILES_LIST }}" ]]; then
+            echo "❌ 文件列表为空，跳过处理"
+            exit 0
+          fi
+          
+          echo "📂 读取md文件列表"
           
           # 先获取当前仓库已有的所有标签
           echo "📋 获取仓库现有标签..."

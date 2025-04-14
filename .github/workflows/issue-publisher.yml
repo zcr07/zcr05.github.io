@@ -1,0 +1,22 @@
+name: Publish Markdown as GitHub Issue
+
+on:
+  push:
+    paths:
+      - 'issues/*.md'
+
+jobs:
+  create_issues:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Read markdown files and create issues
+        run: |
+          for file in issues/*.md; do
+            TITLE=$(head -n 1 "$file" | sed 's/^# //')
+            BODY=$(tail -n +2 "$file")
+            gh issue create -R ${{ github.repository }} -t "$TITLE" -b "$BODY"
+          done
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

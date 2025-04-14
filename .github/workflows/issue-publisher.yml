@@ -20,79 +20,62 @@ jobs:
         id: get_changed_files
         run: |
           echo "🔍 当前 GITHUB_SHA: $GITHUB_SHA"
+
+          # 打印当前提交前后的变更文件
           echo "📋 当前提交变更文件列表："
-          # 打印当前变更的文件
-          git diff-tree --no-commit-id --name-only -r "$GITHUB_SHA"
+          git diff --name-only HEAD^ HEAD
           
-          # 获取变更的 .md 文件
-          CHANGED_FILES=$(git diff-tree --no-commit-id --name-only -r "$GITHUB_SHA" | grep -E '^issues/.*\.md$' || true)
-          
+          # 使用 git diff 获取变更的 issues/*.md 文件
+          CHANGED_FILES=$(git diff --name-only HEAD^ HEAD | grep -E '^issues/.*\.md$' || true)
+
+          # 输出获取到的 md 文件列表
           echo "📂 本次获取到的md文件：$CHANGED_FILES"
           
-          # 输出获取到的文件到环境变量，供后续步骤使用
+          # 如果没有文件变更，跳过后续操作
+          if [[ -z "$CHANGED_FILES" ]]; then
+            echo "✅ 本次提交没有变更任何 issues/*.md 文件，跳过处理"
+            exit 0
+          fi
+
+          # 输出变更文件列表到 GitHub Actions 环境变量
           echo "CHANGED_FILES<<EOF" >> $GITHUB_ENV
           echo "$CHANGED_FILES" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
-      - name: 🔧 调试当前工作目录及文件
+      - name: 📄 处理每个变更的md文件
+        id: process_files
         run: |
-          echo "📂 当前工作目录：$(pwd)"
-          echo "📂 当前工作目录下文件列表："
-          ls -la
-          
-      - name: 📝 处理变更的 issue 文件
-        if: ${{ env.CHANGED_FILES != '' }}
-        run: |
-          # 输出变更文件的日志
-          echo "📂 处理以下变更的 issue 文件："
-          echo "$CHANGED_FILES"
-          
-          # 遍历变更的文件
-          for file in $CHANGED_FILES; do
-            echo "🔍 正在处理文件: $file"
-            
-            # 提取标题和标签
-            TITLE=$(head -n 1 "$file" | sed 's/^# //')
-            BODY=$(tail -n +2 "$file")
-            
-            # 提取标签
-            LABELS=$(grep -E '^ISSUE_LABELS:' "$file" | sed 's/^ISSUE_LABELS:[[:space:]]*//')
-            
-            echo "📋 读取到的标题: $TITLE"
-            echo "📋 读取到的标签: $LABELS"
-            
-            # 如果没有标签，跳过
-            if [[ -n "$LABELS" ]]; then
-              echo "📋 标签列表: $LABELS"
-            else
-              echo "❌ 没有标签，跳过标签设置"
-            fi
+          # 从环境变量中获取变更的md文件列表
+          CHANGED_FILES="${{ env.CHANGED_FILES }}"
 
-            # 检查 issue 是否已存在
-            ISSUE_NUMBER=$(gh issue list \
-              --state all \
-              --search "$TITLE in:title" \
-              --json number,title \
-              | jq -r ".[] | select(.title==\"$TITLE\") | .number")
-            
+          echo "📂 处理变更的md文件：$CHANGED_FILES"
+
+          for FILE in $CHANGED_FILES; do
+            echo "🔍 处理文件：$FILE"
+
+            # 从md文件中提取标题
+            TITLE=$(head -n 1 "$FILE" | sed 's/^# //')
+            echo "📋 提取标题：$TITLE"
+
+            # 从md文件中提取正文内容
+            BODY=$(tail -n +2 "$FILE")
+            echo "📋 提取正文：$BODY"
+
+            # 从md文件中提取标签
+            LABELS=$(grep -E '^ISSUE_LABELS:' "$FILE" | sed 's/^ISSUE_LABELS:[[:space:]]*//')
+            echo "📋 提取标签：$LABELS"
+
+            # 检查是否已有同名 issue
+            ISSUE_NUMBER=$(gh issue list --state all --search "$TITLE in:title" --json number,title | jq -r ".[] | select(.title==\"$TITLE\") | .number")
+            echo "🔍 检查是否已有同名 issue: '$TITLE'，找到 issue number: $ISSUE_NUMBER"
+
+            # 如果找到 issue，则更新，否则创建新的 issue
             if [[ -n "$ISSUE_NUMBER" ]]; then
               echo "♻️ 更新已存在的 issue #$ISSUE_NUMBER"
-              gh issue edit "$ISSUE_NUMBER" --body "$BODY"
-              
-              # 更新标签
-              if [[ -n "$LABELS" ]]; then
-                echo "🔧 更新标签为: $LABELS"
-                gh issue edit "$ISSUE_NUMBER" --add-label "$LABELS"
-              fi
+              gh issue edit "$ISSUE_NUMBER" --body "$BODY" --label "$LABELS"
             else
               echo "🆕 创建新的 issue: $TITLE"
-              gh issue create -t "$TITLE" -b "$BODY"
-              
-              # 添加标签
-              if [[ -n "$LABELS" ]]; then
-                echo "🔧 为新 issue 添加标签: $LABELS"
-                gh issue edit "$ISSUE_NUMBER" --add-label "$LABELS"
-              fi
+              gh issue create -t "$TITLE" -b "$BODY" --label "$LABELS"
             fi
 
             echo "✅ 完成：$TITLE"

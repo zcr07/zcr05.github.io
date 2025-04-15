@@ -1460,7 +1460,7 @@ tr.post-item p, .post-item p,
 }
 
 /* 文章正文内容换行 */
-#postBody, #postBody * {
+#postBody, #postBody *:not(pre):not(code):not(.highlight):not([class*="language-"]):not(.notranslate):not(.copy-feedback) {
   white-space: normal !important;
   overflow-wrap: break-word !important;
   word-wrap: break-word !important;
@@ -1475,6 +1475,77 @@ tr.post-item p, .post-item p,
   overflow-wrap: break-word !important;
   display: inline-block !important;
   max-width: 100% !important;
+}
+
+/* 确保代码块保持原有格式 */
+#postBody pre, 
+#postBody code, 
+#postBody .highlight, 
+#postBody pre[class*="language-"],
+#postBody code[class*="language-"],
+#postBody pre.notranslate,
+#postBody code.notranslate {
+  white-space: pre !important;
+  overflow-x: auto !important;
+  overflow-wrap: normal !important;
+  word-wrap: normal !important;
+  word-break: normal !important;
+  tab-size: 4 !important;
+  font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace !important;
+  background-color: #f6f8fa !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  border-radius: 6px !important;
+  padding: 16px !important;
+  margin: 8px 0 !important;
+  line-height: 1.5 !important;
+  font-size: 14px !important;
+  color: #24292e !important;
+  max-width: 100% !important;
+  display: block !important;
+}
+
+/* 确保代码块内的所有元素保持原有格式 */
+#postBody pre *, 
+#postBody code *, 
+#postBody .highlight *, 
+#postBody pre[class*="language-"] *,
+#postBody code[class*="language-"] *,
+#postBody pre.notranslate *,
+#postBody code.notranslate * {
+  white-space: pre !important;
+  overflow-wrap: normal !important;
+  word-wrap: normal !important;
+  word-break: normal !important;
+  font-family: inherit !important;
+}
+
+/* 暗色模式下的代码块 */
+html[data-color-mode="dark"] #postBody pre,
+html[data-color-mode="dark"] #postBody code,
+html[data-color-mode="dark"] #postBody .highlight,
+html[data-color-mode="dark"] #postBody pre[class*="language-"],
+html[data-color-mode="dark"] #postBody code[class*="language-"] {
+  background-color: #0d1117 !important;
+  color: #c9d1d9 !important;
+  border-color: #30363d !important;
+}
+
+/* 为特定的代码块容器设置样式 */
+.snippet-clipboard-content, .snippet-clipboard-content pre {
+  position: relative !important;
+  overflow: auto !important; 
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+.snippet-clipboard-content.position-relative.overflow-auto {
+  max-width: 100% !important;
+  overflow: auto !important;
+  background-color: #f6f8fa !important;
+  padding: 0 !important;
+  margin: 16px 0 !important;
+  border-radius: 6px !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
 }
 
 /* 防止博客内容标题链接在悬停时出现浮动效果 */
@@ -1500,4 +1571,19 @@ main > div > div:hover a,
 #content h4 a, #content h5 a, #content h6 a {
   transform: none !important;
   transition: color 0.3s ease, border-bottom 0.3s ease !important;
+}
+
+/* 复制提示样式 - 确保不换行 */
+.copy-feedback {
+  white-space: nowrap !important;
+  word-break: keep-all !important;
+  word-wrap: normal !important;
+  overflow-wrap: normal !important;
+  position: absolute !important;
+  text-align: center !important;
+  background: rgba(0, 0, 0, 0.8) !important;
+  color: white !important;
+  padding: 5px 10px !important;
+  border-radius: 3px !important;
+  font-size: 12px !important;
 }

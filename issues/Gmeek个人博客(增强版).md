@@ -1,3 +1,4 @@
+
 # **基于** [**Gmeek**](https://github.com/Meekdai/Gmeek)**的个人博客做了很多改善**
 
 ## UI改善
@@ -6,11 +7,11 @@
 
 # [Gmeek](https://github.com/Meekdai/Gmeek)的原理流程
 
-![](http://www.kdocs.cn/api/v3/office/copy/YU5aZW5GWUZaMlBXcUJLTUQ0WDhDalg1SERNR1VNRHNiVFY5bndYOHE3OUFuQVBOY0l4a0czTzQ1ZVhhRUZoVlRnSjB5aW41Uzl0TWJlRllSbVF5SEorOEJ1ZlFFcFRBaUY5U05sekRxa3F4N0Zya1RpUjNyM0w2OU9Ja21PcGpkVmR2eVBrSWpHakZDckMzVUd2bnhzWE9IQ1RSSTd2ZGpCQWF1em9renJ1dGNCN05kREtpcTVBdUYwcUtManJBcXlDWXJSakZWWE1yWDc2ZkJNc1lHT3VXV2E1cGhBS29zeVgxcnd3OHBjQ3l0dkYyREQwSHo5N1IveFBycDdSczRzZjdUNktjOXhvPQ==/attach/object/EUUTS6I7ADQAK? "po_bheegdgbihhhba")
+![](http://www.kdocs.cn/api/v3/office/copy/em1nN3dtbzFFYTZMMkluTzZ1NlRPME82c1RJSDdiQjJ4QlQrcVB3dGdHKzBPa0tSeEMxNW9ONTBkMXpVbGM4aHcwZzhqUHl0Myt0dVpkWUVPeDhwWFhMRlRCSk04STlTSUNHQ2ZQM09DQUovYjlSeHYwZzRnd1VsT1R4enh2bDBYWnR3ajMrWEFzdmhKRW1NV1I5TTZ1SHhuUUhnTlJ4cU1nTkRzaXc2Sy9qclc2SVhkREVmM3F5US82YUV1UkY1ZGFmbDVTTHRreFl2UDR5N0ZxR2RLaXR4MW1HL2docWo4dUphSHhGNStqNVR3Wmx3OVhxT1NxeDFYd2ptRFNYTlZERWFCSmpicUhjPQ==/attach/object/EUUTS6I7ADQAK? "po_bheegdgbihhhba")
 
 # [Gmeek增强](https://github.com/MyMaskKing/MyMaskKing.github.io.git)的原理流程
 
-![](http://www.kdocs.cn/api/v3/office/copy/YU5aZW5GWUZaMlBXcUJLTUQ0WDhDalg1SERNR1VNRHNiVFY5bndYOHE3OUFuQVBOY0l4a0czTzQ1ZVhhRUZoVlRnSjB5aW41Uzl0TWJlRllSbVF5SEorOEJ1ZlFFcFRBaUY5U05sekRxa3F4N0Zya1RpUjNyM0w2OU9Ja21PcGpkVmR2eVBrSWpHakZDckMzVUd2bnhzWE9IQ1RSSTd2ZGpCQWF1em9renJ1dGNCN05kREtpcTVBdUYwcUtManJBcXlDWXJSakZWWE1yWDc2ZkJNc1lHT3VXV2E1cGhBS29zeVgxcnd3OHBjQ3l0dkYyREQwSHo5N1IveFBycDdSczRzZjdUNktjOXhvPQ==/attach/object/JXQUS6I7AAAFU? "po_bheegdhaijjcja")
+![](http://www.kdocs.cn/api/v3/office/copy/em1nN3dtbzFFYTZMMkluTzZ1NlRPME82c1RJSDdiQjJ4QlQrcVB3dGdHKzBPa0tSeEMxNW9ONTBkMXpVbGM4aHcwZzhqUHl0Myt0dVpkWUVPeDhwWFhMRlRCSk04STlTSUNHQ2ZQM09DQUovYjlSeHYwZzRnd1VsT1R4enh2bDBYWnR3ajMrWEFzdmhKRW1NV1I5TTZ1SHhuUUhnTlJ4cU1nTkRzaXc2Sy9qclc2SVhkREVmM3F5US82YUV1UkY1ZGFmbDVTTHRreFl2UDR5N0ZxR2RLaXR4MW1HL2docWo4dUphSHhGNStqNVR3Wmx3OVhxT1NxeDFYd2ptRFNYTlZERWFCSmpicUhjPQ==/attach/object/JXQUS6I7AAAFU? "po_bheegdhaijjcja")
 
 ----------
 
@@ -50,14 +51,57 @@
 
 当 `issues/*.md` 文件有任何变更时触发工作流。
 
-### **使用方法**
+### 使用方法
 
-1.  把Git `issues/` 目录链接到[**StackEdit**](https://stackedit.cn/#)
-2.  **添加文章**：在 `issues/` 目录下创建 `.md` 文件
-3.  **更新文章**：修改 `issues/` 目录下的 `.md` 文件
-4.  **删除文章**：删除 `issues/` 目录下的 `.md` 文件
+> [!CAUTION]  
+> 使用Gmeek增强版之前务必先阅读[# Gmeek快速上手](https://blog.meekdai.com/post/Gmeek-kuai-su-shang-shou.html)，这里只讲增强内容的用法。
 
-系统会自动同步变更到 GitHub Issues。
+#### 1. 基础设置
+
+1.  点击[Gmeek增强版Template](https://github.com/new?template_name=gmeek_enhanced&template_owner=MyMaskKing)把仓库下载到自己的Github
+2.  在仓库根目录创建`issues`文件夹(如不存在)
+
+#### 2. 创建文章
+
+> [!NOTE]  
+> 可以通过[StackEdit](https://stackedit.cn/)将Github的指定目录进行关联（可通过[我的博客](https://blog.mymaskking.dpdns.org/)找到具体方法,博客内有我的B站，抖音，油管等视频平台也可以找到相关视频）
+
+1.  在`issues/`目录下创建Markdown文件(如`my-first-post.md`)
+2.  文件名将自动成为Issue的标题
+3.  在文件开头可以定义标签：
+
+```
+ISSUE_LABELS: 技术, 教程, 心得
+
+这里开始是文章正文内容...
+```
+
+1.  保存文件并推送到GitHub
+
+#### 3. 更新文章
+
+1.  修改`issues/`目录下的Markdown文件
+2.  保存并推送到GitHub
+3.  系统会自动更新对应的Issue
+
+#### 4. 删除文章
+
+1.  从`issues/`目录删除Markdown文件
+2.  推送更改到GitHub
+3.  系统会自动关闭对应的Issue
+
+# 内置Gmeek官方UI和Gmeek增强版UI
+
+1.  请选择要使用的config.json
+2.  点击Action中的build Gmeek进行发布博客新的CSS和JS
+
+## Gmeek官方UI
+
+![](http://www.kdocs.cn/api/v3/office/copy/em1nN3dtbzFFYTZMMkluTzZ1NlRPME82c1RJSDdiQjJ4QlQrcVB3dGdHKzBPa0tSeEMxNW9ONTBkMXpVbGM4aHcwZzhqUHl0Myt0dVpkWUVPeDhwWFhMRlRCSk04STlTSUNHQ2ZQM09DQUovYjlSeHYwZzRnd1VsT1R4enh2bDBYWnR3ajMrWEFzdmhKRW1NV1I5TTZ1SHhuUUhnTlJ4cU1nTkRzaXc2Sy9qclc2SVhkREVmM3F5US82YUV1UkY1ZGFmbDVTTHRreFl2UDR5N0ZxR2RLaXR4MW1HL2docWo4dUphSHhGNStqNVR3Wmx3OVhxT1NxeDFYd2ptRFNYTlZERWFCSmpicUhjPQ==/attach/object/CXW327Q7ADQCG?)
+
+### Gmeek增强版UI
+
+![](http://www.kdocs.cn/api/v3/office/copy/em1nN3dtbzFFYTZMMkluTzZ1NlRPME82c1RJSDdiQjJ4QlQrcVB3dGdHKzBPa0tSeEMxNW9ONTBkMXpVbGM4aHcwZzhqUHl0Myt0dVpkWUVPeDhwWFhMRlRCSk04STlTSUNHQ2ZQM09DQUovYjlSeHYwZzRnd1VsT1R4enh2bDBYWnR3ajMrWEFzdmhKRW1NV1I5TTZ1SHhuUUhnTlJ4cU1nTkRzaXc2Sy9qclc2SVhkREVmM3F5US82YUV1UkY1ZGFmbDVTTHRreFl2UDR5N0ZxR2RLaXR4MW1HL2docWo4dUphSHhGNStqNVR3Wmx3OVhxT1NxeDFYd2ptRFNYTlZERWFCSmpicUhjPQ==/attach/object/D7W327Q7ADQCQ?)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEyMDgxMzEwNjJdfQ==
+eyJoaXN0b3J5IjpbLTEyMzI5MDk0ODJdfQ==
 -->

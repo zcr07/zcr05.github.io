@@ -1017,7 +1017,7 @@ body::before {
 .main-content-container, 
 main,
 #content {
-  padding: 24px;
+  padding: 1px;
   width: 100%;
   max-width: var(--max-width);
   margin: 0 auto;

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>爱捣鼓的小水木的博客</title><link>https://blog.mymaskking.dpdns.org/</link><description>一个等着裁员的java程序猿，每天无所事事，只想搞钱，喜欢钻研各种实用的技能，讨厌天天做工作上的项目，对自己毫无实用价值。&lt;BR/&gt;&lt;div class='listLabels'&gt;&lt;span class='Label LabelName'style='background-color:#efe1e1'&gt;&lt;object&gt;&lt;a style='color:#000000'href='https://v.douyin.com/UFXv95UxBbQ/'data-click-setup='true'&gt;抖音&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#a2eeef'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://kdocs.cn/l/clf4xOs5a3Q1'data-click-setup='true'&gt;WPS万能文档&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#ff0c0c'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://www.youtube.com/channel/UCeHFivb01FfFIL7kciY6KFg'data-click-setup='true'&gt;YouTobe&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelTime'style='background-color:#ff4f9a'&gt;&lt;a style='color:#fff'href='https://b23.tv/rGe89DU' data-click-setup='true'&gt;哔哩哔哩&lt;/a&gt;&lt;/span&gt;&lt;/div&gt;</description><copyright>爱捣鼓的小水木的博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/41733240?v=4</url><title>avatar</title><link>https://blog.mymaskking.dpdns.org/</link></image><lastBuildDate>Tue, 15 Apr 2025 12:51:20 +0000</lastBuildDate><managingEditor>爱捣鼓的小水木的博客</managingEditor><ttl>60</ttl><webMaster>爱捣鼓的小水木的博客</webMaster><item><title>Cursor的开发Rule设置</title><link>https://blog.mymaskking.dpdns.org//post/Cursor-de-kai-fa-Rule-she-zhi.html</link><description>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>爱捣鼓的小水木的博客</title><link>https://blog.mymaskking.dpdns.org/</link><description>一个等着裁员的java程序猿，每天无所事事，只想搞钱，喜欢钻研各种实用的技能，讨厌天天做工作上的项目，对自己毫无实用价值。&lt;BR/&gt;&lt;div class='listLabels'&gt;&lt;span class='Label LabelName'style='background-color:#efe1e1'&gt;&lt;object&gt;&lt;a style='color:#000000'href='https://v.douyin.com/UFXv95UxBbQ/'data-click-setup='true'&gt;抖音&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#a2eeef'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://kdocs.cn/l/clf4xOs5a3Q1'data-click-setup='true'&gt;WPS万能文档&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#ff0c0c'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://www.youtube.com/channel/UCeHFivb01FfFIL7kciY6KFg'data-click-setup='true'&gt;YouTobe&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelTime'style='background-color:#ff4f9a'&gt;&lt;a style='color:#fff'href='https://b23.tv/rGe89DU' data-click-setup='true'&gt;哔哩哔哩&lt;/a&gt;&lt;/span&gt;&lt;/div&gt;</description><copyright>爱捣鼓的小水木的博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/41733240?v=4</url><title>avatar</title><link>https://blog.mymaskking.dpdns.org/</link></image><lastBuildDate>Tue, 15 Apr 2025 13:11:25 +0000</lastBuildDate><managingEditor>爱捣鼓的小水木的博客</managingEditor><ttl>60</ttl><webMaster>爱捣鼓的小水木的博客</webMaster><item><title>Cursor的开发Rule设置</title><link>https://blog.mymaskking.dpdns.org//post/Cursor-de-kai-fa-Rule-she-zhi.html</link><description>
 # Cursor的Rule（中文版）
 
 ```
@@ -13,7 +13,7 @@
     - 重新代码的时候，要确保新代码和原来的代码的功能，画面样式一致
     - 保证代码的设计和design.md的设计一致
     # 解决问题策略
-    - 当出现问题的时候，你要对相关所有代码进行检查，找出问题并解决
+    - 当出现问题的时候，你要对这个问题相关所有代码进行检查，防止有其他bug未修复
     - 当问题超过两次没有解决时，你要换一个思路来解决问题
 ```
 
@@ -22,29 +22,26 @@
 # Cursor的Rule（英文版）
 
 ```
-Code Regulations
-• Commonize duplicate code.
-• The number of lines in each code file should not exceed 600.
-• Before deleting code, confirm that it is not in use.
-• When adding code, ensure that your code will not affect other code.
-• When adding new features, confirm that there is no relevant feature code in the existing code.
-• When adding CSS styles to the screen, make sure the CSS you add does not affect the global CSS.
-• When recoding, ensure that the new code has the same functionality and screen style as the original code.
-• Ensure that the code design is consistent with the design in design.md.
-Problem - Solving Strategies
-• When a problem occurs, you should check all relevant code, identify the problem and solve it.
-• When a problem has not been solved more than twice, you should adopt a different approach to solve the problem.
+# Code Specifications
+- Duplicate code should be made common.
+- The number of lines in each code file should not exceed 600.
+- Before deleting code, confirm that it is not in use.
+- When adding code, make sure your code does not affect other code.
+- When adding new features, confirm that there is no relevant feature code in the existing code.
+- When adding CSS styles for the screen, ensure that the CSS you add does not affect the global CSS.
+- When recoding, ensure that the new code has the same functionality and screen style as the original code.
+- Ensure that the code design is consistent with the design in design.md.
+
+# Problem - Solving Strategies
+- When a problem occurs, check all the code related to this problem to prevent other un - fixed bugs.
+- When a problem has not been solved more than twice, you should approach the problem from a different perspective.
 ```
 
 # 使用方法
 
-![](http://www.kdocs.cn/api/v3/office/copy/SkJTSUlpbmtvTnR0enhPQ1RZTEp2WlZjempheWEvdlZmSkhaWk9UUFZKM2ZKSm5KUldKRzUzaGxodHlURndCbWJGa3RCbWVFcUt1V1M2bDJialNZVG5hOW5EQlRLT1JSb1hRMVVBVS9rTzA3QVJUWmZ2a3JhSlhYbnJqbG9xb0ppTnBVZlowOUR5MUVtS3pGUTNIeEhvR3NCVFZuWVpBTEhpaWo5SGU4ZWwxWjZtMjBLRzVtU0pac055Q1V4KzNVWjI5RTZhVGV1YmN5b2QzeDdzc2w2YXFWY2VtZlpxMDgrb2FUcWk0c2U5VEpDYTd2bnJRcHRIZ3d0d3U4djB0SWJMOUJ6eDlQRlhFPQ==/attach/object/OVFTY7Q7ACAD6?)
-
-⭐
-
-![](http://www.kdocs.cn/api/v3/office/copy/SkJTSUlpbmtvTnR0enhPQ1RZTEp2WlZjempheWEvdlZmSkhaWk9UUFZKM2ZKSm5KUldKRzUzaGxodHlURndCbWJGa3RCbWVFcUt1V1M2bDJialNZVG5hOW5EQlRLT1JSb1hRMVVBVS9rTzA3QVJUWmZ2a3JhSlhYbnJqbG9xb0ppTnBVZlowOUR5MUVtS3pGUTNIeEhvR3NCVFZuWVpBTEhpaWo5SGU4ZWwxWjZtMjBLRzVtU0pac055Q1V4KzNVWjI5RTZhVGV1YmN5b2QzeDdzc2w2YXFWY2VtZlpxMDgrb2FUcWk0c2U5VEpDYTd2bnJRcHRIZ3d0d3U4djB0SWJMOUJ6eDlQRlhFPQ==/attach/object/ASWDY7Q7ABQHO?)
+![](http://www.kdocs.cn/api/v3/office/copy/SmQxR2VsT3VVRFlWYlQ0ZGJ4YUc5N3E3Rmtadmw4SXdFWjUrT3YxOTYzcmp2MVh6cEhyOFlmZHVrekU0UGNySHBlZUdOalpkQ3NJWEdpNkkwL0kva0JEZ05WeXcvVGhQV3BwTHUvYlAyY0twWkIxcnIycmNHbXFsaHFuQ0wwblltVDN3c0Jvak9TcHkwdnRiaFdZclFJVko0Y1hvcVpUSVV5YTJqUU53UUdSYjIzT2czMVVhd1dpSGRVSnRBMnM1VUJIdkh1RzR1WXhIZkZZbHYzL3NxbXFiNmhuL1NIZXNkVHMyUWFTYStERW94V0d4MTI1MHRvWjhkSXBONS92NXhRWjk1b05oUzNNPQ==/attach/object/OVFTY7Q7ACAD6?)
 &lt;!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE1NzUxMzc3MjBdfQ==
+eyJoaXN0b3J5IjpbLTM5MDYwOTk1MF19
 --&gt;
 。</description><guid isPermaLink="true">https://blog.mymaskking.dpdns.org//post/Cursor-de-kai-fa-Rule-she-zhi.html</guid><pubDate>Tue, 15 Apr 2025 12:49:49 +0000</pubDate></item><item><title>Gmeek个人博客(增强版)</title><link>https://blog.mymaskking.dpdns.org//post/Gmeek-ge-ren-bo-ke-%28-zeng-qiang-ban-%29.html</link><description># **基于** [**Gmeek**](https://github.com/Meekdai/Gmeek)**的个人博客做了很多改善**
 

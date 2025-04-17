@@ -1118,6 +1118,7 @@ html[data-color-mode="auto"] #content > div:first-child {
 /* 列表导航容器样式 */
 .SideNav {
   max-width: var(--max-width);
+  width: 100%;
   margin: 0 auto;
   border-radius: 12px !important;
   overflow: hidden;
@@ -1126,6 +1127,7 @@ html[data-color-mode="auto"] #content > div:first-child {
   background-color: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  box-sizing: border-box;
 }
 
 /* 列表标签样式 */
@@ -1331,7 +1333,14 @@ tr.post-item p, .post-item p,
 
 /* 在小屏幕设备上调整列表悬停效果 */
 @media (max-width: 768px) {
-  
+  #header, #content, .SideNav, #footer {
+    padding: 8px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
   
   .Box-row:hover, .d-flex:hover, #indexPostsList > div:hover, tr.post-item:hover, 
   .post-item:hover,
@@ -1390,7 +1399,7 @@ tr.post-item p, .post-item p,
   }
   
   /* 确保内容容器居中且不超出屏幕 */
-  #content, .container, .container-lg, .container-md, .container-sm, .container-xl {
+  #content, .container, .container-lg, .container-md, .container-sm, .container-xl, .SideNav {
     padding-left: 1px !important;
     padding-right: 5px !important;
     width: 100% !important;
@@ -1588,4 +1597,25 @@ main > div > div:hover a,
   padding: 5px 10px !important;
   border-radius: 3px !important;
   font-size: 12px !important;
+}
+
+/* 移动设备设置 */
+@media (max-width: 768px) {
+  /* 调整列表项内容样式 */
+  .SideNav {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: unset !important;
+  }
+  
+  /* 调整SideNav-item内部的布局 */
+  .SideNav-item {
+    padding: 12px 10px !important;
+  }
+  
+  /* 确保列表标题在小屏幕上依然可读 */
+  .listTitle {
+    font-size: 14px !important;
+    max-width: 100% !important;
+  }
 }

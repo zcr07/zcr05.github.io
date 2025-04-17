@@ -342,7 +342,7 @@ html[data-color-mode="light"] body::after {
   width: 100%;
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 20px;
+  padding: 16px;
   box-sizing: border-box;
 }
 
@@ -1331,6 +1331,25 @@ tr.post-item p, .post-item p,
 
 /* 在小屏幕设备上调整列表悬停效果 */
 @media (max-width: 768px) {
+  #header, #content, .SideNav, #footer {
+    padding: 16px !important;
+  }
+  
+  .Box-row {
+    padding: 16px !important;
+    margin-bottom: 12px !important;
+  }
+  
+  .Label {
+    margin: 4px !important;
+    padding: 6px 12px !important;
+  }
+  
+  #content > div:first-child {
+    margin: 0 0 16px 0 !important;
+    padding: 16px !important;
+  }
+  
   .Box-row:hover, .d-flex:hover, #indexPostsList > div:hover, tr.post-item:hover, 
   .post-item:hover,
   .container-lg > div.container-lg > div.Box:hover,

@@ -221,16 +221,17 @@ function createLeftSideHotSites() {
     leftPanel.id = 'hotSitesPanel';
     leftPanel.className = 'hot-sites-panel';
     
-    // 确保面板有正确的定位样式
+    // 确保面板有正确的定位样式 - 贴左侧边缘显示，顶部偏移50%
     leftPanel.style.position = 'fixed';
-    leftPanel.style.top = '120px';
-    leftPanel.style.left = '20px';
+    leftPanel.style.top = '40%';
+    leftPanel.style.left = '0';
+    leftPanel.style.transform = 'translateY(-50%)';
     leftPanel.style.zIndex = '100';
-    leftPanel.style.maxHeight = 'calc(100vh - 150px)';
+    leftPanel.style.maxHeight = '70vh'; // 统一使用视口高度的70%作为最大高度
     leftPanel.style.overflowY = 'auto';
     leftPanel.style.width = '220px';
     leftPanel.style.backgroundColor = '#ffffff';
-    leftPanel.style.borderRadius = '12px';
+    leftPanel.style.borderRadius = '0 12px 12px 0'; // 调整圆角，左侧对齐不需要左侧圆角
     leftPanel.style.boxShadow = '0 5px 20px rgba(0, 0, 0, 0.1)';
     
     // 创建面板标题
@@ -285,12 +286,12 @@ function createLeftSideHotSites() {
         // 在小屏幕上默认隐藏面板
         leftPanel.style.display = 'none';
         leftPanel.style.opacity = '0';
-        leftPanel.style.transform = 'translateX(-260px)';
+        leftPanel.style.transform = 'translateY(-50%) translateX(-260px)'; // 保持垂直居中并水平移出
     } else {
         // 在大屏幕上默认显示面板
         leftPanel.style.display = 'block';
         leftPanel.style.opacity = '1';
-        leftPanel.style.transform = 'scale(1)';
+        leftPanel.style.transform = 'translateY(-50%) scale(1)'; // 保持垂直居中
         leftPanel.style.visibility = 'visible';
     }
     
@@ -384,9 +385,6 @@ function showHotSitesPanel(panel, btn) {
     
     console.log('显示热门站点面板');
     
-    // 获取目录按钮位置以确保不遮挡
-    const tocBtn = document.querySelector('.mobile-toc-btn');
-    
     // 在小屏幕上，如果工具面板正在显示，则关闭它
     if (window.UIState?.device.isMobile) {
         const quickToolsPanel = DOMUtils.getElement('quickToolsPanel');
@@ -412,29 +410,34 @@ function showHotSitesPanel(panel, btn) {
     
     // 设置面板的位置，在移动设备上从左侧滑出
     if (window.UIState?.device.isMobile) {
-        // 移动视图下，面板从左侧滑入
-        panel.style.transform = 'translateX(-260px)';
+        // 移动视图下，面板从左侧滑入，同时保持垂直居中
+        panel.style.transform = 'translateY(-50%) translateX(-260px)';
         
         // 确保样式立即生效
         requestAnimationFrame(() => {
             panel.style.opacity = '1';
-            panel.style.transform = 'translateX(0)';
+            panel.style.transform = 'translateY(-50%) translateX(0)';
             panel.style.visibility = 'visible';
             
             // 添加滚动指示器
             addScrollIndicator(panel);
             
-            // 调整面板位置，确保不遮挡目录按钮
-            adjustPanelPosition(panel, tocBtn);
+            // 确保贴边显示
+            panel.style.left = '0';
+            panel.style.borderRadius = '0 12px 12px 0';
             
             console.log('热门站点面板已显示 - 移动视图');
         });
     } else {
-        // 大屏幕视图，正常显示
+        // 大屏幕视图，正常显示，保持垂直居中
         requestAnimationFrame(() => {
             panel.style.opacity = '1';
-            panel.style.transform = 'scale(1)';
+            panel.style.transform = 'translateY(-50%) scale(1)';
             panel.style.visibility = 'visible';
+            
+            // 确保贴边显示
+            panel.style.left = '0';
+            panel.style.borderRadius = '0 12px 12px 0';
             
             console.log('热门站点面板已显示 - 桌面视图');
         });
@@ -448,37 +451,22 @@ function showHotSitesPanel(panel, btn) {
     }
 }
 
-// 调整面板位置，避免遮挡目录按钮
+// 调整面板位置，统一显示方式
 function adjustPanelPosition(panel, tocBtn) {
     if (!panel) return;
     
     const viewportHeight = window.innerHeight;
     
-    // 限制面板高度，设置为视口高度的60%，确保不会太大
-    const maxHeight = Math.min(viewportHeight * 0.6, 400) + 'px';
+    // 限制面板高度，设置为视口高度的70%，与其他设置保持一致
+    const maxHeight = Math.min(viewportHeight * 0.7, 600) + 'px';
     panel.style.maxHeight = maxHeight;
     
-    if (tocBtn) {
-        // 如果存在目录按钮，确保面板不会遮挡它
-        const tocRect = tocBtn.getBoundingClientRect();
-        const tocTop = tocRect.top;
-        const tocHeight = tocRect.height;
-        
-        // 计算面板底部边界，确保至少留出10px间距
-        const safeBottomMargin = tocTop - 10;
-        
-        // 调整面板位置，默认居中但受底部安全区域限制
-        let panelTop = (viewportHeight - panel.offsetHeight) / 2;
-        const panelBottom = panelTop + panel.offsetHeight;
-        
-        // 如果面板底部会遮挡目录按钮，则向上移动
-        if (panelBottom > safeBottomMargin) {
-            panelTop = Math.max(10, safeBottomMargin - panel.offsetHeight);
-        }
-        
-        panel.style.top = panelTop + 'px';
-        panel.style.transform = 'none'; // 移除默认的垂直居中transform
-    }
+    // 统一设置面板位置 - 贴左侧边缘显示
+    panel.style.position = 'fixed';
+    panel.style.top = '50%';
+    panel.style.left = '0';
+    panel.style.transform = 'translateY(-50%)';
+    panel.style.borderRadius = '0 12px 12px 0';
 }
 
 // 添加滚动指示器
@@ -525,13 +513,13 @@ function hideHotSitesPanel(panel, btn) {
     panel.classList.remove('show');
     
     if (window.UIState?.device.isMobile) {
-        // 移动视图下，面板向左侧滑出
+        // 移动视图下，面板向左侧滑出，同时保持垂直居中
         panel.style.opacity = '0';
-        panel.style.transform = 'translateX(-260px)';
+        panel.style.transform = 'translateY(-50%) translateX(-260px)';
     } else {
-        // 大屏幕视图，正常隐藏
+        // 大屏幕视图，正常隐藏，同时保持垂直居中
         panel.style.opacity = '0';
-        panel.style.transform = 'scale(0.95)';
+        panel.style.transform = 'translateY(-50%) scale(0.95)';
     }
     
     // 更新按钮样式
@@ -567,7 +555,7 @@ function setupHotSitesResponsiveBehavior() {
                 panel.classList.remove('show');
                 panel.style.display = 'none';
                 panel.style.opacity = '0';
-                panel.style.transform = 'translateX(-50px)';
+                panel.style.transform = 'translateY(-50%) translateX(-50px)';
                 panel.style.visibility = 'hidden';
             }
             
@@ -580,14 +568,24 @@ function setupHotSitesResponsiveBehavior() {
             
             // 配置面板为移动样式
             panel.classList.add('mobile');
+            
+            // 确保贴边显示
+            panel.style.left = '0';
+            panel.style.top = '40%';
+            panel.style.borderRadius = '0 12px 12px 0';
         } else {
             // 在大屏幕上始终显示面板
             panel.classList.remove('show');
             panel.classList.remove('mobile');
             panel.style.display = 'block';
             panel.style.opacity = '1';
-            panel.style.transform = 'scale(1)';
+            panel.style.transform = 'translateY(-50%) scale(1)';
             panel.style.visibility = 'visible';
+            
+            // 确保贴边显示
+            panel.style.left = '0';
+            panel.style.top = '40%';
+            panel.style.borderRadius = '0 12px 12px 0';
             
             // 隐藏按钮（如果存在）
             if (toggleBtn) {
@@ -651,13 +649,14 @@ function addHotSitesStyles() {
         /* 热门站点面板 - 基础样式 */
         #hotSitesPanel.hot-sites-panel {
             position: fixed !important;
-            top: 120px !important;
-            left: 20px !important;
+            top: 50% !important;
+            left: 0 !important;
+            transform: translateY(-50%) !important;
             width: 220px !important;
-            max-height: calc(100vh - 150px) !important;
+            max-height: 60vh !important; /* 统一面板高度为视口的70% */
             overflow-y: auto !important;
             background-color: #ffffff !important;
-            border-radius: 12px !important;
+            border-radius: 0 12px 12px 0 !important; /* 调整圆角，左侧贴边 */
             border: 1px solid rgba(126, 87, 255, 0.3) !important;
             padding: 15px 12px !important;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1) !important;
@@ -924,7 +923,6 @@ function addHotSitesStyles() {
         /* 响应式设计 */
         @media (max-width: 1400px) {
             .hot-sites-panel {
-                left: 10px;
                 width: 200px;
             }
         }
@@ -934,7 +932,7 @@ function addHotSitesStyles() {
             #hotSitesPanel.hot-sites-panel {
                 display: none !important;
                 opacity: 0 !important;
-                transform: translateX(-50px) !important;
+                transform: translateY(-50%) translateX(-50px) !important;
                 transition: transform 0.3s ease, opacity 0.3s ease !important;
                 visibility: hidden !important;
             }
@@ -943,7 +941,7 @@ function addHotSitesStyles() {
             #hotSitesPanel.hot-sites-panel.show {
                 display: block !important;
                 opacity: 1 !important;
-                transform: translateX(0) !important;
+                transform: translateY(-50%) translateX(0) !important;
                 visibility: visible !important;
                 z-index: 9990 !important; /* 确保低于目录按钮的z-index */
             }
@@ -963,7 +961,7 @@ function addHotSitesStyles() {
                 right: auto !important;
                 transform: translateY(-50%) !important;
                 width: 260px !important;
-                max-height: 60vh !important; /* 限制高度，避免太长 */
+                max-height: 70vh !important; /* 与桌面端使用相同的70%视口高度限制 */
                 border-radius: 0 12px 12px 0 !important;
                 box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2) !important;
                 transform-origin: left center !important;
@@ -1061,7 +1059,7 @@ function addHotSitesStyles() {
         @media (max-width: 768px) {
             #hotSitesPanel.hot-sites-panel.mobile {
                 width: 240px !important;
-                max-height: 65vh !important;
+                max-height: 70vh !important; /* 保持一致的高度限制 */
             }
             
             #hotSitesToggleBtn.hot-sites-toggle {
@@ -1329,7 +1327,7 @@ function updateHotSitesButtonPosition() {
     if (isMobile) {
         // 在小屏幕上强制显示按钮 - 确保按钮可见
         hotSitesBtn.style.position = 'fixed';
-        hotSitesBtn.style.top = '50%'; // 与工具按钮保持相同垂直位置
+        hotSitesBtn.style.top = '50%'; // 与面板保持相同垂直位置
         hotSitesBtn.style.transform = 'translateY(-50%)';
         hotSitesBtn.style.left = '0';
         hotSitesBtn.style.right = 'auto';

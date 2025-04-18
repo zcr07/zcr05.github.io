@@ -1,0 +1,42 @@
+[
+  {
+    "name": "颜色转换工具",
+    "url": "https://convertacolor.com",
+    "description": "在HEX、RGB、HSL等颜色格式之间转换"
+  },
+  {
+    "name": "正则表达式测试",
+    "url": "https://regex101.com",
+    "description": "在线测试和调试正则表达式"
+  },
+  {
+    "name": "Favicon生成器",
+    "url": "https://realfavicongenerator.net",
+    "description": "生成各种尺寸的网站图标"
+  },
+  {
+    "name": "Can I Use",
+    "url": "https://caniuse.com",
+    "description": "查询前端技术的浏览器兼容性"
+  },
+  {
+    "name": "JSON格式化",
+    "url": "https://jsonformatter.curiousconcept.com",
+    "description": "JSON在线格式化和验证工具"
+  },
+  {
+    "name": "图片压缩",
+    "url": "https://tinypng.com",
+    "description": "无损压缩PNG和JPEG图片"
+  },
+  {
+    "name": "CSS动画生成器",
+    "url": "https://animista.net",
+    "description": "可视化创建和自定义CSS动画"
+  },
+  {
+    "name": "在线代码编辑器",
+    "url": "https://codepen.io",
+    "description": "在线编写和测试HTML、CSS和JavaScript"
+  }
+] 

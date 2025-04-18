@@ -1,0 +1,42 @@
+[
+  {
+    "name": "GitHub",
+    "url": "https://github.com",
+    "hot": 95
+  },
+  {
+    "name": "Stack Overflow",
+    "url": "https://stackoverflow.com",
+    "hot": 90
+  },
+  {
+    "name": "掘金",
+    "url": "https://juejin.cn",
+    "hot": 85
+  },
+  {
+    "name": "CSDN",
+    "url": "https://www.csdn.net",
+    "hot": 80
+  },
+  {
+    "name": "InfoQ",
+    "url": "https://www.infoq.cn",
+    "hot": 75
+  },
+  {
+    "name": "知乎",
+    "url": "https://www.zhihu.com",
+    "hot": 70
+  },
+  {
+    "name": "V2EX",
+    "url": "https://www.v2ex.com",
+    "hot": 65
+  },
+  {
+    "name": "博客园",
+    "url": "https://www.cnblogs.com",
+    "hot": 60
+  }
+] 

@@ -1619,3 +1619,200 @@ main > div > div:hover a,
     max-width: 100% !important;
   }
 }
+
+/* 热门站点容器样式 */
+.HotSites {
+  max-width: var(--max-width);
+  width: 100%;
+  margin: 0 auto 20px auto;
+  border-radius: 12px !important;
+  overflow: hidden;
+  border: 1px solid rgba(200, 210, 255, 0.3) !important;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-sizing: border-box;
+}
+
+/* 热门站点标题 */
+.HotSites-title {
+  font-size: 16px;
+  font-weight: 600;
+  padding: 12px 16px;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.7), rgba(246, 246, 255, 0.7));
+  border-bottom: 1px solid rgba(200, 210, 255, 0.3);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.HotSites-title .octicon {
+  color: var(--primary-color);
+}
+
+/* 热门站点列表 */
+.HotSites-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* 热门站点项目 */
+.HotSites-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(200, 210, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.HotSites-item:last-child {
+  border-bottom: none;
+}
+
+.HotSites-item:hover {
+  background-color: rgba(126, 87, 255, 0.05);
+}
+
+/* 热门站点链接 */
+.HotSites-link {
+  color: var(--text-color);
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.HotSites-link:hover {
+  color: var(--primary-color);
+  transform: translateX(3px);
+}
+
+/* 热度值样式 */
+.HotSites-hot {
+  display: inline-block;
+  padding: 3px 6px;
+  font-size: 12px;
+  border-radius: 10px;
+  color: #fff;
+  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  opacity: 0.8;
+  transition: all 0.3s ease;
+}
+
+.HotSites-item:hover .HotSites-hot {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* 热门站点折叠按钮 - 移动端 */
+.HotSites-toggle {
+  display: none;
+  border: none;
+  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 10;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.HotSites-toggle:hover {
+  transform: rotate(15deg);
+}
+
+.HotSites-toggle svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* 响应式设置 */
+@media (max-width: 768px) {
+  .HotSites {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 80%;
+    max-width: 300px;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 1000;
+    margin: 0;
+    border-radius: 0 12px 12px 0 !important;
+  }
+  
+  .HotSites.show {
+    transform: translateX(0);
+  }
+  
+  .HotSites-toggle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .HotSites-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .HotSites-backdrop.show {
+    display: block;
+    opacity: 1;
+  }
+  
+  #content, .SideNav {
+    width: 100% !important;
+  }
+}
+
+/* 布局结构 - 支持左中右布局 */
+.layout-container {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  gap: 20px;
+}
+
+.layout-left {
+  flex: 1;
+  min-width: 250px;
+}
+
+.layout-center {
+  flex: 2;
+  min-width: 0;
+}
+
+.layout-right {
+  flex: 1;
+  min-width: 250px;
+}
+
+@media (max-width: 968px) {
+  .layout-container {
+    flex-direction: column;
+  }
+  
+  .layout-left, .layout-center, .layout-right {
+    width: 100%;
+    flex: none;
+  }
+}

@@ -88,12 +88,27 @@ const HOT_SITES_DATA = [
 // 全局变量，用于存储从服务器获取的热门站点数据
 let hotSitesData = null;
 
+// 定义命名空间，避免全局变量冲突
+const HotSites = {
+  // 状态变量
+  state: {
+    isInitialized: false,
+    isMobile: false
+  }
+};
+
 // 在页面加载完成时初始化
 console.log("热门站点脚本已加载");
 
 // 初始化热门站点功能
 function initHotSites() {
     console.log("初始化热门功能");
+    
+    // 防止重复初始化
+    if (HotSites.state.isInitialized) {
+        console.log("热门站点已初始化，跳过");
+        return;
+    }
     
     // 先从服务器获取热门站点数据
     fetchHotSitesData()
@@ -124,6 +139,9 @@ function initHotSites() {
                 setTimeout(() => {
                     updateHotSitesButtonPosition();
                 }, 1500);
+                
+                // 标记为已初始化
+                HotSites.state.isInitialized = true;
             } else {
                 console.log("热门数据为空或无效，不创建热门元素");
             }
@@ -147,6 +165,9 @@ function initHotSites() {
                 setTimeout(() => {
                     updateHotSitesButtonPosition();
                 }, 1500);
+                
+                // 标记为已初始化
+                HotSites.state.isInitialized = true;
             } else {
                 console.log("备用数据也无效，不创建热门元素");
             }
@@ -348,6 +369,10 @@ function createToggleButton() {
         toggleBtn.style.opacity = '0';
     }
     
+    // 将按钮添加到body
+    document.body.appendChild(toggleBtn);
+    console.log('热门站点切换按钮已添加到DOM');
+    
     // 添加点击事件
     toggleBtn.addEventListener('click', function(e) {
         e.preventDefault();
@@ -370,31 +395,61 @@ function createToggleButton() {
         }
     });
     
-    // 将按钮添加到body
-    document.body.appendChild(toggleBtn);
-    
-    // 添加点击外部区域关闭面板的功能
-    document.addEventListener('click', function(e) {
-        const panel = document.getElementById('hotSitesPanel');
-        const toggleBtn = document.getElementById('hotSitesToggleBtn');
+    // 添加全局点击监听器，处理所有弹窗的关闭
+    if (!window.globalOutsideClickHandler) {
+        window.globalOutsideClickHandler = function(e) {
+            // 处理热门站点面板
+            const hotSitesPanel = document.getElementById('hotSitesPanel');
+            const hotSitesBtn = document.getElementById('hotSitesToggleBtn');
+            
+            if (hotSitesPanel && hotSitesBtn && 
+                window.innerWidth <= 1200 && 
+                hotSitesPanel.classList.contains('show') && 
+                !hotSitesPanel.contains(e.target) && 
+                e.target !== hotSitesBtn && 
+                !hotSitesBtn.contains(e.target)) {
+                // 点击了热门站点面板外部区域，隐藏面板
+                hideHotSitesPanel(hotSitesPanel, hotSitesBtn);
+                hotSitesBtn.classList.remove('active');
+                console.log('全局点击监听器：关闭热门站点面板');
+            }
+            
+            // 处理便捷工具面板
+            const quickToolsPanel = document.getElementById('quickToolsPanel');
+            const quickToolsBtn = document.getElementById('quickToolsToggleBtn');
+            
+            if (quickToolsPanel && quickToolsBtn && 
+                window.innerWidth <= 1200 && 
+                quickToolsPanel.classList.contains('show') && 
+                !quickToolsPanel.contains(e.target) && 
+                e.target !== quickToolsBtn && 
+                !quickToolsBtn.contains(e.target)) {
+                // 点击了便捷工具面板外部区域，隐藏面板
+                try {
+                    // 使用全局定义的方法隐藏快捷工具面板
+                    hideQuickToolsPanel(quickToolsPanel, quickToolsBtn);
+                    quickToolsBtn.classList.remove('active');
+                    console.log('全局点击监听器：关闭便捷工具面板');
+                } catch (error) {
+                    console.error('全局点击监听器：尝试关闭便捷工具面板失败', error);
+                }
+            }
+            
+            // 这里可以添加其他弹窗的处理逻辑
+        };
         
-        if (panel && toggleBtn && 
-            window.innerWidth <= 1200 && 
-            panel.classList.contains('show') && 
-            !panel.contains(e.target) && 
-            e.target !== toggleBtn && 
-            !toggleBtn.contains(e.target)) {
-            // 点击了外部区域，隐藏面板
-            hideHotSitesPanel(panel, toggleBtn);
-            toggleBtn.classList.remove('active');
-        }
-    });
+        // 添加全局点击事件监听
+        document.addEventListener('click', window.globalOutsideClickHandler);
+        console.log('全局点击监听器已添加');
+    }
     
     // 正确定位按钮（相对于目录按钮）
     updateHotSitesButtonPosition();
     
     // 监听窗口大小变化，更新按钮位置
     window.addEventListener('resize', updateHotSitesButtonPosition);
+    
+    // MutationObserver监听DOM变化，确保按钮不被移除
     
     return toggleBtn;
 }
@@ -680,7 +735,7 @@ function addHotSitesStyles() {
             border: none !important;
             outline: none !important;
             position: fixed !important;
-            top: 30% !important;
+            top: 40% !important;
             left: 0 !important;
             transform: translateY(-50%) !important;
             visibility: hidden !important; /* 默认隐藏，在移动视图中再显示 */
@@ -1230,16 +1285,28 @@ function renderHotSites(sites) {
 
 // 确保在DOM完全加载后再执行初始化
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initHotSites);
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log("DOM加载完成，初始化热门站点");
+        initHotSites();
+    });
 } else {
     // 如果DOMContentLoaded已经触发，直接初始化
+    console.log("DOM已经加载，直接初始化热门站点");
     initHotSites();
 }
 
 // 为了确保脚本能够执行，添加一个延迟的初始化调用
 setTimeout(function() {
-    console.log("延迟初始化热门站点");
-    initHotSites();
+    console.log("延迟初始化热门站点 - 检查是否已初始化");
+    // 确保只初始化一次
+    if (!HotSites.state.isInitialized) {
+        console.log("热门站点尚未初始化，执行延迟初始化");
+        initHotSites();
+    } else {
+        console.log("热门站点已初始化，跳过延迟初始化");
+        // 仍然更新按钮位置，确保UI正确
+        updateHotSitesButtonPosition();
+    }
 }, 1000);
 
 // 在页面完全加载后，再次确保按钮可见
@@ -1261,23 +1328,39 @@ function updateHotSitesButtonPosition() {
     
     if (isMobileView) {
         // 在小屏幕上强制显示按钮 - 确保按钮可见
-        hotSitesBtn.style.display = 'flex';
-        hotSitesBtn.style.visibility = 'visible';
-        hotSitesBtn.style.opacity = '1';
-        hotSitesBtn.style.zIndex = '9980';
-        
-        // 将热门站点按钮设置为贴边显示（贴靠左侧边缘）
         hotSitesBtn.style.position = 'fixed';
-        hotSitesBtn.style.top = '30%'; // 定位在上方三分之一处，避开中间和底部区域
+        hotSitesBtn.style.top = '50%'; // 与工具按钮保持相同垂直位置
         hotSitesBtn.style.transform = 'translateY(-50%)';
         hotSitesBtn.style.left = '0';
         hotSitesBtn.style.right = 'auto';
         hotSitesBtn.style.bottom = 'auto';
         hotSitesBtn.style.borderRadius = '0 24px 24px 0'; // 右侧为半圆形，左侧贴边
+        hotSitesBtn.style.zIndex = '9980'; // 确保比工具按钮高一级
+        
+        // 强制显示按钮
+        hotSitesBtn.style.display = 'flex';
+        hotSitesBtn.style.visibility = 'visible';
+        hotSitesBtn.style.opacity = '1';
+        hotSitesBtn.style.width = '36px';
+        hotSitesBtn.style.height = '80px';
+        hotSitesBtn.style.writingMode = 'vertical-rl';
+        hotSitesBtn.style.textOrientation = 'mixed';
+        hotSitesBtn.style.background = 'linear-gradient(90deg, #7e57ff, #9165ff)';
+        hotSitesBtn.style.color = 'white';
+        hotSitesBtn.style.boxShadow = '2px 0 10px rgba(0, 0, 0, 0.2)';
+        hotSitesBtn.style.border = 'none';
+        hotSitesBtn.style.fontSize = '16px';
+        hotSitesBtn.style.fontWeight = 'bold';
+        hotSitesBtn.style.letterSpacing = '2px';
+        hotSitesBtn.style.alignItems = 'center';
+        hotSitesBtn.style.justifyContent = 'center';
         
         // 如果是小屏幕，稍微调整尺寸
         if (window.innerWidth <= 768) {
             hotSitesBtn.style.borderRadius = '0 20px 20px 0';
+            hotSitesBtn.style.width = '32px';
+            hotSitesBtn.style.height = '70px';
+            hotSitesBtn.style.fontSize = '14px';
         }
     } else {
         // 大屏幕上隐藏按钮

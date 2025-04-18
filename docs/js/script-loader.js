@@ -618,6 +618,30 @@ document.addEventListener('DOMContentLoaded', function() {
                         console.log(`[${delay}ms] 移动端: 确保便捷工具按钮显示`);
                     }
                 }
+                
+                // 同时检查热门按钮状态
+                const hotBtn = document.getElementById('hotSitesToggleBtn');
+                if (hotBtn) {
+                    if (window.BrowserDetect.isDesktop()) {
+                        // PC端强制隐藏
+                        hotBtn.style.display = 'none';
+                        hotBtn.style.visibility = 'hidden';
+                        hotBtn.style.opacity = '0';
+                        console.log(`[${delay}ms] PC端: 确保热门按钮隐藏`);
+                    } else {
+                        // 移动端强制显示
+                        hotBtn.style.display = 'flex';
+                        hotBtn.style.visibility = 'visible';
+                        hotBtn.style.opacity = '1';
+                        console.log(`[${delay}ms] 移动端: 确保热门按钮显示`);
+                    }
+                } else if (!window.BrowserDetect.isDesktop()) {
+                    // 如果热门按钮不存在且是移动端，尝试调用创建函数
+                    console.log(`[${delay}ms] 热门按钮不存在，尝试调用热门按钮创建函数`);
+                    if (typeof window.ensureButtonVisibility === 'function') {
+                        window.ensureButtonVisibility();
+                    }
+                }
             }, delay);
         });
     });

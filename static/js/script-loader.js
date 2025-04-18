@@ -7,7 +7,6 @@ const ScriptPaths = {
     local: {
         // 本地绝对路径 (用于Chrome/Edge等浏览器)
         absolute: {
-            basePath: 'D:/AboutDev/Workspace_AI/MyMaskKing.github.io',
             utils: 'D:/AboutDev/Workspace_AI/MyMaskKing.github.io/static/js/utils.js',
             hotSites: 'D:/AboutDev/Workspace_AI/MyMaskKing.github.io/static/js/plugins/hot-sites.js',
             quickTools: 'D:/AboutDev/Workspace_AI/MyMaskKing.github.io/static/js/plugins/quick-tools.js'

@@ -1365,4 +1365,50 @@ function updateHotSitesButtonPosition() {
         hotSitesBtn.style.display = 'none';
         hotSitesBtn.style.visibility = 'hidden';
     }
-} 
+}
+
+// 确保热门站点按钮在小屏幕上始终可见的函数
+function ensureButtonVisibility() {
+    console.log('确保热门站点按钮可见 - 开始');
+    
+    // 如果不是小屏幕，不需要处理
+    if (window.innerWidth > 1200) {
+        console.log('大屏幕模式，无需确保按钮可见');
+        return;
+    }
+    
+    // 查找热门站点按钮
+    let hotSitesBtn = document.getElementById('hotSitesToggleBtn');
+    
+    // 如果按钮不存在，创建一个新的
+    if (!hotSitesBtn) {
+        console.log('热门站点按钮不存在，尝试创建');
+        if (typeof createToggleButton === 'function') {
+            hotSitesBtn = createToggleButton();
+            console.log('已创建热门站点按钮');
+        } else {
+            console.error('无法创建热门站点按钮：createToggleButton函数不可用');
+            return;
+        }
+    }
+    
+    // 检查按钮是否在DOM中
+    if (!document.body.contains(hotSitesBtn)) {
+        console.log('热门站点按钮不在DOM中，重新添加');
+        document.body.appendChild(hotSitesBtn);
+    }
+    
+    // 确保按钮可见
+    hotSitesBtn.style.display = 'flex';
+    hotSitesBtn.style.visibility = 'visible';
+    hotSitesBtn.style.opacity = '1';
+    
+    // 如果是移动设备，确保按钮位置正确
+    updateHotSitesButtonPosition();
+    
+    console.log('确保热门站点按钮可见 - 完成');
+    return hotSitesBtn;
+}
+
+// 暴露函数到全局作用域，以便其他脚本可以调用
+window.ensureButtonVisibility = ensureButtonVisibility; 

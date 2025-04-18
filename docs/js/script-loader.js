@@ -37,6 +37,29 @@ function checkTocExistence() {
     return false;
 }
 
+// 设置全局的基本配置和状态
+function setupGlobalConfig() {
+    // 将目录状态暴露为全局变量，供各脚本使用
+    window.hasToc = checkTocExistence();
+    console.log("目录状态：", window.hasToc ? "存在" : "不存在");
+    
+    // 提前获取当前域名，方便构建各种路径
+    window.currentDomain = window.location.origin;
+    
+    // 判断当前环境
+    window.isLocalEnv = window.location.protocol === 'file:' || 
+                       window.location.hostname === 'localhost' || 
+                       window.location.hostname === '127.0.0.1';
+    
+    // 输出环境信息
+    console.log(`当前环境: ${window.isLocalEnv ? '本地测试' : '网络环境'}`);
+    console.log(`当前域名: ${window.currentDomain}`);
+    
+    // 输出配置文件路径信息
+    console.log("配置文件路径: 热门站点配置 -> " + window.location.origin + "/static/config/hot_site.json");
+    console.log("配置文件路径: 便捷工具配置 -> " + window.location.origin + "/static/config/quick_tools.json");
+}
+
 // 按顺序加载脚本的函数
 function loadScriptsSequentially(scripts, callback) {
     let index = 0;
@@ -47,7 +70,7 @@ function loadScriptsSequentially(scripts, callback) {
             console.log(`加载脚本 (${index + 1}/${scripts.length}): ${scriptSrc}`);
             
             // 如果有目录且当前是便捷工具JS，则跳过加载
-            const hasToc = checkTocExistence();
+            const hasToc = window.hasToc || checkTocExistence();
             if (hasToc && scriptSrc.includes('quick-tools.js')) {
                 console.log(`检测到目录存在，跳过加载便捷工具JS: ${scriptSrc}`);
                 index++;
@@ -84,20 +107,33 @@ function loadScriptsSequentially(scripts, callback) {
 }
 
 // 需要按顺序加载的脚本列表
-const scripts = [
-    './js/plugins/hot-sites.js',
-    './js/plugins/quick-tools.js'
-];
+const scripts = (() => {
+    // 设置全局基础配置
+    setupGlobalConfig();
+    
+    // 根据当前环境确定脚本路径
+    if (window.isLocalEnv) {
+        // 本地测试环境使用相对路径
+        console.log('使用本地测试路径');
+        return [
+            'D:/AboutDev/Workspace_AI/MyMaskKing.github.io/static/js/plugins/hot-sites.js',
+            'D:/AboutDev/Workspace_AI/MyMaskKing.github.io/static/js/plugins/quick-tools.js'
+        ];
+    } else {
+        // 网络环境使用绝对路径
+        console.log('使用网络环境路径');
+        return [
+            `${window.currentDomain}/static/js/plugins/hot-sites.js`,
+            `${window.currentDomain}/static/js/plugins/quick-tools.js`
+        ];
+    }
+})();
 
 // 在DOM加载完成后开始加载脚本
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM已加载，开始按顺序加载插件脚本');
     
-    const hasToc = checkTocExistence();
-    if (hasToc) {
-        console.log('检测到目录，仅加载热门站点JS，跳过便捷工具JS');
-    }
-    
+    // 加载脚本
     loadScriptsSequentially(scripts, function() {
         console.log('所有插件脚本加载完成');
     });

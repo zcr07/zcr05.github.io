@@ -1,6 +1,13 @@
 // 脚本加载器 - 确保按顺序加载js文件
 // 先加载热点站点JS，再加载便捷工具JS
 
+// 全局加载状态跟踪
+window.scriptLoaderStatus = {
+    hotSitesLoaded: false,
+    quickToolsLoaded: false,
+    pageFullyLoaded: false
+};
+
 // 检查页面是否存在目录
 function checkTocExistence() {
     // 检查常见的目录元素
@@ -85,12 +92,41 @@ function loadScriptsSequentially(scripts, callback) {
             // 脚本加载完成或出错时继续加载下一个
             script.onload = function() {
                 console.log(`脚本加载成功: ${scriptSrc}`);
+                
+                // 更新加载状态
+                if (scriptSrc.includes('hot-sites.js')) {
+                    window.scriptLoaderStatus.hotSitesLoaded = true;
+                    
+                    // 确保热门按钮可见（在小屏幕上）
+                    if (window.innerWidth <= 1200) {
+                        setTimeout(function() {
+                            if (typeof window.ensureButtonVisibility === 'function') {
+                                window.ensureButtonVisibility();
+                            }
+                        }, 200);
+                    }
+                } else if (scriptSrc.includes('quick-tools.js')) {
+                    window.scriptLoaderStatus.quickToolsLoaded = true;
+                }
+                
                 index++;
                 loadNext();
             };
             
             script.onerror = function() {
                 console.error(`脚本加载失败: ${scriptSrc}`);
+                
+                // 尝试热门站点脚本重试加载
+                if (scriptSrc.includes('hot-sites.js')) {
+                    console.warn('热门站点脚本加载失败，将在1秒后重试');
+                    setTimeout(function() {
+                        const retryScript = document.createElement('script');
+                        retryScript.src = scriptSrc;
+                        retryScript.async = false;
+                        document.head.appendChild(retryScript);
+                    }, 1000);
+                }
+                
                 index++;
                 loadNext();
             };
@@ -111,22 +147,39 @@ const scripts = (() => {
     // 设置全局基础配置
     setupGlobalConfig();
     
+    // 构建脚本路径
+    let hotSitesPath, quickToolsPath;
+    
     // 根据当前环境确定脚本路径
     if (window.isLocalEnv) {
-        // 本地测试环境使用相对路径
+        // 本地测试环境，使用相对路径或绝对路径
         console.log('使用本地测试路径');
-        return [
-            'D:/AboutDev/Workspace_AI/MyMaskKing.github.io/static/js/plugins/hot-sites.js',
-            'D:/AboutDev/Workspace_AI/MyMaskKing.github.io/static/js/plugins/quick-tools.js'
-        ];
+        
+        // 获取当前路径
+        const currentPath = window.location.pathname;
+        const baseDir = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
+        
+        // 尝试使用相对路径
+        hotSitesPath = `${baseDir}static/js/plugins/hot-sites.js`;
+        quickToolsPath = `${baseDir}static/js/plugins/quick-tools.js`;
+        
+        // 如果是特定项目路径，提供硬编码路径作为备用
+        if (currentPath.includes('AboutDev/Workspace_AI')) {
+            console.log('检测到特定项目路径，提供备用绝对路径');
+            hotSitesPath = 'D:/AboutDev/Workspace_AI/MyMaskKing.github.io/static/js/plugins/hot-sites.js';
+            quickToolsPath = 'D:/AboutDev/Workspace_AI/MyMaskKing.github.io/static/js/plugins/quick-tools.js';
+        }
     } else {
         // 网络环境使用绝对路径
         console.log('使用网络环境路径');
-        return [
-            `${window.currentDomain}/js/plugins/hot-sites.js`,
-            `${window.currentDomain}/js/plugins/quick-tools.js`
-        ];
+        hotSitesPath = `${window.location.origin}/static/js/plugins/hot-sites.js`;
+        quickToolsPath = `${window.location.origin}/static/js/plugins/quick-tools.js`;
     }
+    
+    console.log('热门站点脚本路径:', hotSitesPath);
+    console.log('便捷工具脚本路径:', quickToolsPath);
+    
+    return [hotSitesPath, quickToolsPath];
 })();
 
 // 在DOM加载完成后开始加载脚本
@@ -136,7 +189,43 @@ document.addEventListener('DOMContentLoaded', function() {
     // 加载脚本
     loadScriptsSequentially(scripts, function() {
         console.log('所有插件脚本加载完成');
+        
+        // 加载完成后，设置热门站点脚本已加载标记
+        window.scriptLoaderStatus.hotSitesLoaded = true;
     });
+});
+
+// 页面完全加载后的额外处理
+window.addEventListener('load', function() {
+    console.log('页面完全加载，执行最终检查');
+    window.scriptLoaderStatus.pageFullyLoaded = true;
+    
+    // 延迟执行最终检查，确保热门按钮存在
+    setTimeout(function() {
+        // 移动视图下检查热门按钮是否存在
+        if (window.innerWidth <= 1200 && !document.getElementById('hotSitesToggleBtn')) {
+            console.log("页面加载完成后未找到热门按钮，尝试恢复");
+            
+            // 按优先级尝试不同的恢复方法
+            if (typeof window.ensureButtonVisibility === 'function') {
+                window.ensureButtonVisibility();
+            } else if (typeof window.createToggleButton === 'function') {
+                window.createToggleButton();
+            }
+        }
+    }, 2000);
+    
+    // 设置定期检查，确保按钮始终存在
+    setInterval(function() {
+        if (window.innerWidth <= 1200 && !document.getElementById('hotSitesToggleBtn')) {
+            console.log("定期检查：热门按钮不存在，尝试恢复");
+            if (typeof window.ensureButtonVisibility === 'function') {
+                window.ensureButtonVisibility();
+            } else if (typeof window.createToggleButton === 'function') {
+                window.createToggleButton();
+            }
+        }
+    }, 5000); // 每5秒检查一次
 });
 
 // 为了防止直接在HTML中添加的脚本标签导致加载顺序错乱，可以在HTML中添加以下代码：

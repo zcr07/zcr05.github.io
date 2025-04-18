@@ -1,87 +1,18 @@
+// 热门站点数据配置 - 方便修改
+// 数据配置路径: static/js/hot-sites.js
+
+// 热门站点数据文件路径
+const HOT_SITES_CONFIG_PATH = 'https://blog.mymaskking.ggff.net/config/hot_site.json';
+
 // 热门站点图标 - 火焰图标的SVG路径
 const HOT_SITES_ICON_PATH = "M11.228 1.945c-.123-.103-.32-.103-.552-.103-.573 0-1.359.243-2.320.722-.96.48-1.726 1.039-2.299 1.683-.531.583-.972 1.258-1.298 2.022-.327.764-.532 1.488-.573 2.164-.04.675.082 1.253.368 1.724.286.471.697.778 1.209.879.532.1 1.053.05 1.564-.151.512-.204.9-.46 1.135-.781.266-.368.43-.737.43-1.1 0-.328-.143-.727-.389-1.156-.246-.43-.449-.665-.613-.665-.163 0-.266.092-.266.235 0 .163.02.285.06.368.042.081.103.204.165.327.102.143.163.306.204.46.061.307.041.604-.081.911a1.294 1.294 0 0 1-.675.645c-.308.144-.635.144-.982.021-.348-.143-.573-.43-.675-.85-.144-.485-.144-1.03-.02-1.6.122-.574.367-1.148.675-1.703.327-.614.736-1.187 1.248-1.683.491-.511 1.024-.92 1.595-1.228A3.89 3.89 0 0 1 9.46 2.257c.389-.02.696.5.92.225.225.184.348.43.389.738.041.286-.02.593-.163.9a2.212 2.212 0 0 1-.593.777c-.245.205-.522.328-.84.43-.327.123-.594.224-.84.307-.245.082-.409.204-.47.388-.063.184-.042.368.08.532.123.143.307.245.552.327.245.081.532.102.86.061.45-.061.838-.184 1.166-.368.327-.183.614-.42.84-.685.246-.266.43-.573.573-.92.143-.348.245-.686.245-1.015.02-.327-.04-.675-.163-1.002-.184-.308-.43-.533-.798-.695zm-7.004 7.65c-.246.409-.471.8-.717 1.168-.225.368-.43.696-.593.972-.358.591-.619 1.066-.747 1.394-.207.532-.166.993.12 1.394.144.184.329.267.573.267.245 0 .532-.083.84-.226.306-.165.593-.349.88-.573.265-.266.511-.553.736-.86.225-.306.43-.613.593-.9l.798-1.374a4.05 4.05 0 0 1-.634-.142 1.862 1.862 0 0 1-.88-.532 1.564 1.564 0 0 1-.45-.797 1.09 1.09 0 0 1-.041-.42c.02-.143.061-.266.1-.368l-.578-.003z";
 
 // 内联热门站点数据 - 这只是备用测试数据，实际数据应从服务器获取
 const HOT_SITES_DATA = [
   {
-    "name": "Gmeek增强版本使用教学",
-    "url": "https://github.com",
+    "name": "测试",
+    "url": "https://test.com",
     "hot": 95
-  },
-  {
-    "name": "Stack Overflow",
-    "url": "https://stackoverflow.com",
-    "hot": 90
-  },
-  {
-    "name": "掘金",
-    "url": "https://juejin.cn",
-    "hot": 85
-  },
-  {
-    "name": "CSDN",
-    "url": "https://www.csdn.net",
-    "hot": 80
-  },
-  {
-    "name": "InfoQ",
-    "url": "https://www.infoq.cn",
-    "hot": 75
-  },
-  {
-    "name": "知乎",
-    "url": "https://www.zhihu.com",
-    "hot": 70
-  },
-  {
-    "name": "V2EX",
-    "url": "https://www.v2ex.com",
-    "hot": 65
-  },
-  {
-    "name": "博客园",
-    "url": "https://www.cnblogs.com",
-    "hot": 60
-  },
-  {
-    "name": "Gmeek增强版本使用教学",
-    "url": "https://github.com",
-    "hot": 95
-  },
-  {
-    "name": "Stack Overflow",
-    "url": "https://stackoverflow.com",
-    "hot": 90
-  },
-  {
-    "name": "掘金",
-    "url": "https://juejin.cn",
-    "hot": 85
-  },
-  {
-    "name": "CSDN",
-    "url": "https://www.csdn.net",
-    "hot": 80
-  },
-  {
-    "name": "InfoQ",
-    "url": "https://www.infoq.cn",
-    "hot": 75
-  },
-  {
-    "name": "知乎",
-    "url": "https://www.zhihu.com",
-    "hot": 70
-  },
-  {
-    "name": "V2EX",
-    "url": "https://www.v2ex.com",
-    "hot": 65
-  },
-  {
-    "name": "博客园",
-    "url": "https://www.cnblogs.com",
-    "hot": 60
   }
 ];
 
@@ -188,7 +119,7 @@ function fetchHotSitesData() {
         }
         
         // 网络环境下，尝试从服务器获取数据
-        fetch('./config/hot_site.json')
+        fetch(HOT_SITES_CONFIG_PATH)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`获取热门站点数据失败: ${response.status}`);
@@ -387,6 +318,35 @@ function createToggleButton() {
         const panel = document.getElementById('hotSitesPanel');
         
         if (this.classList.contains('active')) {
+            // 如果工具面板正在显示，先关闭它
+            if (window.innerWidth <= 1200) {
+                const quickToolsPanel = document.getElementById('quickToolsPanel');
+                const quickToolsBtn = document.getElementById('quickToolsToggleBtn');
+                
+                if (quickToolsPanel && quickToolsPanel.classList.contains('show')) {
+                    console.log('点击热门按钮：检测到工具面板开启，自动关闭工具面板');
+                    try {
+                        // 尝试使用全局定义的方法隐藏快捷工具面板
+                        if (typeof hideQuickToolsPanel === 'function') {
+                            hideQuickToolsPanel(quickToolsPanel, quickToolsBtn);
+                        } else {
+                            // 直接修改样式
+                            quickToolsPanel.classList.remove('show');
+                            quickToolsPanel.style.display = 'none';
+                            quickToolsPanel.style.opacity = '0';
+                            quickToolsPanel.style.transform = 'translateX(260px)';
+                        }
+                        
+                        // 更新按钮状态
+                        if (quickToolsBtn) {
+                            quickToolsBtn.classList.remove('active');
+                        }
+                    } catch (error) {
+                        console.error('关闭工具面板失败:', error);
+                    }
+                }
+            }
+            
             // 显示面板
             showHotSitesPanel(panel, this);
         } else {
@@ -427,7 +387,15 @@ function createToggleButton() {
                 // 点击了便捷工具面板外部区域，隐藏面板
                 try {
                     // 使用全局定义的方法隐藏快捷工具面板
-                    hideQuickToolsPanel(quickToolsPanel, quickToolsBtn);
+                    if (typeof hideQuickToolsPanel === 'function') {
+                        hideQuickToolsPanel(quickToolsPanel, quickToolsBtn);
+                    } else {
+                        // 直接修改样式
+                        quickToolsPanel.classList.remove('show');
+                        quickToolsPanel.style.display = 'none';
+                        quickToolsPanel.style.opacity = '0';
+                        quickToolsPanel.style.transform = 'translateX(260px)';
+                    }
                     quickToolsBtn.classList.remove('active');
                     console.log('全局点击监听器：关闭便捷工具面板');
                 } catch (error) {
@@ -462,6 +430,35 @@ function showHotSitesPanel(panel, btn) {
     
     // 获取目录按钮位置以确保不遮挡
     const tocBtn = document.querySelector('.mobile-toc-btn');
+    
+    // 在小屏幕上，如果工具面板正在显示，则关闭它
+    if (window.innerWidth <= 1200) {
+        const quickToolsPanel = document.getElementById('quickToolsPanel');
+        const quickToolsBtn = document.getElementById('quickToolsToggleBtn');
+        
+        if (quickToolsPanel && quickToolsPanel.classList.contains('show')) {
+            console.log('检测到工具面板开启，自动关闭工具面板');
+            try {
+                // 尝试使用全局定义的方法隐藏快捷工具面板
+                if (typeof hideQuickToolsPanel === 'function') {
+                    hideQuickToolsPanel(quickToolsPanel, quickToolsBtn);
+                } else {
+                    // 直接修改样式
+                    quickToolsPanel.classList.remove('show');
+                    quickToolsPanel.style.display = 'none';
+                    quickToolsPanel.style.opacity = '0';
+                    quickToolsPanel.style.transform = 'translateX(260px)';
+                }
+                
+                // 更新按钮状态
+                if (quickToolsBtn) {
+                    quickToolsBtn.classList.remove('active');
+                }
+            } catch (error) {
+                console.error('关闭工具面板失败:', error);
+            }
+        }
+    }
     
     // 显示面板
     panel.classList.add('show');

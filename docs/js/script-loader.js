@@ -70,11 +70,158 @@ function setupGlobalConfig() {
 // 按顺序加载脚本的函数
 function loadScriptsSequentially(scripts, callback) {
     let index = 0;
+    const scriptStatus = {}; // 记录每个脚本的加载状态
+    const MAX_RETRIES = 3;   // 最大重试次数
+    const TIMEOUT = 10000;   // 脚本加载超时时间（毫秒）
     
+    // 标记脚本已加载完成，继续加载下一个
+    function markScriptLoaded(src, success = true) {
+        if (!scriptStatus[src]) {
+            scriptStatus[src] = {
+                loaded: success,
+                attempts: 1
+            };
+        } else {
+            scriptStatus[src].loaded = success;
+            scriptStatus[src].attempts++;
+        }
+        
+        console.log(`脚本 ${src} ${success ? '加载成功' : '加载失败'} (尝试次数: ${scriptStatus[src].attempts})`);
+    }
+    
+    // 加载单个脚本
+    function loadScript(src, onComplete) {
+        console.log(`开始加载脚本: ${src}`);
+        
+        // 创建脚本元素
+        const script = document.createElement('script');
+        script.src = src;
+        script.async = false; // 禁用异步加载，确保按顺序执行
+        
+        // 设置加载超时处理
+        let timeoutId = setTimeout(function() {
+            console.warn(`脚本加载超时: ${src}`);
+            
+            // 检查脚本是否已标记为加载成功，避免重复处理
+            if (scriptStatus[src] && scriptStatus[src].loaded) {
+                return;
+            }
+            
+            // 标记为加载失败
+            markScriptLoaded(src, false);
+            
+            // 检查是否需要重试
+            if (!scriptStatus[src] || scriptStatus[src].attempts < MAX_RETRIES) {
+                console.log(`重试加载脚本(${scriptStatus[src] ? scriptStatus[src].attempts : 0}/${MAX_RETRIES}): ${src}`);
+                // 移除超时的脚本元素
+                if (script.parentNode) {
+                    script.parentNode.removeChild(script);
+                }
+                // 延迟重试，避免立即失败
+                setTimeout(function() {
+                    loadScript(src, onComplete);
+                }, 1000);
+            } else {
+                console.error(`脚本 ${src} 加载失败，已达最大重试次数`);
+                onComplete(false);
+            }
+        }, TIMEOUT);
+        
+        // 脚本加载成功
+        script.onload = function() {
+            clearTimeout(timeoutId); // 清除超时计时器
+            markScriptLoaded(src, true);
+            
+            // 根据脚本类型更新全局状态
+            if (src.includes('hot-sites.js')) {
+                window.scriptLoaderStatus.hotSitesLoaded = true;
+                
+                // 确保热门按钮可见（在小屏幕上）
+                if (window.innerWidth <= 1200) {
+                    setTimeout(function() {
+                        if (typeof window.ensureButtonVisibility === 'function') {
+                            window.ensureButtonVisibility();
+                        }
+                    }, 200);
+                }
+            } else if (src.includes('quick-tools.js')) {
+                window.scriptLoaderStatus.quickToolsLoaded = true;
+            }
+            
+            onComplete(true);
+        };
+        
+        // 脚本加载失败
+        script.onerror = function() {
+            clearTimeout(timeoutId); // 清除超时计时器
+            markScriptLoaded(src, false);
+            
+            // 检查是否需要重试
+            if (scriptStatus[src].attempts < MAX_RETRIES) {
+                console.warn(`脚本加载失败，准备重试(${scriptStatus[src].attempts}/${MAX_RETRIES}): ${src}`);
+                
+                // 移除错误的脚本元素
+                if (script.parentNode) {
+                    script.parentNode.removeChild(script);
+                }
+                
+                // 延迟重试，避免立即失败
+                setTimeout(function() {
+                    loadScript(src, onComplete);
+                }, 1000 * scriptStatus[src].attempts); // 重试间隔随尝试次数增加
+            } else {
+                console.error(`脚本 ${src} 加载失败，已达最大重试次数`);
+                
+                // 特殊处理热门站点脚本加载失败的情况
+                if (src.includes('hot-sites.js') && window.innerWidth <= 1200) {
+                    console.warn('热门站点脚本加载失败，尝试应急方案');
+                    // 添加一个简单的内联脚本创建热门按钮
+                    const inlineScript = document.createElement('script');
+                    inlineScript.textContent = `
+                        (function() {
+                            console.log("创建应急热门按钮");
+                            const btn = document.createElement('button');
+                            btn.id = 'hotSitesToggleBtn';
+                            btn.style.position = 'fixed';
+                            btn.style.top = '50%';
+                            btn.style.left = '0';
+                            btn.style.transform = 'translateY(-50%)';
+                            btn.style.zIndex = '9999';
+                            btn.style.width = '36px';
+                            btn.style.height = '80px';
+                            btn.style.background = 'linear-gradient(90deg, #7e57ff, #9165ff)';
+                            btn.style.color = 'white';
+                            btn.style.border = 'none';
+                            btn.style.borderRadius = '0 24px 24px 0';
+                            btn.style.writingMode = 'vertical-rl';
+                            btn.style.fontSize = '16px';
+                            btn.style.display = 'flex';
+                            btn.style.alignItems = 'center';
+                            btn.style.justifyContent = 'center';
+                            btn.innerHTML = "热门";
+                            
+                            btn.addEventListener('click', function() {
+                                alert('热门站点功能正在加载中，请稍后再试');
+                            });
+                            
+                            document.body.appendChild(btn);
+                        })();
+                    `;
+                    document.head.appendChild(inlineScript);
+                }
+                
+                onComplete(false);
+            }
+        };
+        
+        // 添加到文档中开始加载
+        document.head.appendChild(script);
+    }
+    
+    // 递归加载脚本列表中的下一个脚本
     function loadNext() {
         if (index < scripts.length) {
             const scriptSrc = scripts[index];
-            console.log(`加载脚本 (${index + 1}/${scripts.length}): ${scriptSrc}`);
             
             // 如果有目录且当前是便捷工具JS，则跳过加载
             const hasToc = window.hasToc || checkTocExistence();
@@ -85,56 +232,17 @@ function loadScriptsSequentially(scripts, callback) {
                 return;
             }
             
-            const script = document.createElement('script');
-            script.src = scriptSrc;
-            script.async = false; // 禁用异步加载，确保按顺序
-            
-            // 脚本加载完成或出错时继续加载下一个
-            script.onload = function() {
-                console.log(`脚本加载成功: ${scriptSrc}`);
-                
-                // 更新加载状态
-                if (scriptSrc.includes('hot-sites.js')) {
-                    window.scriptLoaderStatus.hotSitesLoaded = true;
-                    
-                    // 确保热门按钮可见（在小屏幕上）
-                    if (window.innerWidth <= 1200) {
-                        setTimeout(function() {
-                            if (typeof window.ensureButtonVisibility === 'function') {
-                                window.ensureButtonVisibility();
-                            }
-                        }, 200);
-                    }
-                } else if (scriptSrc.includes('quick-tools.js')) {
-                    window.scriptLoaderStatus.quickToolsLoaded = true;
-                }
-                
+            // 加载当前脚本，完成后继续加载下一个
+            loadScript(scriptSrc, function(success) {
                 index++;
-                loadNext();
-            };
-            
-            script.onerror = function() {
-                console.error(`脚本加载失败: ${scriptSrc}`);
                 
-                // 尝试热门站点脚本重试加载
-                if (scriptSrc.includes('hot-sites.js')) {
-                    console.warn('热门站点脚本加载失败，将在1秒后重试');
-                    setTimeout(function() {
-                        const retryScript = document.createElement('script');
-                        retryScript.src = scriptSrc;
-                        retryScript.async = false;
-                        document.head.appendChild(retryScript);
-                    }, 1000);
-                }
-                
-                index++;
-                loadNext();
-            };
-            
-            document.head.appendChild(script);
+                // 不管成功或失败，都继续加载下一个脚本
+                setTimeout(loadNext, 200); // 小延迟，避免连续加载过快
+            });
         } else if (typeof callback === 'function') {
             // 所有脚本加载完成，执行回调
             callback();
+            console.log('所有脚本加载序列已完成');
         }
     }
     
@@ -227,8 +335,3 @@ window.addEventListener('load', function() {
         }
     }, 5000); // 每5秒检查一次
 });
-
-// 为了防止直接在HTML中添加的脚本标签导致加载顺序错乱，可以在HTML中添加以下代码：
-/*
-<script src="/static/js/script-loader.js"></script>
-*/ 

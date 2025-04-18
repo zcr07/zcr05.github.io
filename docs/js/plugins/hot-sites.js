@@ -6,7 +6,7 @@ const HOT_SITES_CONFIG_PATH = (() => {
     // 获取当前域名
     const currentDomain = window.location.origin;
     // 拼接配置文件路径
-    return `${currentDomain}/static/config/hot_site.json`;
+    return `${currentDomain}/config/hot_site.json`;
 })();
 
 // 热门站点图标 - 火焰图标的SVG路径

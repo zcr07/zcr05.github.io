@@ -6,7 +6,7 @@ const QUICK_TOOLS_CONFIG_PATH = (() => {
     // 获取当前域名
     const currentDomain = window.location.origin;
     // 拼接配置文件路径
-    return `${currentDomain}/static/config/quick_tools.json`;
+    return `${currentDomain}/config/quick_tools.json`;
 })();
 
 // 内联便捷工具数据 - 备用数据

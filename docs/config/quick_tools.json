@@ -1,5 +1,10 @@
 [
   {
+    "name": "视频发布网站一键打开",
+    "url": "https://blog.mymaskking.ggff.net/quick_release_video/",
+    "description": "一键打开多个网站，支持云同步数据。"
+  },
+  {
     "name": "颜色转换工具",
     "url": "https://convertacolor.com",
     "description": "在HEX、RGB、HSL等颜色格式之间转换"

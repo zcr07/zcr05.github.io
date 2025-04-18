@@ -42,6 +42,46 @@ const HOT_SITES_DATA = [
     "name": "博客园",
     "url": "https://www.cnblogs.com",
     "hot": 60
+  },
+  {
+    "name": "Gmeek增强版本使用教学",
+    "url": "https://github.com",
+    "hot": 95
+  },
+  {
+    "name": "Stack Overflow",
+    "url": "https://stackoverflow.com",
+    "hot": 90
+  },
+  {
+    "name": "掘金",
+    "url": "https://juejin.cn",
+    "hot": 85
+  },
+  {
+    "name": "CSDN",
+    "url": "https://www.csdn.net",
+    "hot": 80
+  },
+  {
+    "name": "InfoQ",
+    "url": "https://www.infoq.cn",
+    "hot": 75
+  },
+  {
+    "name": "知乎",
+    "url": "https://www.zhihu.com",
+    "hot": 70
+  },
+  {
+    "name": "V2EX",
+    "url": "https://www.v2ex.com",
+    "hot": 65
+  },
+  {
+    "name": "博客园",
+    "url": "https://www.cnblogs.com",
+    "hot": 60
   }
 ];
 
@@ -70,7 +110,7 @@ function initHotSites() {
                 renderHotSites(hotSitesData);
                 
                 // 添加响应式处理
-                setupResponsiveBehavior();
+                setupHotSitesResponsiveBehavior();
                 
                 // 添加主题变化监听
                 setupThemeChangeListener();
@@ -79,6 +119,11 @@ function initHotSites() {
                 setTimeout(() => {
                     updateHotSitesButtonPosition();
                 }, 500);
+                
+                // 再次延迟更新按钮位置，确保在较慢的设备上也能正确显示
+                setTimeout(() => {
+                    updateHotSitesButtonPosition();
+                }, 1500);
             } else {
                 console.log("热门数据为空或无效，不创建热门元素");
             }
@@ -92,11 +137,16 @@ function initHotSites() {
                 hotSitesData = HOT_SITES_DATA;
                 createHotSitesElements();
                 renderHotSites(hotSitesData);
-                setupResponsiveBehavior();
+                setupHotSitesResponsiveBehavior();
                 setupThemeChangeListener();
                 setTimeout(() => {
                     updateHotSitesButtonPosition();
                 }, 500);
+                
+                // 再次延迟更新按钮位置
+                setTimeout(() => {
+                    updateHotSitesButtonPosition();
+                }, 1500);
             } else {
                 console.log("备用数据也无效，不创建热门元素");
             }
@@ -190,6 +240,18 @@ function createLeftSideHotSites() {
     leftPanel.id = 'hotSitesPanel';
     leftPanel.className = 'hot-sites-panel';
     
+    // 确保面板有正确的定位样式
+    leftPanel.style.position = 'fixed';
+    leftPanel.style.top = '120px';
+    leftPanel.style.left = '20px';
+    leftPanel.style.zIndex = '100';
+    leftPanel.style.maxHeight = 'calc(100vh - 150px)';
+    leftPanel.style.overflowY = 'auto';
+    leftPanel.style.width = '220px';
+    leftPanel.style.backgroundColor = '#ffffff';
+    leftPanel.style.borderRadius = '12px';
+    leftPanel.style.boxShadow = '0 5px 20px rgba(0, 0, 0, 0.1)';
+    
     // 创建面板标题
     const titleContainer = document.createElement('div');
     titleContainer.className = 'hot-sites-header';
@@ -236,6 +298,26 @@ function createLeftSideHotSites() {
     
     // 将面板添加到body
     body.appendChild(leftPanel);
+    
+    // 检查屏幕宽度，设置初始显示状态
+    if (window.innerWidth <= 1200) {
+        // 在小屏幕上默认隐藏面板
+        leftPanel.style.display = 'none';
+        leftPanel.style.opacity = '0';
+        leftPanel.style.transform = 'translateX(-260px)';
+    } else {
+        // 在大屏幕上默认显示面板
+        leftPanel.style.display = 'block';
+        leftPanel.style.opacity = '1';
+        leftPanel.style.transform = 'scale(1)';
+        leftPanel.style.visibility = 'visible';
+    }
+    
+    // 在暗色模式下应用不同的背景色
+    if (document.documentElement.getAttribute('data-color-mode') === 'dark') {
+        leftPanel.style.backgroundColor = '#22223b';
+        leftPanel.classList.add('theme-dark');
+    }
 }
 
 // 创建收起/展开按钮
@@ -254,6 +336,17 @@ function createToggleButton() {
     
     // 不设置innerHTML，使用CSS ::after伪元素显示图标
     toggleBtn.innerHTML = '';
+    
+    // 根据当前屏幕宽度设置初始状态
+    if (window.innerWidth <= 1200) {
+        toggleBtn.style.display = 'flex';
+        toggleBtn.style.visibility = 'visible';
+        toggleBtn.style.opacity = '0.95';
+    } else {
+        toggleBtn.style.display = 'none';
+        toggleBtn.style.visibility = 'hidden';
+        toggleBtn.style.opacity = '0';
+    }
     
     // 添加点击事件
     toggleBtn.addEventListener('click', function(e) {
@@ -319,10 +412,10 @@ function showHotSitesPanel(panel, btn) {
     panel.classList.add('show');
     panel.style.display = 'block';
     
-    // 设置面板的位置，在移动设备上从右侧滑出
+    // 设置面板的位置，在移动设备上从左侧滑出
     if (window.innerWidth <= 1200) {
-        // 移动视图下，面板从右侧滑入
-        panel.style.transform = 'translateX(260px)';
+        // 移动视图下，面板从左侧滑入
+        panel.style.transform = 'translateX(-260px)';
         
         // 确保样式立即生效
         requestAnimationFrame(() => {
@@ -422,9 +515,9 @@ function hideHotSitesPanel(panel, btn) {
     panel.classList.remove('show');
     
     if (window.innerWidth <= 1200) {
-        // 移动视图下，面板向右侧滑出
+        // 移动视图下，面板向左侧滑出
         panel.style.opacity = '0';
-        panel.style.transform = 'translateX(260px)';
+        panel.style.transform = 'translateX(-260px)';
     } else {
         // 大屏幕视图，正常隐藏
         panel.style.opacity = '0';
@@ -447,27 +540,30 @@ function hideHotSitesPanel(panel, btn) {
 }
 
 // 设置响应式行为
-function setupResponsiveBehavior() {
+function setupHotSitesResponsiveBehavior() {
     // 检测窗口大小变化
     window.addEventListener('resize', function() {
         const panel = document.getElementById('hotSitesPanel');
         const toggleBtn = document.getElementById('hotSitesToggleBtn');
         
-        if (!panel || !toggleBtn) return;
+        if (!panel) return;
         
         if (window.innerWidth <= 1200) {
             // 在小屏幕上默认隐藏面板，确保按钮可见
-            if (!toggleBtn.classList.contains('active')) {
+            if (toggleBtn && !toggleBtn.classList.contains('active')) {
                 panel.classList.remove('show');
                 panel.style.display = 'none';
                 panel.style.opacity = '0';
-                panel.style.transform = 'scale(0.95)';
+                panel.style.transform = 'translateX(-50px)';
+                panel.style.visibility = 'hidden';
             }
             
-            // 强制显示按钮
-            toggleBtn.style.display = 'flex';
-            toggleBtn.style.visibility = 'visible';
-            toggleBtn.style.opacity = '1';
+            // 确保按钮显示（如果存在）
+            if (toggleBtn) {
+                toggleBtn.style.display = 'flex';
+                toggleBtn.style.visibility = 'visible';
+                toggleBtn.style.opacity = '0.95';
+            }
             
             // 配置面板为移动样式
             panel.classList.add('mobile');
@@ -478,10 +574,15 @@ function setupResponsiveBehavior() {
             panel.style.display = 'block';
             panel.style.opacity = '1';
             panel.style.transform = 'scale(1)';
+            panel.style.visibility = 'visible';
             
-            // 隐藏按钮
-            toggleBtn.style.display = 'none';
-            toggleBtn.classList.remove('active');
+            // 隐藏按钮（如果存在）
+            if (toggleBtn) {
+                toggleBtn.style.display = 'none';
+                toggleBtn.style.visibility = 'hidden';
+                toggleBtn.style.opacity = '0';
+                toggleBtn.classList.remove('active');
+            }
         }
     });
     
@@ -542,161 +643,217 @@ function addHotSitesStyles() {
     styleElement.id = 'hotSitesStyles';
     styleElement.textContent = `
         /* 热门站点面板 - 基础样式 */
-        .hot-sites-panel {
-            position: fixed;
-            top: 120px;
-            left: 20px;
-            width: 220px;
-            max-height: calc(100vh - 150px);
-            overflow-y: auto;
-            background-color: #ffffff;
-            border-radius: 12px;
-            border: 1px solid rgba(126, 87, 255, 0.3);
-            padding: 15px 12px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-            z-index: 100;
+        #hotSitesPanel.hot-sites-panel {
+            position: fixed !important;
+            top: 120px !important;
+            left: 20px !important;
+            width: 220px !important;
+            max-height: calc(100vh - 150px) !important;
+            overflow-y: auto !important;
+            background-color: #ffffff !important;
+            border-radius: 12px !important;
+            border: 1px solid rgba(126, 87, 255, 0.3) !important;
+            padding: 15px 12px !important;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            transition: all 0.3s ease !important;
+            z-index: 100 !important;
+        }
+        
+        /* 热门站点切换按钮 */
+        #hotSitesToggleBtn.hot-sites-toggle {
+            display: none !important; /* 默认隐藏，在移动视图中再显示 */
+            align-items: center !important;
+            justify-content: center !important;
+            width: 36px !important;
+            height: 80px !important;
+            border-radius: 0 24px 24px 0 !important;
+            background: linear-gradient(90deg, #7e57ff, #9165ff) !important;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2) !important;
+            cursor: pointer !important;
+            color: white !important;
+            font-size: 20px !important;
+            font-weight: bold !important;
+            transition: all 0.3s ease !important;
+            z-index: 9980 !important;
+            border: none !important;
+            outline: none !important;
+            position: fixed !important;
+            top: 30% !important;
+            left: 0 !important;
+            transform: translateY(-50%) !important;
+            visibility: hidden !important; /* 默认隐藏，在移动视图中再显示 */
+            opacity: 0 !important;
+            writing-mode: vertical-rl !important;
+            text-orientation: mixed !important;
+        }
+        
+        /* 热门站点文字标签 */
+        #hotSitesToggleBtn.hot-sites-toggle::after {
+            content: '热门🔥' !important;
+            font-size: 16px !important;
+            letter-spacing: 2px !important;
+            margin-top: 5px !important;
+        }
+        
+        /* 切换按钮悬停效果 */
+        #hotSitesToggleBtn.hot-sites-toggle:hover {
+            opacity: 1 !important;
+            width: 40px !important;
+            box-shadow: 3px 0 15px rgba(0, 0, 0, 0.3) !important;
+        }
+        
+        /* 切换按钮激活状态 */
+        #hotSitesToggleBtn.hot-sites-toggle.active {
+            background: linear-gradient(90deg, #9165ff, #7e57ff) !important;
+            width: 36px !important;
+        }
+        
+        /* 切换按钮激活状态下文字 */
+        #hotSitesToggleBtn.hot-sites-toggle.active::after {
+            content: '收起⬅' !important;
         }
         
         /* 悬停效果 */
-        .hot-sites-panel:hover {
-            box-shadow: 0 8px 25px rgba(126, 87, 255, 0.25);
+        #hotSitesPanel.hot-sites-panel:hover {
+            box-shadow: 0 8px 25px rgba(126, 87, 255, 0.25) !important;
         }
         
         /* 暗色模式下的面板 */
-        html[data-color-mode="dark"] .hot-sites-panel {
-            background-color: #22223b;
-            border: 1px solid rgba(126, 87, 255, 0.4);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        html[data-color-mode="dark"] #hotSitesPanel.hot-sites-panel {
+            background-color: #22223b !important;
+            border: 1px solid rgba(126, 87, 255, 0.4) !important;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3) !important;
         }
         
         /* 滚动条样式 */
-        .hot-sites-panel::-webkit-scrollbar {
-            width: 5px;
+        #hotSitesPanel.hot-sites-panel::-webkit-scrollbar {
+            width: 5px !important;
         }
         
-        .hot-sites-panel::-webkit-scrollbar-track {
-            background-color: rgba(0, 0, 0, 0.05);
-            border-radius: 10px;
+        #hotSitesPanel.hot-sites-panel::-webkit-scrollbar-track {
+            background-color: rgba(0, 0, 0, 0.05) !important;
+            border-radius: 10px !important;
         }
         
-        .hot-sites-panel::-webkit-scrollbar-thumb {
-            background: linear-gradient(to bottom, var(--primary-color, #7e57ff), var(--secondary-color, #ff4f9a));
-            border-radius: 10px;
+        #hotSitesPanel.hot-sites-panel::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, var(--primary-color, #7e57ff), var(--secondary-color, #ff4f9a)) !important;
+            border-radius: 10px !important;
         }
         
         /* 标题样式 */
-        .hot-sites-header {
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid rgba(126, 87, 255, 0.3);
-            display: flex;
-            align-items: center;
+        #hotSitesPanel .hot-sites-header {
+            font-weight: bold !important;
+            text-align: center !important;
+            margin-bottom: 15px !important;
+            padding-bottom: 10px !important;
+            border-bottom: 2px solid rgba(126, 87, 255, 0.3) !important;
+            display: flex !important;
+            align-items: center !important;
+            background-color: transparent !important;
         }
         
         /* 标题图标 */
-        .hot-sites-icon {
-            margin-right: 8px;
-            color: #f85149;
-            flex-shrink: 0;
+        #hotSitesPanel .hot-sites-icon {
+            margin-right: 8px !important;
+            color: #f85149 !important;
+            flex-shrink: 0 !important;
         }
         
         /* 标题文本 */
-        .hot-sites-header span {
-            font-weight: 600;
-            font-size: 16px;
-            background: linear-gradient(135deg, var(--primary-color, #7e57ff), var(--secondary-color, #ff4f9a));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        #hotSitesPanel .hot-sites-header span {
+            font-weight: 600 !important;
+            font-size: 16px !important;
+            background: linear-gradient(135deg, var(--primary-color, #7e57ff), var(--secondary-color, #ff4f9a)) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-clip: text !important;
         }
         
         /* 站点列表 */
-        .hot-sites-list {
-            display: flex;
-            flex-direction: column;
-            gap: 7px;
-            padding-right: 5px;
+        #hotSitesPanel .hot-sites-list {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 7px !important;
+            padding-right: 5px !important;
+            background-color: transparent !important;
         }
         
         /* 单个站点项 */
-        .hot-site-item {
-            display: flex;
-            align-items: center;
-            padding: 8px 12px;
-            margin: 3px 0;
-            border-left: 2px solid transparent;
-            border-radius: 0 8px 8px 0;
-            transition: all 0.3s ease;
-            background-color: #ffffff;
+        #hotSitesPanel .hot-site-item {
+            display: flex !important;
+            align-items: center !important;
+            padding: 8px 12px !important;
+            margin: 3px 0 !important;
+            border-left: 2px solid transparent !important;
+            border-radius: 0 8px 8px 0 !important;
+            transition: all 0.3s ease !important;
+            background-color: #ffffff !important;
         }
         
         /* 暗黑主题站点项 */
-        html[data-color-mode="dark"] .hot-site-item {
-            background-color: #2d333b;
+        html[data-color-mode="dark"] #hotSitesPanel .hot-site-item {
+            background-color: #2d333b !important;
         }
         
         /* 站点悬停效果 */
-        .hot-site-item:hover {
-            background-color: rgba(126, 87, 255, 0.1);
-            border-left-color: var(--primary-color, #7e57ff);
-            transform: translateX(3px);
+        #hotSitesPanel .hot-site-item:hover {
+            background-color: rgba(126, 87, 255, 0.1) !important;
+            border-left-color: var(--primary-color, #7e57ff) !important;
+            transform: translateX(3px) !important;
         }
         
         /* 排名标识 */
-        .hot-site-rank {
-            width: 22px;
-            height: 22px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #e5e5e5;
-            color: #606060;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: bold;
-            margin-right: 10px;
-            flex-shrink: 0;
+        #hotSitesPanel .hot-site-rank {
+            width: 22px !important;
+            height: 22px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            background-color: #e5e5e5 !important;
+            color: #606060 !important;
+            border-radius: 4px !important;
+            font-size: 12px !important;
+            font-weight: bold !important;
+            margin-right: 10px !important;
+            flex-shrink: 0 !important;
         }
         
         /* 前三名排名标识 */
-        .hot-site-rank.rank-1 {
-            background-color: #FFD700;
-            color: #664d00;
+        #hotSitesPanel .hot-site-rank.rank-1 {
+            background-color: #FFD700 !important;
+            color: #664d00 !important;
         }
         
-        .hot-site-rank.rank-2 {
-            background-color: #C0C0C0;
-            color: #505050;
+        #hotSitesPanel .hot-site-rank.rank-2 {
+            background-color: #C0C0C0 !important;
+            color: #505050 !important;
         }
         
-        .hot-site-rank.rank-3 {
-            background-color: #CD7F32;
-            color: #5a3600;
+        #hotSitesPanel .hot-site-rank.rank-3 {
+            background-color: #CD7F32 !important;
+            color: #5a3600 !important;
         }
         
-        html[data-color-mode="dark"] .hot-site-rank {
-            background-color: #2d333b;
-            color: #adbac7;
+        html[data-color-mode="dark"] #hotSitesPanel .hot-site-rank {
+            background-color: #2d333b !important;
+            color: #adbac7 !important;
         }
         
-        html[data-color-mode="dark"] .hot-site-rank.rank-1 {
-            background-color: #705b00;
-            color: #FFD700;
+        html[data-color-mode="dark"] #hotSitesPanel .hot-site-rank.rank-1 {
+            background-color: #705b00 !important;
+            color: #FFD700 !important;
         }
         
-        html[data-color-mode="dark"] .hot-site-rank.rank-2 {
-            background-color: #494949;
-            color: #dddddd;
+        html[data-color-mode="dark"] #hotSitesPanel .hot-site-rank.rank-2 {
+            background-color: #494949 !important;
+            color: #dddddd !important;
         }
         
-        html[data-color-mode="dark"] .hot-site-rank.rank-3 {
-            background-color: #614023;
-            color: #ea9a56;
+        html[data-color-mode="dark"] #hotSitesPanel .hot-site-rank.rank-3 {
+            background-color: #614023 !important;
+            color: #ea9a56 !important;
         }
         
         /* 站点链接 */
@@ -768,210 +925,166 @@ function addHotSitesStyles() {
         
         @media (max-width: 1200px) {
             /* 默认隐藏热门站点面板 */
-            .hot-sites-panel {
-                display: none;
-                opacity: 0;
-                transform: translateX(50px);
-                transition: transform 0.3s ease, opacity 0.3s ease;
-                visibility: hidden;
+            #hotSitesPanel.hot-sites-panel {
+                display: none !important;
+                opacity: 0 !important;
+                transform: translateX(-50px) !important;
+                transition: transform 0.3s ease, opacity 0.3s ease !important;
+                visibility: hidden !important;
             }
             
             /* 当面板显示时的样式 */
-            .hot-sites-panel.show {
-                display: block;
-                opacity: 1;
-                transform: translateX(0);
-                visibility: visible;
-                z-index: 9990; /* 确保低于目录按钮的z-index */
+            #hotSitesPanel.hot-sites-panel.show {
+                display: block !important;
+                opacity: 1 !important;
+                transform: translateX(0) !important;
+                visibility: visible !important;
+                z-index: 9990 !important; /* 确保低于目录按钮的z-index */
+            }
+            
+            /* 在移动设备上显示按钮 */
+            #hotSitesToggleBtn.hot-sites-toggle {
+                display: flex !important;
+                visibility: visible !important;
+                opacity: 0.95 !important;
             }
             
             /* 在移动设备上的面板样式 */
-            .hot-sites-panel.mobile {
-                position: fixed;
-                top: 50%;
-                right: 0;
-                left: auto;
-                transform: translateY(-50%);
-                width: 260px;
-                max-height: 60vh; /* 限制高度，避免太长 */
-                border-radius: 12px 0 0 12px;
-                box-shadow: -2px 0 15px rgba(0, 0, 0, 0.2);
-                transform-origin: right center;
-                overflow-y: auto; /* 确保可以滚动 */
-                overflow-x: hidden;
-                scrollbar-width: thin; /* Firefox */
-                scrollbar-color: rgba(126, 87, 255, 0.5) transparent; /* Firefox */
-                background-color: #ffffff; /* 确保移动视图背景也是白色 */
+            #hotSitesPanel.hot-sites-panel.mobile {
+                position: fixed !important;
+                top: 50% !important;
+                left: 0 !important;
+                right: auto !important;
+                transform: translateY(-50%) !important;
+                width: 260px !important;
+                max-height: 60vh !important; /* 限制高度，避免太长 */
+                border-radius: 0 12px 12px 0 !important;
+                box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2) !important;
+                transform-origin: left center !important;
+                overflow-y: auto !important; /* 确保可以滚动 */
+                overflow-x: hidden !important;
+                scrollbar-width: thin !important; /* Firefox */
+                scrollbar-color: rgba(126, 87, 255, 0.5) transparent !important; /* Firefox */
+                background-color: #ffffff !important; /* 确保移动视图背景也是白色 */
             }
             
-            html[data-color-mode="dark"] .hot-sites-panel.mobile {
-                background-color: #22223b; /* 暗色模式下的背景色 */
+            html[data-color-mode="dark"] #hotSitesPanel.hot-sites-panel.mobile {
+                background-color: #22223b !important; /* 暗色模式下的背景色 */
             }
             
             /* 自定义滚动条样式 */
-            .hot-sites-panel.mobile::-webkit-scrollbar {
-                width: 5px;
+            #hotSitesPanel.hot-sites-panel.mobile::-webkit-scrollbar {
+                width: 5px !important;
             }
             
-            .hot-sites-panel.mobile::-webkit-scrollbar-track {
-                background: transparent;
-                margin: 10px 0;
+            #hotSitesPanel.hot-sites-panel.mobile::-webkit-scrollbar-track {
+                background: transparent !important;
+                margin: 10px 0 !important;
             }
             
-            .hot-sites-panel.mobile::-webkit-scrollbar-thumb {
-                background-color: rgba(126, 87, 255, 0.5);
-                border-radius: 10px;
+            #hotSitesPanel.hot-sites-panel.mobile::-webkit-scrollbar-thumb {
+                background-color: rgba(126, 87, 255, 0.5) !important;
+                border-radius: 10px !important;
             }
             
-            .hot-sites-panel.mobile::-webkit-scrollbar-thumb:hover {
-                background-color: rgba(126, 87, 255, 0.8);
+            #hotSitesPanel.hot-sites-panel.mobile::-webkit-scrollbar-thumb:hover {
+                background-color: rgba(126, 87, 255, 0.8) !important;
             }
             
             /* 添加滚动提示 */
-            .hot-sites-panel.mobile::after {
-                content: "";
-                position: absolute;
-                bottom: 15px;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 40px;
-                height: 4px;
-                background-color: rgba(126, 87, 255, 0.3);
-                border-radius: 4px;
-                opacity: 0.7;
-                animation: scrollHint 2s infinite;
-                pointer-events: none;
+            #hotSitesPanel.hot-sites-panel.mobile::after {
+                content: "" !important;
+                position: absolute !important;
+                bottom: 15px !important;
+                left: 50% !important;
+                transform: translateX(-50%) !important;
+                width: 40px !important;
+                height: 4px !important;
+                background-color: rgba(126, 87, 255, 0.3) !important;
+                border-radius: 4px !important;
+                opacity: 0.7 !important;
+                animation: hotSitesScrollHint 2s infinite !important;
+                pointer-events: none !important;
             }
             
-            @keyframes scrollHint {
+            @keyframes hotSitesScrollHint {
                 0%, 100% { opacity: 0.3; }
                 50% { opacity: 0.8; }
             }
             
             /* 热门站点列表样式优化 */
-            .hot-sites-list {
-                padding-bottom: 20px; /* 为滚动提示预留空间 */
-                display: flex;
-                flex-direction: column;
-                gap: 7px;
-            }
-            
-            /* 热门站点切换按钮 - 贴边样式 */
-            .hot-sites-toggle {
-                display: flex !important; /* 强制显示 */
-                align-items: center;
-                justify-content: center;
-                width: 36px;
-                height: 80px;
-                border-radius: 24px 0 0 24px; /* 左侧半圆，右侧贴边 */
-                background: linear-gradient(90deg, #7e57ff, #9165ff);
-                box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
-                cursor: pointer;
-                color: white;
-                font-size: 20px;
-                font-weight: bold;
-                transition: all 0.3s ease;
-                z-index: 9980; /* 确保低于目录按钮 */
-                border: none;
-                outline: none;
-                position: fixed;
-                top: 30%; /* 放在屏幕上方三分之一处，避开目录按钮 */
-                right: 0;
-                transform: translateY(-50%);
-                visibility: visible;
-                opacity: 0.95;
-                writing-mode: vertical-rl;
-                text-orientation: mixed;
-            }
-            
-            /* 热门站点文字标签 */
-            .hot-sites-toggle::after {
-                content: '热门🔥';
-                font-size: 16px;
-                letter-spacing: 2px;
-                margin-top: 5px;
-            }
-            
-            /* 切换按钮悬停效果 */
-            .hot-sites-toggle:hover {
-                opacity: 1;
-                width: 40px;
-                box-shadow: -3px 0 15px rgba(0, 0, 0, 0.3);
-            }
-            
-            /* 切换按钮激活状态 */
-            .hot-sites-toggle.active {
-                background: linear-gradient(90deg, #9165ff, #7e57ff);
-                width: 36px;
-            }
-            
-            /* 切换按钮激活状态下文字 */
-            .hot-sites-toggle.active::after {
-                content: '收起➡';
+            #hotSitesPanel .hot-sites-list {
+                padding-bottom: 20px !important; /* 为滚动提示预留空间 */
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 7px !important;
             }
             
             /* 移动端交互优化 */
-            .hot-site-item {
-                padding: 10px 12px;
-                margin: 4px 0;
-                border-radius: 8px;
-                transition: background-color 0.2s ease, transform 0.2s ease;
-                background-color: #ffffff;
+            #hotSitesPanel .hot-site-item {
+                padding: 10px 12px !important;
+                margin: 4px 0 !important;
+                border-radius: 8px !important;
+                transition: background-color 0.2s ease, transform 0.2s ease !important;
+                background-color: #ffffff !important;
             }
             
-            html[data-color-mode="dark"] .hot-site-item {
-                background-color: #2d333b;
+            html[data-color-mode="dark"] #hotSitesPanel .hot-site-item {
+                background-color: #2d333b !important;
             }
             
-            .hot-site-item:active {
-                background-color: rgba(126, 87, 255, 0.2);
-                transform: scale(0.98);
+            #hotSitesPanel .hot-site-item:active {
+                background-color: rgba(126, 87, 255, 0.2) !important;
+                transform: scale(0.98) !important;
             }
             
             /* 站点悬停效果微调 */
-            .hot-site-item:hover {
-                background-color: rgba(126, 87, 255, 0.1);
+            #hotSitesPanel .hot-site-item:hover {
+                background-color: rgba(126, 87, 255, 0.1) !important;
             }
             
             /* 在移动设备上增加链接区域宽度 */
-            .hot-site-link {
-                max-width: 170px; /* 移动视图增加链接宽度 */
+            #hotSitesPanel .hot-site-link {
+                max-width: 170px !important; /* 移动视图增加链接宽度 */
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+                white-space: nowrap !important;
             }
         }
         
         @media (max-width: 768px) {
-            .hot-sites-panel.mobile {
-                width: 240px;
-                max-height: 65vh;
+            #hotSitesPanel.hot-sites-panel.mobile {
+                width: 240px !important;
+                max-height: 65vh !important;
             }
             
-            .hot-sites-toggle {
-                width: 32px;
-                height: 70px;
-                border-radius: 20px 0 0 20px;
-                font-size: 16px;
+            #hotSitesToggleBtn.hot-sites-toggle {
+                width: 32px !important;
+                height: 70px !important;
+                border-radius: 0 20px 20px 0 !important;
+                font-size: 16px !important;
             }
             
-            .hot-sites-toggle::after {
-                font-size: 14px;
-                letter-spacing: 1px;
+            #hotSitesToggleBtn.hot-sites-toggle::after {
+                font-size: 14px !important;
+                letter-spacing: 1px !important;
             }
             
-            .hot-sites-toggle:hover {
-                width: 36px;
+            #hotSitesToggleBtn.hot-sites-toggle:hover {
+                width: 36px !important;
             }
             
-            .hot-sites-toggle.active {
-                width: 32px;
+            #hotSitesToggleBtn.hot-sites-toggle.active {
+                width: 32px !important;
             }
             
-            .hot-site-link {
-                font-size: 13px;
-                max-width: 150px; /* 小屏幕调整链接宽度 */
+            #hotSitesPanel .hot-site-link {
+                font-size: 13px !important;
+                max-width: 150px !important; /* 小屏幕调整链接宽度 */
             }
             
-            .hot-site-item {
-                padding: 8px 10px;
+            #hotSitesPanel .hot-site-item {
+                padding: 8px 10px !important;
             }
         }
     `;
@@ -1129,6 +1242,14 @@ setTimeout(function() {
     initHotSites();
 }, 1000);
 
+// 在页面完全加载后，再次确保按钮可见
+window.addEventListener('load', function() {
+    setTimeout(() => {
+        console.log("页面加载完成后更新热门站点按钮位置");
+        updateHotSitesButtonPosition();
+    }, 1000);
+});
+
 // 更新热门站点按钮的位置
 function updateHotSitesButtonPosition() {
     const hotSitesBtn = document.getElementById('hotSitesToggleBtn');
@@ -1139,21 +1260,28 @@ function updateHotSitesButtonPosition() {
     const isMobileView = window.innerWidth <= 1200;
     
     if (isMobileView) {
-        // 将热门站点按钮设置为贴边显示（贴靠右侧边缘）
+        // 在小屏幕上强制显示按钮 - 确保按钮可见
+        hotSitesBtn.style.display = 'flex';
+        hotSitesBtn.style.visibility = 'visible';
+        hotSitesBtn.style.opacity = '1';
+        hotSitesBtn.style.zIndex = '9980';
+        
+        // 将热门站点按钮设置为贴边显示（贴靠左侧边缘）
         hotSitesBtn.style.position = 'fixed';
         hotSitesBtn.style.top = '30%'; // 定位在上方三分之一处，避开中间和底部区域
         hotSitesBtn.style.transform = 'translateY(-50%)';
-        hotSitesBtn.style.right = '0';
-        hotSitesBtn.style.left = 'auto';
+        hotSitesBtn.style.left = '0';
+        hotSitesBtn.style.right = 'auto';
         hotSitesBtn.style.bottom = 'auto';
-        hotSitesBtn.style.borderRadius = '24px 0 0 24px'; // 左侧为半圆形，右侧贴边
+        hotSitesBtn.style.borderRadius = '0 24px 24px 0'; // 右侧为半圆形，左侧贴边
         
         // 如果是小屏幕，稍微调整尺寸
         if (window.innerWidth <= 768) {
-            hotSitesBtn.style.borderRadius = '20px 0 0 20px';
+            hotSitesBtn.style.borderRadius = '0 20px 20px 0';
         }
     } else {
         // 大屏幕上隐藏按钮
         hotSitesBtn.style.display = 'none';
+        hotSitesBtn.style.visibility = 'hidden';
     }
 } 

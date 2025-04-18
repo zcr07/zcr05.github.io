@@ -284,12 +284,6 @@ function loadScriptsSequentially(scripts, callback) {
             } else if (window.UIState?.environment.isLocalEnv) {
                 // 对于本地环境，非Firefox浏览器保持使用绝对路径
                 console.log(`使用本地路径: ${scriptSrc}`);
-            } else {
-                // 网络环境，修正路径中的js/plugins为static/js/plugins
-                if (scriptSrc.includes('/js/plugins/')) {
-                    actualScriptSrc = scriptSrc.replace('/js/plugins/', '/static/js/plugins/');
-                    console.log(`修正网络路径: ${scriptSrc} → ${actualScriptSrc}`);
-                }
             }
             
             // 创建脚本元素

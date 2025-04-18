@@ -193,7 +193,7 @@ function createHotSitesElements() {
     createLeftSideHotSites();
     
     // 添加收起/展开按钮 - 用于移动设备
-    createToggleButton();
+    createHotSitesToggleButton();
     
     // 添加CSS样式
     addHotSitesStyles();
@@ -310,7 +310,7 @@ function createLeftSideHotSites() {
 }
 
 // 创建收起/展开按钮
-function createToggleButton() {
+function createHotSitesToggleButton() {
     // 如果已存在则不重复创建
     if (DOMUtils.getElement('hotSitesToggleBtn')) {
         return;
@@ -1461,11 +1461,11 @@ function ensureButtonVisibility() {
     // 如果按钮不存在，创建一个新的
     if (!hotSitesBtn) {
         console.log('热门站点按钮不存在，尝试创建');
-        if (typeof createToggleButton === 'function') {
-            hotSitesBtn = createToggleButton();
+        if (typeof createHotSitesToggleButton === 'function') {
+            hotSitesBtn = createHotSitesToggleButton();
             console.log('已创建热门站点按钮');
         } else {
-            console.error('无法创建热门站点按钮：createToggleButton函数不可用');
+            console.error('无法创建热门站点按钮：createHotSitesToggleButton函数不可用');
             return;
         }
     }

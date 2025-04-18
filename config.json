@@ -34,7 +34,7 @@
     "nightTheme": "dark",
     "urlMode": "pinyin",
     "head": "<meta name='viewport' content='width=device-width, initial-scale=1.0'/><meta name='theme-color' content='#5d4fff'><meta name='description' content='爱捣鼓的小水木的个人博客，分享技术、生活和想法'>",
-    "allHead": "<script src='https://blog.mymaskking.ggff.net/js/blog.js'></script><script src='https://blog.mymaskking.ggff.net/js/plugins/toc.js'></script><script src='https://blog.mymaskking.ggff.net/js/plugins/quick-tools.js'></script><script src='https://blog.mymaskking.ggff.net/js/plugins/hot-sites.js'></script><link href='https://blog.mymaskking.ggff.net/css/blog.css' rel='stylesheet' /><link href='https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap' rel='stylesheet'>",
+    "allHead": "<script src='https://blog.mymaskking.ggff.net/js/blog.js'></script><script src='https://blog.mymaskking.ggff.net/js/plugins/toc.js'></script><script src='https://blog.mymaskking.ggff.net/js/script-loader.js'></script><link href='https://blog.mymaskking.ggff.net/css/blog.css' rel='stylesheet' /><link href='https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap' rel='stylesheet'>",
     "script":"<script src='https://blog.meekdai.com/Gmeek/plugins/lightbox.js'></script>",
     "showPostSource": 1,
     "rssSplit": "sentence",

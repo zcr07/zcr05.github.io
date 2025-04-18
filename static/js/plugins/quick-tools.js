@@ -32,12 +32,127 @@ const QuickTools = {
   state: {
     isInitialized: false,
     isMobile: false,
-    isVisible: false
+    isVisible: false,
+    hotSitesLoaded: false, // 热点站点是否已加载
+    hasToc: false // 页面是否有目录
   }
 };
 
 // 在页面加载完成时初始化
 console.log("便捷工具脚本已加载");
+
+// 检查页面是否存在目录
+function checkTocExistence() {
+    // 检查常见的目录元素
+    const tocSelectors = [
+        '.toc', 
+        '#toc', 
+        '.table-of-contents', 
+        '#table-of-contents',
+        '.post-toc',
+        '.article-toc',
+        '.markdown-toc',
+        '.mobile-toc-btn',
+        '[data-role="toc"]',
+        '.sidebar-toc'
+    ];
+    
+    // 搜索所有可能的目录元素
+    for (const selector of tocSelectors) {
+        const tocElement = document.querySelector(selector);
+        if (tocElement) {
+            console.log(`检测到目录元素: ${selector}`);
+            return true;
+        }
+    }
+    
+    // 额外检查是否有通过移动端目录按钮
+    const mobileTocBtn = document.querySelector('.mobile-toc-btn, .toc-mobile-btn, .btn-toc, [data-role="toc-btn"]');
+    if (mobileTocBtn) {
+        console.log('检测到移动端目录按钮');
+        return true;
+    }
+    
+    console.log('未检测到目录元素');
+    return false;
+}
+
+// 完全清除所有便捷工具元素（按钮和面板）
+function removeAllQuickToolsElements() {
+    console.log("发现目录存在，移除所有便捷工具元素");
+    
+    // 移除面板
+    const panel = document.getElementById('quickToolsPanel');
+    if (panel) {
+        panel.remove();
+        console.log("移除便捷工具面板");
+    }
+    
+    // 移除按钮 - 使用多种选择器确保所有可能的按钮都被移除
+    const buttonSelectors = [
+        '#quickToolsToggleBtn', 
+        '.quick-tools-toggle', 
+        '[data-qt-button="true"]',
+        'button[aria-label="显示/隐藏便捷工具"]'
+    ];
+    
+    buttonSelectors.forEach(selector => {
+        const elements = document.querySelectorAll(selector);
+        if (elements.length > 0) {
+            console.log(`找到 ${elements.length} 个匹配 "${selector}" 的元素，正在移除`);
+            elements.forEach(el => el.remove());
+        }
+    });
+    
+    // 移除样式
+    const styles = document.getElementById('quickToolsStyles');
+    if (styles) {
+        styles.remove();
+        console.log("移除便捷工具样式");
+    }
+    
+    // 重置状态
+    QuickTools.elements.panel = null;
+    QuickTools.elements.toggleBtn = null;
+    QuickTools.elements.list = null;
+    
+    // 标记为已初始化，以防止再次尝试初始化
+    QuickTools.state.isInitialized = true;
+}
+
+// 检查热点站点是否已经加载
+function checkHotSitesLoaded() {
+    // 通过检查热点站点的全局对象和函数来判断
+    return (typeof HotSites !== 'undefined' && 
+            typeof hideHotSitesPanel === 'function' && 
+            typeof showHotSitesPanel === 'function');
+}
+
+// 安全地调用热点站点函数
+function safeHideHotSitesPanel(panel, btn) {
+    if (typeof hideHotSitesPanel === 'function') {
+        try {
+            hideHotSitesPanel(panel, btn);
+            return true;
+        } catch (e) {
+            console.error('调用hideHotSitesPanel失败:', e);
+        }
+    }
+    
+    // 后备方案：直接修改样式
+    if (panel) {
+        panel.classList.remove('show');
+        panel.style.display = 'none';
+        panel.style.opacity = '0';
+        panel.style.transform = 'translateX(-260px)';
+    }
+    
+    if (btn) {
+        btn.classList.remove('active');
+    }
+    
+    return false;
+}
 
 // 初始化便捷工具
 function initQuickTools() {
@@ -47,39 +162,63 @@ function initQuickTools() {
         // 防止重复初始化
         if (QuickTools.state.isInitialized) {
             console.log("便捷工具已初始化，跳过");
-            // 即使已经初始化，也要确保按钮可见
-            if (QuickTools.elements.toggleBtn) {
-                forceShowToggleButton();
-            }
             return;
         }
+        
+        // 新增：检查页面是否存在目录
+        QuickTools.state.hasToc = checkTocExistence();
+        
+        // 如果页面有目录，清除所有便捷工具元素并退出
+        if (QuickTools.state.hasToc) {
+            console.log("检测到页面存在目录，不初始化便捷工具功能");
+            removeAllQuickToolsElements();
+            return;
+        }
+
+        // 检查热点站点是否已加载
+        QuickTools.state.hotSitesLoaded = checkHotSitesLoaded();
+        console.log("热点站点加载状态:", QuickTools.state.hotSitesLoaded);
     
-    // 先从服务器获取便捷功能数据
-    fetchQuickToolsData()
-        .then(data => {
-            // 设置全局变量
-            quickToolsData = data;
-            
+        // 先从服务器获取便捷功能数据
+        fetchQuickToolsData()
+            .then(data => {
+                // 设置全局变量
+                quickToolsData = data;
+                
                 try {
-            // 检查数据有效性
-            if (checkQuickToolsData(quickToolsData)) {
-                // 创建DOM元素
-                createQuickToolsElements();
-                
-                // 渲染便捷功能
-                renderQuickTools(quickToolsData);
-                
-                // 添加响应式处理
+                    // 二次检查目录 - 防止DOM在加载过程中变化
+                    if (checkTocExistence()) {
+                        console.log("数据加载完成后检测到目录，终止初始化");
+                        removeAllQuickToolsElements();
+                        return;
+                    }
+                    
+                    // 检查数据有效性
+                    if (checkQuickToolsData(quickToolsData)) {
+                        // 创建DOM元素
+                        createQuickToolsElements();
+                        
+                        // 渲染便捷功能
+                        renderQuickTools(quickToolsData);
+                        
+                        // 添加响应式处理
                         setupQuickToolsResponsiveBehavior();
-                
-                // 添加主题变化监听
-                setupThemeChangeListener();
-                
-                // 延迟更新便捷功能按钮位置
-                setTimeout(() => {
+                        
+                        // 添加主题变化监听
+                        setupThemeChangeListener();
+                        
+                        // 延迟更新便捷功能按钮位置
+                        setTimeout(() => {
+                            // 最后再次检查目录
+                            if (checkTocExistence()) {
+                                console.log("显示按钮前再次检测到目录，移除所有元素");
+                                removeAllQuickToolsElements();
+                                return;
+                            }
+                            
                             console.log("初始化后强制显示按钮");
                             forceShowToggleButton();
-                }, 500);
+                        }, 500);
                         
                         // 标记为已初始化
                         QuickTools.state.isInitialized = true;
@@ -87,9 +226,16 @@ function initQuickTools() {
                         
                         // 最后再次强制执行一次屏幕尺寸检测
                         setTimeout(() => {
+                            // 最后检查目录
+                            if (checkTocExistence()) {
+                                console.log("屏幕检测前再次检测到目录，移除所有元素");
+                                removeAllQuickToolsElements();
+                                return;
+                            }
+                            
                             checkScreenSize();
                         }, 1000);
-            } else {
+                    } else {
                         console.log("便捷功能数据为空或无效，尝试使用备用数据");
                         // 尝试使用备用数据
                         initWithFallbackData();
@@ -98,13 +244,13 @@ function initQuickTools() {
                     console.error("初始化便捷工具时发生错误:", error);
                     // 出错时尝试使用备用数据
                     initWithFallbackData();
-            }
-        })
-        .catch(error => {
-            console.error("获取便捷功能数据失败:", error);
-            console.log("尝试使用备用数据");
-            
-            // 尝试使用备用数据
+                }
+            })
+            .catch(error => {
+                console.error("获取便捷功能数据失败:", error);
+                console.log("尝试使用备用数据");
+                
+                // 尝试使用备用数据
                 initWithFallbackData();
             });
     } catch (error) {
@@ -116,23 +262,44 @@ function initQuickTools() {
 
 // 使用备用数据初始化的辅助函数
 function initWithFallbackData() {
+    // 检查是否存在目录
+    if (checkTocExistence()) {
+        console.log("检测到页面存在目录，不使用备用数据初始化便捷工具");
+        removeAllQuickToolsElements();
+        return;
+    }
+    
     try {
-            if (checkQuickToolsData(QUICK_TOOLS_DATA)) {
-                quickToolsData = QUICK_TOOLS_DATA;
-                createQuickToolsElements();
-                renderQuickTools(quickToolsData);
+        if (checkQuickToolsData(QUICK_TOOLS_DATA)) {
+            quickToolsData = QUICK_TOOLS_DATA;
+            createQuickToolsElements();
+            renderQuickTools(quickToolsData);
             setupQuickToolsResponsiveBehavior();
-                setupThemeChangeListener();
+            setupThemeChangeListener();
             
-                setTimeout(() => {
+            setTimeout(() => {
+                // 再次检查目录
+                if (checkTocExistence()) {
+                    console.log("使用备用数据后再次检测到目录，移除所有元素");
+                    removeAllQuickToolsElements();
+                    return;
+                }
+                
                 forceShowToggleButton();
-                }, 500);
+            }, 500);
             
             // 标记为已初始化
             QuickTools.state.isInitialized = true;
             console.log("便捷工具使用备用数据初始化完成");
-            } else {
+        } else {
             console.log("备用数据也无效，创建最小化便捷功能按钮");
+            // 再次检查目录
+            if (checkTocExistence()) {
+                console.log("创建最小化按钮前检测到目录，跳过创建");
+                removeAllQuickToolsElements();
+                return;
+            }
+            
             // 即使数据无效，也要创建按钮
             createToggleButton();
             setupQuickToolsResponsiveBehavior();
@@ -140,7 +307,12 @@ function initWithFallbackData() {
     } catch (error) {
         console.error("使用备用数据初始化时发生错误:", error);
         // 最后的尝试：只创建按钮
-        createToggleButton();
+        if (!checkTocExistence()) {
+            createToggleButton();
+        } else {
+            console.log("错误处理中检测到目录，不创建任何元素");
+            removeAllQuickToolsElements();
+        }
     }
 }
 
@@ -611,7 +783,7 @@ function toggleQuickToolsPanel() {
     }
 }
 
-// 显示便捷功能面板 - 模仿热门站点的显示函数
+// 显示便捷功能面板 - 修改为更安全的实现
 function showQuickToolsPanel(panel, btn) {
     if (!panel) {
         panel = QuickTools.elements.panel;
@@ -635,25 +807,7 @@ function showQuickToolsPanel(panel, btn) {
         
         if (hotSitesPanel && hotSitesPanel.classList.contains('show')) {
             console.log('检测到热门站点面板开启，自动关闭热门站点面板');
-            try {
-                // 尝试使用全局定义的方法隐藏热门站点面板
-                if (typeof hideHotSitesPanel === 'function') {
-                    hideHotSitesPanel(hotSitesPanel, hotSitesBtn);
-                } else {
-                    // 直接修改样式
-                    hotSitesPanel.classList.remove('show');
-                    hotSitesPanel.style.display = 'none';
-                    hotSitesPanel.style.opacity = '0';
-                    hotSitesPanel.style.transform = 'translateX(-260px)';
-                }
-                
-                // 更新按钮状态
-                if (hotSitesBtn) {
-                    hotSitesBtn.classList.remove('active');
-                }
-            } catch (error) {
-                console.error('关闭热门站点面板失败:', error);
-            }
+            safeHideHotSitesPanel(hotSitesPanel, hotSitesBtn);
         }
     }
     
@@ -813,7 +967,7 @@ function addScrollIndicator(panel) {
     }
 }
 
-// 设置响应式行为
+// 设置响应式行为 - 修改以避免与热点站点冲突
 function setupQuickToolsResponsiveBehavior() {
     console.log("设置便捷工具响应式行为 - 开始");
     
@@ -829,8 +983,15 @@ function setupQuickToolsResponsiveBehavior() {
         }, 100); // 100ms的防抖延迟
     };
     
-    // 添加resize监听器
-    window.addEventListener('resize', window.quickToolsResizeHandler);
+    // 替代直接添加事件监听器，使用更安全的方式
+    if (window.originalAddEventListener) {
+        // 如果已经被重写，使用原始方法
+        window.originalAddEventListener.call(window, 'resize', window.quickToolsResizeHandler);
+    } else {
+        // 正常添加
+        window.addEventListener('resize', window.quickToolsResizeHandler);
+    }
+    
     console.log("成功添加便捷工具resize监听器");
     
     // 测试resize事件是否正常工作
@@ -1475,181 +1636,52 @@ function addQuickToolsStyles() {
     document.head.appendChild(styleElement);
 }
 
-// 为了确保脚本能够执行，添加一个延迟的初始化调用
-setTimeout(function() {
-    console.log("延迟初始化便捷功能 - 检查是否已初始化");
-    // 检查冲突
-    checkAndResolveConflicts();
+// 检查并解决与其他脚本的冲突
+function checkAndResolveConflicts() {
+    // 检查热点站点是否已加载并更新状态
+    QuickTools.state.hotSitesLoaded = checkHotSitesLoaded();
+    console.log("检查并解决可能的脚本冲突, 热点站点加载状态:", QuickTools.state.hotSitesLoaded);
     
-    // 确保只初始化一次
-    if (!QuickTools.state.isInitialized) {
-        console.log("尚未初始化，执行延迟初始化");
-        initQuickTools();
-    } else {
-        console.log("已初始化，跳过延迟初始化");
-        // 仍然更新按钮位置，确保UI正确
-        if (QuickTools.elements.toggleBtn) {
-            forceShowToggleButton();
-        } else {
-            console.warn("按钮不存在，重新创建");
-            createToggleButton();
-        }
-    }
-}, 1000);
-
-// 最终检查，确保按钮在所有情况下都可见
-setTimeout(function() {
-    console.log("最终按钮检查");
-    checkAndResolveConflicts(); // 确保没有冲突
-    
-    // 检查按钮是否存在且可见
-    const btn = document.getElementById('quickToolsToggleBtn');
-    const isMobile = window.innerWidth <= 1200;
-    
-    if (isMobile) {
-        if (!btn) {
-            console.warn("按钮不存在（最终检查），创建按钮");
-            try {
-                // 直接创建按钮而不调用可能有冲突的函数
-                const newBtn = document.createElement('button');
-                newBtn.id = 'quickToolsToggleBtn';
-                newBtn.className = 'quick-tools-toggle quick-tools-btn-persistent';
-                newBtn.setAttribute('aria-label', '显示/隐藏便捷工具');
-                newBtn.setAttribute('type', 'button');
-                newBtn.setAttribute('data-qt-button', 'true');
-                newBtn.setAttribute('data-final-check', 'true');
-                newBtn.setAttribute('data-timestamp', Date.now());
+    // 如果热点站点已加载，不需要重写addEventListener
+    if (QuickTools.state.hotSitesLoaded) {
+        console.log("热点站点已加载，使用更安全的冲突处理方法");
+        
+        // 清理可能的重复元素
+        setTimeout(function() {
+            // 延时执行，确保DOM完全加载
+            const quickToolsButtons = document.querySelectorAll('[id^="quickToolsToggleBtn"]');
+            if (quickToolsButtons.length > 1) {
+                console.warn("检测到多个快捷工具按钮，清理重复按钮");
+                // 保留最近创建的按钮
+                let newestBtn = null;
+                let newestTimestamp = 0;
                 
-                // 应用样式
-                newBtn.style.position = 'fixed';
-                newBtn.style.display = 'flex';
-                newBtn.style.visibility = 'visible';
-                newBtn.style.opacity = '1';
-                newBtn.style.zIndex = '9979';
-                newBtn.style.top = '40%';
-                newBtn.style.right = '0';
-                newBtn.style.transform = 'translateY(-50%)';
-                newBtn.style.width = '36px';
-                newBtn.style.height = '80px';
-                newBtn.style.borderRadius = '24px 0 0 24px';
-                newBtn.style.background = 'linear-gradient(90deg, #2ea043, #3fb950)';
-                newBtn.style.color = 'white';
-                newBtn.style.fontSize = '16px';
-                newBtn.style.fontWeight = 'bold';
-                newBtn.style.letterSpacing = '2px';
-                newBtn.style.cursor = 'pointer';
-                newBtn.style.border = 'none';
-                newBtn.style.outline = 'none';
-                newBtn.style.writingMode = 'vertical-rl';
-                newBtn.style.textOrientation = 'mixed';
-                newBtn.style.boxShadow = '-2px 0 10px rgba(0, 0, 0, 0.2)';
-                newBtn.textContent = '工具⚙️';
-                
-                // 添加点击事件
-                newBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.log('紧急创建的便捷功能按钮被点击');
-                    // 尝试查找并使用toggleQuickToolsPanel函数
-                    if (typeof toggleQuickToolsPanel === 'function') {
-                        toggleQuickToolsPanel();
-                    } else {
-                        // 直接切换面板显示/隐藏
-                        const panel = document.querySelector('.quick-tools-panel');
-                        if (panel) {
-                            if (panel.style.display === 'none') {
-                                panel.style.display = 'block';
-                                panel.style.opacity = '1';
-                                panel.style.visibility = 'visible';
-                                panel.style.transform = 'translateX(0)';
-                                panel.classList.add('show');
-                            } else {
-                                panel.style.display = 'none';
-                                panel.style.opacity = '0';
-                                panel.style.visibility = 'hidden';
-                                panel.style.transform = 'translateX(260px)';
-                                panel.classList.remove('show');
-                            }
-                        }
+                quickToolsButtons.forEach(function(btn) {
+                    const timestamp = parseInt(btn.getAttribute('data-timestamp') || '0');
+                    if (timestamp > newestTimestamp) {
+                        newestTimestamp = timestamp;
+                        newestBtn = btn;
                     }
                 });
                 
-                // 添加到DOM
-                document.body.appendChild(newBtn);
-                console.log("最终检查创建了新按钮:", newBtn.id);
+                // 删除其他按钮
+                quickToolsButtons.forEach(function(btn) {
+                    if (btn !== newestBtn) {
+                        btn.remove();
+                    }
+                });
                 
                 // 更新引用
-                if (typeof QuickTools !== 'undefined' && QuickTools.elements) {
-                    QuickTools.elements.toggleBtn = newBtn;
-                }
-            } catch (error) {
-                console.error("最终检查创建按钮失败:", error);
-                // 尝试使用函数创建
-                if (typeof createToggleButton === 'function') {
-                    createToggleButton();
+                if (newestBtn) {
+                    QuickTools.elements.toggleBtn = newestBtn;
                 }
             }
-        } else if (btn.style.display !== 'flex' || btn.style.visibility !== 'visible') {
-            console.warn("按钮存在但不可见（最终检查），强制显示");
-            if (typeof forceShowToggleButton === 'function') {
-                forceShowToggleButton();
-            } else {
-                // 直接应用样式
-                btn.style.display = 'flex';
-                btn.style.visibility = 'visible';
-                btn.style.opacity = '1';
-                btn.style.position = 'fixed';
-                btn.style.right = '0';
-                btn.style.top = '40%';
-                btn.style.zIndex = '9979';
-            }
-        }
-    }
-}, 2000);
-
-// 多次执行最终检查，确保在各种情况下按钮都能正常显示
-[3000, 5000, 10000].forEach(function(delay) {
-    setTimeout(function() {
-        console.log(`${delay}ms 延迟检查便捷工具按钮可见性`);
-        const btn = document.getElementById('quickToolsToggleBtn');
-        const isMobile = window.innerWidth <= 1200;
+        }, 500);
         
-        if (isMobile && (!btn || btn.style.display !== 'flex' || btn.style.visibility !== 'visible')) {
-            console.warn(`${delay}ms 检查: 按钮不可见，强制显示`);
-            if (typeof forceShowToggleButton === 'function') {
-                forceShowToggleButton();
-            } else if (!btn) {
-                // 创建超简单按钮
-                const emergencyBtn = document.createElement('button');
-                emergencyBtn.id = 'quickToolsToggleBtn';
-                emergencyBtn.style.position = 'fixed';
-                emergencyBtn.style.right = '0';
-                emergencyBtn.style.top = '40%';
-                emergencyBtn.style.width = '36px';
-                emergencyBtn.style.height = '80px';
-                emergencyBtn.style.zIndex = '9999';
-                emergencyBtn.style.display = 'flex';
-                emergencyBtn.style.visibility = 'visible';
-                emergencyBtn.style.opacity = '1';
-                emergencyBtn.style.background = 'linear-gradient(90deg, #2ea043, #3fb950)';
-                emergencyBtn.style.borderRadius = '24px 0 0 24px';
-                emergencyBtn.style.border = 'none';
-                emergencyBtn.style.color = 'white';
-                emergencyBtn.textContent = '工具';
-                emergencyBtn.setAttribute('data-emergency', 'true');
-                document.body.appendChild(emergencyBtn);
-                console.log("创建了紧急按钮");
-            }
-        }
-    }, delay);
-});
-
-// 检查并解决与其他脚本的冲突
-function checkAndResolveConflicts() {
-    // 防止热门站点脚本的resize监听器干扰我们的按钮
-    console.log("检查并解决可能的脚本冲突");
+        return;
+    }
     
-    // 保存原始的resize事件，以便我们可以稍后恢复它
+    // 热点站点未加载时，使用原有的事件重写逻辑
     if (window.originalAddEventListener === undefined) {
         window.originalAddEventListener = window.addEventListener;
         
@@ -1682,13 +1714,11 @@ function checkAndResolveConflicts() {
         };
     }
     
-    // 清理可能的重复元素
+    // 清理可能的重复元素 (与上面相同)
     setTimeout(function() {
-        // 延时执行，确保DOM完全加载
         const quickToolsButtons = document.querySelectorAll('[id^="quickToolsToggleBtn"]');
         if (quickToolsButtons.length > 1) {
             console.warn("检测到多个快捷工具按钮，清理重复按钮");
-            // 保留最近创建的按钮
             let newestBtn = null;
             let newestTimestamp = 0;
             
@@ -1700,14 +1730,12 @@ function checkAndResolveConflicts() {
                 }
             });
             
-            // 删除其他按钮
             quickToolsButtons.forEach(function(btn) {
                 if (btn !== newestBtn) {
                     btn.remove();
                 }
             });
             
-            // 更新引用
             if (newestBtn) {
                 QuickTools.elements.toggleBtn = newestBtn;
             }
@@ -1715,20 +1743,118 @@ function checkAndResolveConflicts() {
     }, 500);
 }
 
-// 确保在DOM完全加载后再执行初始化
+// 监听DOM变化，检测是否添加了目录
+function setupTocMutationObserver() {
+    // 如果已有目录，直接移除所有元素
+    if (checkTocExistence()) {
+        removeAllQuickToolsElements();
+        return;
+    }
+    
+    // 创建一个观察器实例
+    const observer = new MutationObserver(function(mutations) {
+        // 当DOM变化时，检查是否出现了目录
+        if (checkTocExistence()) {
+            console.log("DOM变化后检测到目录，移除便捷工具元素");
+            removeAllQuickToolsElements();
+            // 断开观察器
+            observer.disconnect();
+        }
+    });
+    
+    // 配置观察选项
+    const config = { 
+        childList: true, // 观察子节点的添加或删除
+        subtree: true,   // 观察所有后代节点
+        attributes: true // 观察属性变化
+    };
+    
+    // 开始观察文档的整个 body
+    observer.observe(document.body, config);
+    console.log("已设置目录变化监听器");
+    
+    return observer;
+}
+
+// 确保在DOM完全加载后再执行初始化 - 增加延迟，确保热点站点先初始化
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function() {
-        console.log("DOM加载完成，初始化便捷工具");
-        checkAndResolveConflicts();
-        initQuickTools();
+        console.log("DOM加载完成，等待热点站点初始化后再初始化便捷工具");
+        
+        // 首先检查目录是否存在
+        if (checkTocExistence()) {
+            console.log("DOMContentLoaded时检测到目录，移除所有便捷工具元素");
+            removeAllQuickToolsElements();
+            
+            // 设置DOM变化监听，以防止便捷工具元素重新出现
+            setupTocMutationObserver();
+            return;
+        }
+        
+        // 延迟执行，给热点站点脚本留出初始化时间
+        setTimeout(function() {
+            // 再次检查是否有目录
+            if (checkTocExistence()) {
+                console.log("延迟检测到目录，移除所有便捷工具元素");
+                removeAllQuickToolsElements();
+                return;
+            }
+            
+            checkAndResolveConflicts();
+            initQuickTools();
+            
+            // 设置DOM变化监听
+            setupTocMutationObserver();
+        }, 300); // 延迟300ms，确保热点站点先初始化
     });
 } else {
-    // 如果DOMContentLoaded已经触发，直接初始化
-    console.log("DOM已经加载，直接初始化便捷工具");
-    checkAndResolveConflicts();
-    initQuickTools();
-} 
+    // 如果DOMContentLoaded已经触发，也增加延迟
+    console.log("DOM已经加载，延迟初始化便捷工具");
+    
+    // 首先检查目录是否存在
+    if (checkTocExistence()) {
+        console.log("延迟加载时检测到目录，移除所有便捷工具元素");
+        removeAllQuickToolsElements();
+        
+        // 设置DOM变化监听
+        setupTocMutationObserver();
+    } else {
+        setTimeout(function() {
+            // 再次检查是否有目录
+            if (checkTocExistence()) {
+                console.log("延迟检测到目录，移除所有便捷工具元素");
+                removeAllQuickToolsElements();
+                return;
+            }
+            
+            checkAndResolveConflicts();
+            initQuickTools();
+            
+            // 设置DOM变化监听
+            setupTocMutationObserver();
+        }, 300); // 同样延迟300ms
+    }
+}
 
-// 确保立即执行初始化
-console.log("立即执行初始化便捷工具");
-initQuickTools();
+// 不要立即执行初始化，改为延迟执行，确保热点站点先初始化
+console.log("延迟执行初始化便捷工具");
+setTimeout(function() {
+    // 检查是否有目录
+    if (checkTocExistence()) {
+        console.log("初始延迟检测到目录，移除所有便捷工具元素");
+        removeAllQuickToolsElements();
+    } else {
+        initQuickTools();
+    }
+}, 100); // 减少延迟，确保早于其他初始化
+
+// 最后安全保障：在页面完全加载后执行一次最终清理
+window.addEventListener('load', function() {
+    if (checkTocExistence()) {
+        console.log("页面加载完成后检测到目录，清理所有便捷工具元素");
+        removeAllQuickToolsElements();
+    }
+    
+    // 设置DOM变化监听，持续检查目录是否出现
+    setupTocMutationObserver();
+});

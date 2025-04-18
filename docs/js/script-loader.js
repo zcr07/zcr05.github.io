@@ -116,17 +116,15 @@ const scripts = (() => {
         // 本地测试环境
         console.log('使用本地测试路径');
         return [
-            // `D:/AboutDev/Workspace_AI/MyMaskKing.github.io/static/js/plugins/hot-sites.js`,
-            // `D:/AboutDev/Workspace_AI/MyMaskKing.github.io/static/js/plugins/quick-tools.js`
-            'https://blog.mymaskking.dpdns.org/js/plugins/hot-sites.js',
-            'https://blog.mymaskking.dpdns.org/js/plugins/quick-tools.js'
+            `D:/AboutDev/Workspace_AI/MyMaskKing.github.io/static/js/plugins/hot-sites.js`,
+            `D:/AboutDev/Workspace_AI/MyMaskKing.github.io/static/js/plugins/quick-tools.js`
         ];
     } else {
         // 网络环境
         console.log('使用网络环境路径');
         return [
-            `${window.currentDomain}/static/js/plugins/hot-sites.js`,
-            `${window.currentDomain}/static/js/plugins/quick-tools.js`
+            `${window.currentDomain}/js/plugins/hot-sites.js`,
+            `${window.currentDomain}/js/plugins/quick-tools.js`
         ];
     }
 })();

@@ -72,8 +72,64 @@ window.BrowserDetect = {
     isFirefox: navigator.userAgent.toLowerCase().indexOf('firefox') > -1,
     isEdge: navigator.userAgent.toLowerCase().indexOf('edg') > -1,
     isChrome: navigator.userAgent.toLowerCase().indexOf('chrome') > -1 && navigator.userAgent.toLowerCase().indexOf('edg') === -1,
-    isMobile: window.innerWidth <= 1200
+    isMobile: window.innerWidth <= 1200,
+    
+    // 设备类型检测
+    isDesktop: function() {
+        return window.innerWidth > 1200;
+    },
+    
+    // 可见性控制
+    visibilityState: {
+        hotButton: {lastState: null, changeTime: 0},
+        quickButton: {lastState: null, changeTime: 0}
+    },
+    
+    // 记录按钮状态变化
+    recordButtonVisibility: function(buttonType, isVisible) {
+        const now = Date.now();
+        const state = this.visibilityState[buttonType];
+        
+        // 如果状态发生变化，记录时间
+        if (state.lastState !== isVisible) {
+            state.lastState = isVisible;
+            state.changeTime = now;
+            console.log(`[设备检测] ${buttonType}按钮状态变为: ${isVisible ? '可见' : '隐藏'}, 时间: ${new Date().toISOString()}`);
+        }
+    }
 };
+
+// 屏蔽按钮闪烁的CSS规则
+function injectAntiFlickerCSS() {
+    if (document.getElementById('anti-flicker-css')) return;
+    
+    const style = document.createElement('style');
+    style.id = 'anti-flicker-css';
+    style.textContent = `
+        /* PC端默认隐藏工具按钮 */
+        @media (min-width: 1201px) {
+            #quickToolsToggleBtn {
+                display: none !important;
+                visibility: hidden !important;
+                opacity: 0 !important;
+                transition: none !important;
+            }
+        }
+        
+        /* 移动端下才默认显示按钮 */
+        @media (max-width: 1200px) {
+            #quickToolsToggleBtn {
+                visibility: visible !important;
+                opacity: 1 !important;
+                display: flex !important;
+                transition: opacity 0.3s ease-in-out !important;
+            }
+        }
+    `;
+    
+    document.head.appendChild(style);
+    console.log('[按钮控制] 注入防闪烁CSS规则成功');
+}
 
 // 检查页面是否存在目录
 function checkTocExistence() {
@@ -113,6 +169,11 @@ function checkTocExistence() {
 
 // 设置全局的基本配置和状态
 function setupGlobalConfig() {
+    // 立即注入防闪烁CSS防止按钮在PC端出现
+    if (window.BrowserDetect.isDesktop()) {
+        injectAntiFlickerCSS();
+    }
+    
     // 将目录状态暴露为全局变量，供各脚本使用
     window.hasToc = checkTocExistence();
     console.log("目录状态：", window.hasToc ? "存在" : "不存在");
@@ -358,15 +419,129 @@ const scripts = (() => {
         // 网络环境
         console.log('使用网络环境路径');
         return [
-            `${window.currentDomain}/js/plugins/hot-sites.js`,
-            `${window.currentDomain}/js/plugins/quick-tools.js`
+            `${window.currentDomain}/static/js/plugins/hot-sites.js`,
+            `${window.currentDomain}/static/js/plugins/quick-tools.js`
         ];
     }
 })();
 
+// 监控DOM以确保按钮可见性符合预期
+function setupButtonVisibilityObserver() {
+    // 创建按钮观察器
+    const buttonObserver = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.type === 'attributes' && 
+                (mutation.attributeName === 'style' || 
+                 mutation.attributeName === 'class')) {
+                
+                const target = mutation.target;
+                // 判断目标是否是我们关心的按钮
+                if (target.id === 'quickToolsToggleBtn') {
+                    // 在PC设备上应保持隐藏
+                    if (window.BrowserDetect.isDesktop()) {
+                        // 强制隐藏按钮
+                        requestAnimationFrame(() => {
+                            target.style.display = 'none';
+                            target.style.visibility = 'hidden';
+                            target.style.opacity = '0';
+                            
+                            // 记录按钮状态
+                            window.BrowserDetect.recordButtonVisibility('quickButton', false);
+                        });
+                    } else {
+                        // 在移动设备上应保持可见
+                        requestAnimationFrame(() => {
+                            target.style.display = 'flex';
+                            target.style.visibility = 'visible';
+                            target.style.opacity = '1';
+                            
+                            // 记录按钮状态
+                            window.BrowserDetect.recordButtonVisibility('quickButton', true);
+                        });
+                    }
+                }
+            }
+        });
+    });
+    
+    // 观察body以捕获按钮何时添加到DOM
+    const bodyObserver = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                // 检查新添加的节点中是否有按钮
+                mutation.addedNodes.forEach((node) => {
+                    if (node.nodeType === 1) { // 元素节点
+                        // 直接检查是否是我们的按钮
+                        if (node.id === 'quickToolsToggleBtn') {
+                            // 开始观察这个按钮
+                            buttonObserver.observe(node, {
+                                attributes: true,
+                                attributeFilter: ['style', 'class']
+                            });
+                            
+                            // 在PC设备上立即隐藏按钮
+                            if (window.BrowserDetect.isDesktop()) {
+                                requestAnimationFrame(() => {
+                                    node.style.display = 'none';
+                                    node.style.visibility = 'hidden';
+                                    node.style.opacity = '0';
+                                });
+                            }
+                        }
+                        
+                        // 检查子元素
+                        const buttons = node.querySelectorAll('#quickToolsToggleBtn');
+                        buttons.forEach((btn) => {
+                            buttonObserver.observe(btn, {
+                                attributes: true,
+                                attributeFilter: ['style', 'class']
+                            });
+                            
+                            // 在PC设备上立即隐藏按钮
+                            if (window.BrowserDetect.isDesktop()) {
+                                requestAnimationFrame(() => {
+                                    btn.style.display = 'none';
+                                    btn.style.visibility = 'hidden';
+                                    btn.style.opacity = '0';
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    });
+    
+    // 开始观察DOM
+    bodyObserver.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+    
+    return {buttonObserver, bodyObserver};
+}
+
 // 在DOM加载完成后开始加载脚本
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM已加载，开始按顺序加载插件脚本');
+    
+    // 立即设置按钮可见性观察器
+    const observers = setupButtonVisibilityObserver();
+    
+    // 立即应用按钮可见性控制
+    if (window.BrowserDetect.isDesktop()) {
+        // PC端：立即隐藏工具按钮，防止闪烁
+        const styleNode = document.createElement('style');
+        styleNode.id = 'temp-button-visibility';
+        styleNode.textContent = `
+            #quickToolsToggleBtn {
+                display: none !important;
+                visibility: hidden !important;
+                opacity: 0 !important;
+            }
+        `;
+        document.head.appendChild(styleNode);
+    }
     
     // 加载脚本
     loadScriptsSequentially(scripts, function() {
@@ -379,5 +554,28 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('最终确认：热门按钮可见性已检查');
             }, 1000);
         }
+        
+        // 添加多个检查点以确保按钮状态正确
+        [500, 1000, 2000, 3000].forEach(delay => {
+            setTimeout(() => {
+                // 再次检查按钮状态
+                const quickBtn = document.getElementById('quickToolsToggleBtn');
+                if (quickBtn) {
+                    if (window.BrowserDetect.isDesktop()) {
+                        // PC端强制隐藏
+                        quickBtn.style.display = 'none';
+                        quickBtn.style.visibility = 'hidden';
+                        quickBtn.style.opacity = '0';
+                        console.log(`[${delay}ms] PC端: 确保便捷工具按钮隐藏`);
+                    } else {
+                        // 移动端强制显示
+                        quickBtn.style.display = 'flex';
+                        quickBtn.style.visibility = 'visible';
+                        quickBtn.style.opacity = '1';
+                        console.log(`[${delay}ms] 移动端: 确保便捷工具按钮显示`);
+                    }
+                }
+            }, delay);
+        });
     });
 });

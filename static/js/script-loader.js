@@ -419,8 +419,8 @@ const scripts = (() => {
         // 网络环境
         console.log('使用网络环境路径');
         return [
-            `${window.currentDomain}/static/js/plugins/hot-sites.js`,
-            `${window.currentDomain}/static/js/plugins/quick-tools.js`
+            `${window.currentDomain}/js/plugins/hot-sites.js`,
+            `${window.currentDomain}/js/plugins/quick-tools.js`
         ];
     }
 })();

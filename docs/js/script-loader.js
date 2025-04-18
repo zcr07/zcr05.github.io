@@ -1,5 +1,31 @@
 // 脚本加载器 - 确保按顺序加载js文件
-// 先加载热点站点JS，再加载便捷工具JS
+// 先加载公共工具模块，然后加载热点站点JS，再加载便捷工具JS
+
+// 路径配置 - 统一管理所有路径
+const ScriptPaths = {
+    // 本地开发环境路径
+    local: {
+        // 本地绝对路径 (用于Chrome/Edge等浏览器)
+        absolute: {
+            basePath: 'D:/AboutDev/Workspace_AI/MyMaskKing.github.io',
+            utils: 'D:/AboutDev/Workspace_AI/MyMaskKing.github.io/static/js/utils.js',
+            hotSites: 'D:/AboutDev/Workspace_AI/MyMaskKing.github.io/static/js/plugins/hot-sites.js',
+            quickTools: 'D:/AboutDev/Workspace_AI/MyMaskKing.github.io/static/js/plugins/quick-tools.js'
+        },
+        // 本地相对路径 (用于Firefox浏览器)
+        relative: {
+            utils: './js/utils.js',
+            hotSites: './js/plugins/hot-sites.js',
+            quickTools: './js/plugins/quick-tools.js'
+        }
+    },
+    // 网络环境路径
+    network: {
+        utils: '/js/utils.js',
+        hotSites: '/js/plugins/hot-sites.js',
+        quickTools: '/js/plugins/quick-tools.js'
+    }
+};
 
 // 创建一个全局命名空间，用于管理插件之间的通信和状态
 window.PluginManager = {
@@ -72,8 +98,64 @@ window.BrowserDetect = {
     isFirefox: navigator.userAgent.toLowerCase().indexOf('firefox') > -1,
     isEdge: navigator.userAgent.toLowerCase().indexOf('edg') > -1,
     isChrome: navigator.userAgent.toLowerCase().indexOf('chrome') > -1 && navigator.userAgent.toLowerCase().indexOf('edg') === -1,
-    isMobile: window.innerWidth <= 1200
+    isMobile: window.innerWidth <= 1200,
+    
+    // 设备类型检测
+    isDesktop: function() {
+        return window.innerWidth > 1200;
+    },
+    
+    // 可见性控制
+    visibilityState: {
+        hotButton: {lastState: null, changeTime: 0},
+        quickButton: {lastState: null, changeTime: 0}
+    },
+    
+    // 记录按钮状态变化
+    recordButtonVisibility: function(buttonType, isVisible) {
+        const now = Date.now();
+        const state = this.visibilityState[buttonType];
+        
+        // 如果状态发生变化，记录时间
+        if (state.lastState !== isVisible) {
+            state.lastState = isVisible;
+            state.changeTime = now;
+            console.log(`[设备检测] ${buttonType}按钮状态变为: ${isVisible ? '可见' : '隐藏'}, 时间: ${new Date().toISOString()}`);
+        }
+    }
 };
+
+// 屏蔽按钮闪烁的CSS规则
+function injectAntiFlickerCSS() {
+    if (document.getElementById('anti-flicker-css')) return;
+    
+    const style = document.createElement('style');
+    style.id = 'anti-flicker-css';
+    style.textContent = `
+        /* PC端默认隐藏工具按钮 */
+        @media (min-width: 1201px) {
+            #quickToolsToggleBtn {
+                display: none !important;
+                visibility: hidden !important;
+                opacity: 0 !important;
+                transition: none !important;
+            }
+        }
+        
+        /* 移动端下才默认显示按钮 */
+        @media (max-width: 1200px) {
+            #quickToolsToggleBtn {
+                visibility: visible !important;
+                opacity: 1 !important;
+                display: flex !important;
+                transition: opacity 0.3s ease-in-out !important;
+            }
+        }
+    `;
+    
+    document.head.appendChild(style);
+    console.log('[按钮控制] 注入防闪烁CSS规则成功');
+}
 
 // 检查页面是否存在目录
 function checkTocExistence() {
@@ -113,6 +195,11 @@ function checkTocExistence() {
 
 // 设置全局的基本配置和状态
 function setupGlobalConfig() {
+    // 立即注入防闪烁CSS防止按钮在PC端出现
+    if (window.BrowserDetect.isDesktop()) {
+        injectAntiFlickerCSS();
+    }
+    
     // 将目录状态暴露为全局变量，供各脚本使用
     window.hasToc = checkTocExistence();
     console.log("目录状态：", window.hasToc ? "存在" : "不存在");
@@ -131,9 +218,9 @@ function setupGlobalConfig() {
     console.log(`当前浏览器: ${BrowserDetect.isFirefox ? 'Firefox' : (BrowserDetect.isEdge ? 'Edge' : 'Chrome/其他')}`);
     console.log(`是否移动视图: ${BrowserDetect.isMobile ? '是' : '否'}`);
     
-    // 输出配置文件路径信息
-    console.log("配置文件路径: 热门站点配置 -> " + window.location.origin + "/static/config/hot_site.json");
-    console.log("配置文件路径: 便捷工具配置 -> " + window.location.origin + "/static/config/quick_tools.json");
+    // 输出配置文件路径信息 - 这些配置实际在各自的插件中定义
+    console.log("配置文件路径: 热门站点配置 -> " + window.location.origin + "/config/hot_site.json");
+    console.log("配置文件路径: 便捷工具配置 -> " + window.location.origin + "/config/quick_tools.json");
     
     // 设置全局点击处理逻辑
     setupGlobalClickHandler();
@@ -172,7 +259,7 @@ function loadScriptsSequentially(scripts, callback) {
             console.log(`加载脚本: ${scriptSrc}`);
             
             // 如果有目录且当前是便捷工具JS，则跳过加载
-            const hasToc = window.hasToc || checkTocExistence();
+            const hasToc = window.UIState?.environment.hasToc || false;
             if (hasToc && scriptSrc.includes('quick-tools.js')) {
                 console.log(`检测到目录存在，跳过加载便捷工具JS: ${scriptSrc}`);
                 index++;
@@ -184,15 +271,17 @@ function loadScriptsSequentially(scripts, callback) {
             let actualScriptSrc = scriptSrc;
             
             // Firefox特殊处理
-            if (BrowserDetect.isFirefox && window.isLocalEnv && scriptSrc.includes('D:')) {
+            if (window.UIState?.device.isFirefox && window.UIState?.environment.isLocalEnv && scriptSrc.includes('D:')) {
                 // Firefox不能加载本地文件系统路径，调整为相对路径
-                if (scriptSrc.includes('hot-sites.js')) {
-                    actualScriptSrc = '/static/js/plugins/hot-sites.js';
+                if (scriptSrc.includes('utils.js')) {
+                    actualScriptSrc = ScriptPaths.local.relative.utils;
+                } else if (scriptSrc.includes('hot-sites.js')) {
+                    actualScriptSrc = ScriptPaths.local.relative.hotSites;
                 } else if (scriptSrc.includes('quick-tools.js')) {
-                    actualScriptSrc = '/static/js/plugins/quick-tools.js';
+                    actualScriptSrc = ScriptPaths.local.relative.quickTools;
                 }
                 console.log(`Firefox特殊处理: ${scriptSrc} → ${actualScriptSrc}`);
-            } else if (window.isLocalEnv) {
+            } else if (window.UIState?.environment.isLocalEnv) {
                 // 对于本地环境，非Firefox浏览器保持使用绝对路径
                 console.log(`使用本地路径: ${scriptSrc}`);
             } else {
@@ -214,11 +303,13 @@ function loadScriptsSequentially(scripts, callback) {
                 
                 // 记录这个插件已经加载到PluginManager中
                 let pluginName = '';
-                if (actualScriptSrc.includes('hot-sites.js')) {
+                if (actualScriptSrc.includes('utils.js')) {
+                    pluginName = 'utils';
+                } else if (actualScriptSrc.includes('hot-sites.js')) {
                     pluginName = 'hotSites';
                     
                     // 确保在小屏幕设备上热门按钮可见
-                    if (BrowserDetect.isMobile && typeof window.ensureButtonVisibility === 'function') {
+                    if (window.UIState?.device.isMobile && typeof window.ensureButtonVisibility === 'function') {
                         setTimeout(() => {
                             window.ensureButtonVisibility();
                         }, 500);
@@ -253,17 +344,21 @@ function loadScriptsSequentially(scripts, callback) {
                     console.log(`重试加载脚本(${scriptRetryStatus[actualScriptSrc]}/${MAX_RETRIES}): ${actualScriptSrc}`);
                     
                     // 针对Firefox进行特殊处理 - 尝试不同的路径格式
-                    if (BrowserDetect.isFirefox) {
+                    if (window.UIState?.device.isFirefox) {
                         let fallbackSrc;
                         
-                        if (actualScriptSrc.includes('hot-sites.js')) {
+                        if (actualScriptSrc.includes('utils.js')) {
                             fallbackSrc = actualScriptSrc.startsWith('/') 
-                                ? `${window.location.origin}/static/js/plugins/hot-sites.js` 
-                                : '/static/js/plugins/hot-sites.js';
+                                ? `${window.location.origin}${ScriptPaths.local.relative.utils}` 
+                                : ScriptPaths.local.relative.utils;
+                        } else if (actualScriptSrc.includes('hot-sites.js')) {
+                            fallbackSrc = actualScriptSrc.startsWith('/') 
+                                ? `${window.location.origin}${ScriptPaths.local.relative.hotSites}` 
+                                : ScriptPaths.local.relative.hotSites;
                         } else if (actualScriptSrc.includes('quick-tools.js')) {
                             fallbackSrc = actualScriptSrc.startsWith('/') 
-                                ? `${window.location.origin}/static/js/plugins/quick-tools.js` 
-                                : '/static/js/plugins/quick-tools.js';
+                                ? `${window.location.origin}${ScriptPaths.local.relative.quickTools}` 
+                                : ScriptPaths.local.relative.quickTools;
                         }
                         
                         console.log(`Firefox尝试备用路径: ${fallbackSrc}`);
@@ -281,7 +376,9 @@ function loadScriptsSequentially(scripts, callback) {
                             
                             // 记录插件加载
                             let pluginName = '';
-                            if (actualScriptSrc.includes('hot-sites.js')) {
+                            if (actualScriptSrc.includes('utils.js')) {
+                                pluginName = 'utils';
+                            } else if (actualScriptSrc.includes('hot-sites.js')) {
                                 pluginName = 'hotSites';
                             } else if (actualScriptSrc.includes('quick-tools.js')) {
                                 pluginName = 'quickTools';
@@ -332,52 +429,203 @@ function loadScriptsSequentially(scripts, callback) {
 
 // 需要按顺序加载的脚本列表
 const scripts = (() => {
-    // 设置全局基础配置
-    setupGlobalConfig();
+    // 获取当前环境信息
+    const isLocalEnv = window.location.protocol === 'file:' || 
+                       window.location.hostname === 'localhost' || 
+                       window.location.hostname === '127.0.0.1';
+    
+    const currentDomain = window.location.origin;
+    
+    // 判断是否是Firefox
+    const isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+    
+    console.log(`当前环境: ${isLocalEnv ? '本地测试' : '网络环境'}`);
+    console.log(`当前域名: ${currentDomain}`);
+    console.log(`浏览器: ${isFirefox ? 'Firefox' : '其他'}`);
     
     // 根据当前环境确定脚本路径
-    if (window.isLocalEnv) {
+    if (isLocalEnv) {
         // 本地测试环境
         console.log('使用本地测试路径');
         
-        if (BrowserDetect.isFirefox) {
+        if (isFirefox) {
             // Firefox浏览器使用相对路径
             console.log('Firefox浏览器使用相对路径');
             return [
-                '/static/js/plugins/hot-sites.js',
-                '/static/js/plugins/quick-tools.js'
+                ScriptPaths.local.relative.utils, // 首先加载工具模块
+                ScriptPaths.local.relative.hotSites,
+                ScriptPaths.local.relative.quickTools
             ];
         } else {
             // 其他浏览器使用绝对路径
             return [
-                `D:/AboutDev/Workspace_AI/MyMaskKing.github.io/static/js/plugins/hot-sites.js`,
-                `D:/AboutDev/Workspace_AI/MyMaskKing.github.io/static/js/plugins/quick-tools.js`
+                ScriptPaths.local.absolute.utils, // 首先加载工具模块
+                ScriptPaths.local.absolute.hotSites,
+                ScriptPaths.local.absolute.quickTools
             ];
         }
     } else {
         // 网络环境
         console.log('使用网络环境路径');
         return [
-            `${window.currentDomain}/js/plugins/hot-sites.js`,
-            `${window.currentDomain}/js/plugins/quick-tools.js`
+            `${currentDomain}${ScriptPaths.network.utils}`, // 首先加载工具模块
+            `${currentDomain}${ScriptPaths.network.hotSites}`,
+            `${currentDomain}${ScriptPaths.network.quickTools}`
         ];
     }
 })();
 
+// 监控DOM以确保按钮可见性符合预期
+function setupButtonVisibilityObserver() {
+    // 创建按钮观察器
+    const buttonObserver = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.type === 'attributes' && 
+                (mutation.attributeName === 'style' || 
+                 mutation.attributeName === 'class')) {
+                
+                const target = mutation.target;
+                // 判断目标是否是我们关心的按钮
+                if (target.id === 'quickToolsToggleBtn') {
+                    // 在PC设备上应保持隐藏
+                    if (window.BrowserDetect.isDesktop()) {
+                        // 强制隐藏按钮
+                        requestAnimationFrame(() => {
+                            target.style.display = 'none';
+                            target.style.visibility = 'hidden';
+                            target.style.opacity = '0';
+                            
+                            // 记录按钮状态
+                            window.BrowserDetect.recordButtonVisibility('quickButton', false);
+                        });
+                    } else {
+                        // 在移动设备上应保持可见
+                        requestAnimationFrame(() => {
+                            target.style.display = 'flex';
+                            target.style.visibility = 'visible';
+                            target.style.opacity = '1';
+                            
+                            // 记录按钮状态
+                            window.BrowserDetect.recordButtonVisibility('quickButton', true);
+                        });
+                    }
+                }
+            }
+        });
+    });
+    
+    // 观察body以捕获按钮何时添加到DOM
+    const bodyObserver = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                // 检查新添加的节点中是否有按钮
+                mutation.addedNodes.forEach((node) => {
+                    if (node.nodeType === 1) { // 元素节点
+                        // 直接检查是否是我们的按钮
+                        if (node.id === 'quickToolsToggleBtn') {
+                            // 开始观察这个按钮
+                            buttonObserver.observe(node, {
+                                attributes: true,
+                                attributeFilter: ['style', 'class']
+                            });
+                            
+                            // 在PC设备上立即隐藏按钮
+                            if (window.BrowserDetect.isDesktop()) {
+                                requestAnimationFrame(() => {
+                                    node.style.display = 'none';
+                                    node.style.visibility = 'hidden';
+                                    node.style.opacity = '0';
+                                });
+                            }
+                        }
+                        
+                        // 检查子元素
+                        const buttons = node.querySelectorAll('#quickToolsToggleBtn');
+                        buttons.forEach((btn) => {
+                            buttonObserver.observe(btn, {
+                                attributes: true,
+                                attributeFilter: ['style', 'class']
+                            });
+                            
+                            // 在PC设备上立即隐藏按钮
+                            if (window.BrowserDetect.isDesktop()) {
+                                requestAnimationFrame(() => {
+                                    btn.style.display = 'none';
+                                    btn.style.visibility = 'hidden';
+                                    btn.style.opacity = '0';
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    });
+    
+    // 开始观察DOM
+    bodyObserver.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+    
+    return {buttonObserver, bodyObserver};
+}
+
 // 在DOM加载完成后开始加载脚本
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM已加载，开始按顺序加载插件脚本');
+    
+    // 立即设置按钮可见性观察器
+    const observers = setupButtonVisibilityObserver();
+    
+    // 立即应用按钮可见性控制
+    if (window.BrowserDetect.isDesktop()) {
+        // PC端：立即隐藏工具按钮，防止闪烁
+        const styleNode = document.createElement('style');
+        styleNode.id = 'temp-button-visibility';
+        styleNode.textContent = `
+            #quickToolsToggleBtn {
+                display: none !important;
+                visibility: hidden !important;
+                opacity: 0 !important;
+            }
+        `;
+        document.head.appendChild(styleNode);
+    }
     
     // 加载脚本
     loadScriptsSequentially(scripts, function() {
         console.log('所有插件脚本加载完成');
         
         // 确保热门按钮在移动设备上可见
-        if (BrowserDetect.isMobile && typeof window.ensureButtonVisibility === 'function') {
+        if (window.UIState?.device.isMobile && typeof window.ensureButtonVisibility === 'function') {
             setTimeout(() => {
                 window.ensureButtonVisibility();
                 console.log('最终确认：热门按钮可见性已检查');
             }, 1000);
         }
+        
+        // 添加多个检查点以确保按钮状态正确
+        [500, 1000, 2000, 3000].forEach(delay => {
+            setTimeout(() => {
+                // 再次检查按钮状态
+                const quickBtn = document.getElementById('quickToolsToggleBtn');
+                if (quickBtn) {
+                    if (window.BrowserDetect.isDesktop()) {
+                        // PC端强制隐藏
+                        quickBtn.style.display = 'none';
+                        quickBtn.style.visibility = 'hidden';
+                        quickBtn.style.opacity = '0';
+                        console.log(`[${delay}ms] PC端: 确保便捷工具按钮隐藏`);
+                    } else {
+                        // 移动端强制显示
+                        quickBtn.style.display = 'flex';
+                        quickBtn.style.visibility = 'visible';
+                        quickBtn.style.opacity = '1';
+                        console.log(`[${delay}ms] 移动端: 确保便捷工具按钮显示`);
+                    }
+                }
+            }, delay);
+        });
     });
 });

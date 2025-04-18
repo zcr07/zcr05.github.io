@@ -24,12 +24,40 @@ const HotSites = {
   // 状态变量
   state: {
     isInitialized: false,
-    isMobile: false
+    isMobile: false,
+    isVisible: false  // 新增状态变量，跟踪面板是否可见
   }
 };
 
 // 在页面加载完成时初始化
 console.log("热门站点脚本已加载");
+
+// 安全地关闭工具面板
+function safeHideQuickToolsPanel(panel, btn) {
+    // 如果工具JS还没有加载，可能hideQuickToolsPanel函数不存在
+    if (typeof hideQuickToolsPanel === 'function') {
+        try {
+            hideQuickToolsPanel(panel, btn);
+            return true;
+        } catch (error) {
+            console.error('调用hideQuickToolsPanel失败:', error);
+        }
+    }
+    
+    // 后备方案：直接修改样式
+    if (panel) {
+        panel.classList.remove('show');
+        panel.style.display = 'none';
+        panel.style.opacity = '0';
+        panel.style.transform = 'translateX(260px)';
+    }
+    
+    if (btn) {
+        btn.classList.remove('active');
+    }
+    
+    return false;
+}
 
 // 初始化热门站点功能
 function initHotSites() {
@@ -73,6 +101,10 @@ function initHotSites() {
                 
                 // 标记为已初始化
                 HotSites.state.isInitialized = true;
+                
+                // 导出关键函数到全局作用域，让工具JS能够调用
+                window.hideHotSitesPanel = hideHotSitesPanel;
+                window.showHotSitesPanel = showHotSitesPanel;
             } else {
                 console.log("热门数据为空或无效，不创建热门元素");
             }
@@ -99,6 +131,10 @@ function initHotSites() {
                 
                 // 标记为已初始化
                 HotSites.state.isInitialized = true;
+                
+                // 导出关键函数到全局作用域
+                window.hideHotSitesPanel = hideHotSitesPanel;
+                window.showHotSitesPanel = showHotSitesPanel;
             } else {
                 console.log("备用数据也无效，不创建热门元素");
             }
@@ -325,25 +361,7 @@ function createToggleButton() {
                 
                 if (quickToolsPanel && quickToolsPanel.classList.contains('show')) {
                     console.log('点击热门按钮：检测到工具面板开启，自动关闭工具面板');
-                    try {
-                        // 尝试使用全局定义的方法隐藏快捷工具面板
-                        if (typeof hideQuickToolsPanel === 'function') {
-                            hideQuickToolsPanel(quickToolsPanel, quickToolsBtn);
-                        } else {
-                            // 直接修改样式
-                            quickToolsPanel.classList.remove('show');
-                            quickToolsPanel.style.display = 'none';
-                            quickToolsPanel.style.opacity = '0';
-                            quickToolsPanel.style.transform = 'translateX(260px)';
-                        }
-                        
-                        // 更新按钮状态
-                        if (quickToolsBtn) {
-                            quickToolsBtn.classList.remove('active');
-                        }
-                    } catch (error) {
-                        console.error('关闭工具面板失败:', error);
-                    }
+                    safeHideQuickToolsPanel(quickToolsPanel, quickToolsBtn);
                 }
             }
             
@@ -355,69 +373,14 @@ function createToggleButton() {
         }
     });
     
-    // 添加全局点击监听器，处理所有弹窗的关闭
-    if (!window.globalOutsideClickHandler) {
-        window.globalOutsideClickHandler = function(e) {
-            // 处理热门站点面板
-            const hotSitesPanel = document.getElementById('hotSitesPanel');
-            const hotSitesBtn = document.getElementById('hotSitesToggleBtn');
-            
-            if (hotSitesPanel && hotSitesBtn && 
-                window.innerWidth <= 1200 && 
-                hotSitesPanel.classList.contains('show') && 
-                !hotSitesPanel.contains(e.target) && 
-                e.target !== hotSitesBtn && 
-                !hotSitesBtn.contains(e.target)) {
-                // 点击了热门站点面板外部区域，隐藏面板
-                hideHotSitesPanel(hotSitesPanel, hotSitesBtn);
-                hotSitesBtn.classList.remove('active');
-                console.log('全局点击监听器：关闭热门站点面板');
-            }
-            
-            // 处理便捷工具面板
-            const quickToolsPanel = document.getElementById('quickToolsPanel');
-            const quickToolsBtn = document.getElementById('quickToolsToggleBtn');
-            
-            if (quickToolsPanel && quickToolsBtn && 
-                window.innerWidth <= 1200 && 
-                quickToolsPanel.classList.contains('show') && 
-                !quickToolsPanel.contains(e.target) && 
-                e.target !== quickToolsBtn && 
-                !quickToolsBtn.contains(e.target)) {
-                // 点击了便捷工具面板外部区域，隐藏面板
-                try {
-                    // 使用全局定义的方法隐藏快捷工具面板
-                    if (typeof hideQuickToolsPanel === 'function') {
-                        hideQuickToolsPanel(quickToolsPanel, quickToolsBtn);
-                    } else {
-                        // 直接修改样式
-                        quickToolsPanel.classList.remove('show');
-                        quickToolsPanel.style.display = 'none';
-                        quickToolsPanel.style.opacity = '0';
-                        quickToolsPanel.style.transform = 'translateX(260px)';
-                    }
-                    quickToolsBtn.classList.remove('active');
-                    console.log('全局点击监听器：关闭便捷工具面板');
-                } catch (error) {
-                    console.error('全局点击监听器：尝试关闭便捷工具面板失败', error);
-                }
-            }
-            
-            // 这里可以添加其他弹窗的处理逻辑
-        };
-        
-        // 添加全局点击事件监听
-        document.addEventListener('click', window.globalOutsideClickHandler);
-        console.log('全局点击监听器已添加');
-    }
+    // 设置全局点击监听器
+    setupGlobalClickHandler();
     
     // 正确定位按钮（相对于目录按钮）
     updateHotSitesButtonPosition();
     
     // 监听窗口大小变化，更新按钮位置
     window.addEventListener('resize', updateHotSitesButtonPosition);
-    
-    // MutationObserver监听DOM变化，确保按钮不被移除
     
     return toggleBtn;
 }
@@ -438,27 +401,12 @@ function showHotSitesPanel(panel, btn) {
         
         if (quickToolsPanel && quickToolsPanel.classList.contains('show')) {
             console.log('检测到工具面板开启，自动关闭工具面板');
-            try {
-                // 尝试使用全局定义的方法隐藏快捷工具面板
-                if (typeof hideQuickToolsPanel === 'function') {
-                    hideQuickToolsPanel(quickToolsPanel, quickToolsBtn);
-                } else {
-                    // 直接修改样式
-                    quickToolsPanel.classList.remove('show');
-                    quickToolsPanel.style.display = 'none';
-                    quickToolsPanel.style.opacity = '0';
-                    quickToolsPanel.style.transform = 'translateX(260px)';
-                }
-                
-                // 更新按钮状态
-                if (quickToolsBtn) {
-                    quickToolsBtn.classList.remove('active');
-                }
-            } catch (error) {
-                console.error('关闭工具面板失败:', error);
-            }
+            safeHideQuickToolsPanel(quickToolsPanel, quickToolsBtn);
         }
     }
+    
+    // 更新状态
+    HotSites.state.isVisible = true;
     
     // 显示面板
     panel.classList.add('show');
@@ -498,6 +446,7 @@ function showHotSitesPanel(panel, btn) {
     if (btn) {
         // 按钮样式由CSS控制
         // 通过切换active类来变更样式
+        btn.classList.add('active');
     }
 }
 
@@ -563,6 +512,9 @@ function hideHotSitesPanel(panel, btn) {
     
     console.log('隐藏热门站点面板');
     
+    // 更新状态
+    HotSites.state.isVisible = false;
+    
     // 隐藏面板
     panel.classList.remove('show');
     
@@ -580,6 +532,7 @@ function hideHotSitesPanel(panel, btn) {
     if (btn) {
         // 按钮样式由CSS控制
         // 通过切换active类来变更样式
+        btn.classList.remove('active');
     }
     
     // 延迟设置display:none，与CSS过渡时间匹配
@@ -1280,7 +1233,54 @@ function renderHotSites(sites) {
     }
 }
 
-// 确保在DOM完全加载后再执行初始化
+// 修改全局点击监听器，分离处理逻辑
+function setupGlobalClickHandler() {
+    // 如果全局点击处理器已经存在，先移除
+    if (window.globalOutsideClickHandler) {
+        document.removeEventListener('click', window.globalOutsideClickHandler);
+    }
+    
+    // 创建新的点击处理器，只处理热门站点面板
+    window.globalOutsideClickHandler = function(e) {
+        // 处理热门站点面板
+        const hotSitesPanel = document.getElementById('hotSitesPanel');
+        const hotSitesBtn = document.getElementById('hotSitesToggleBtn');
+        
+        if (hotSitesPanel && hotSitesBtn && 
+            window.innerWidth <= 1200 && 
+            hotSitesPanel.classList.contains('show') && 
+            !hotSitesPanel.contains(e.target) && 
+            e.target !== hotSitesBtn && 
+            !hotSitesBtn.contains(e.target)) {
+            // 点击了热门站点面板外部区域，隐藏面板
+            hideHotSitesPanel(hotSitesPanel, hotSitesBtn);
+            hotSitesBtn.classList.remove('active');
+            console.log('全局点击监听器：关闭热门站点面板');
+        }
+        
+        // 处理便捷工具面板 - 前提是这部分代码已加载
+        const quickToolsPanel = document.getElementById('quickToolsPanel');
+        const quickToolsBtn = document.getElementById('quickToolsToggleBtn');
+        
+        if (quickToolsPanel && quickToolsBtn && 
+            typeof hideQuickToolsPanel === 'function' &&
+            window.innerWidth <= 1200 && 
+            quickToolsPanel.classList.contains('show') && 
+            !quickToolsPanel.contains(e.target) && 
+            e.target !== quickToolsBtn && 
+            !quickToolsBtn.contains(e.target)) {
+            // 点击了便捷工具面板外部区域，隐藏面板 - 使用安全的调用方式
+            safeHideQuickToolsPanel(quickToolsPanel, quickToolsBtn);
+            console.log('全局点击监听器：关闭便捷工具面板');
+        }
+    };
+    
+    // 添加全局点击事件监听
+    document.addEventListener('click', window.globalOutsideClickHandler);
+    console.log('全局点击监听器已添加（热门站点版本）');
+}
+
+// 确保在DOM完全加载后再执行初始化 - 比工具JS更早执行
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function() {
         console.log("DOM加载完成，初始化热门站点");
@@ -1291,6 +1291,10 @@ if (document.readyState === 'loading') {
     console.log("DOM已经加载，直接初始化热门站点");
     initHotSites();
 }
+
+// 立即执行初始化，确保早于工具JS执行
+console.log("立即初始化热门站点，确保在工具JS之前执行");
+initHotSites();
 
 // 为了确保脚本能够执行，添加一个延迟的初始化调用
 setTimeout(function() {
@@ -1304,15 +1308,7 @@ setTimeout(function() {
         // 仍然更新按钮位置，确保UI正确
         updateHotSitesButtonPosition();
     }
-}, 1000);
-
-// 在页面完全加载后，再次确保按钮可见
-window.addEventListener('load', function() {
-    setTimeout(() => {
-        console.log("页面加载完成后更新热门站点按钮位置");
-        updateHotSitesButtonPosition();
-    }, 1000);
-});
+}, 300); // 较短的延迟，确保在工具JS之前执行
 
 // 更新热门站点按钮的位置
 function updateHotSitesButtonPosition() {

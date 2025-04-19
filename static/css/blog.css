@@ -195,6 +195,8 @@ html[data-color-mode="auto"] {
       radial-gradient(circle at 10% 85%, rgba(40, 9, 140, 0.2), transparent 25%),
       repeating-linear-gradient(45deg, rgba(200, 210, 255, 0.4) 0%, rgba(220, 230, 255, 0.4) 10%),
       linear-gradient(135deg, #d0e0ff 0%, #e8edff 100%) !important;
+    --text-color: #333;
+    color: var(--text-color);
   }
   
   html[data-color-mode="auto"] #fixed-background::before {
@@ -225,13 +227,27 @@ html[data-color-mode="auto"] {
     left: 0;
     width: 100%;
     height: 100%;
-    background: 
-      radial-gradient(circle at 30% 40%, rgba(126, 87, 255, 0.05) 0%, transparent 45%),
-      radial-gradient(circle at 70% 60%, rgba(0, 220, 220, 0.05) 0%, transparent 45%);
-    z-index: -2;
-    animation: rotateGlow 25s linear infinite;
+    background: linear-gradient(135deg, rgba(208, 224, 255, 0.1) 0%, rgba(232, 237, 255, 0.1) 100%);
     pointer-events: none;
-    overflow: hidden !important;
+    z-index: -1;
+  }
+  
+  html[data-color-mode="auto"] #content > div:first-child {
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+  
+  html[data-color-mode="auto"] #content > div:first-child:hover {
+    background-color: rgba(255, 255, 255, 0.9);
+  }
+  
+  html[data-color-mode="auto"] .SideNav-item {
+    color: #0071ff;
+  }
+  
+  html[data-color-mode="auto"] #postBody {
+    background-color: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.03);
+    color: #2d3748;
   }
 }
 
@@ -1956,15 +1972,6 @@ main > div > div:hover a,
   text-align: left;
 }
 
-html[data-color-mode="dark"] #postBody h1,
-html[data-color-mode="dark"] #postBody h2,
-html[data-color-mode="dark"] #postBody h3,
-html[data-color-mode="dark"] #postBody h4,
-html[data-color-mode="dark"] #postBody h5,
-html[data-color-mode="dark"] #postBody h6,
-html[data-color-mode="dark"] #postBody strong, #postBody b {
-  color: #e6e6e6;
-}
 /* 为博客内容设置专业字体系统 */
 #postBody {
   font-family:
@@ -2044,7 +2051,669 @@ html[data-color-mode="light"] #postBody {
 html[data-color-mode="dark"] #postBody {
   background-color: rgba(18, 18, 42, 0.4);
   box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+  color: #f0f0f0;
 }
+
+html[data-color-mode="dark"] #postBody p,
+html[data-color-mode="dark"] #postBody li,
+html[data-color-mode="dark"] #postBody td,
+html[data-color-mode="dark"] #postBody th,
+html[data-color-mode="dark"] #postBody div {
+  color: #f0f0f0;
+}
+
+html[data-color-mode="dark"] #postBody h1,
+html[data-color-mode="dark"] #postBody h2,
+html[data-color-mode="dark"] #postBody h3,
+html[data-color-mode="dark"] #postBody h4,
+html[data-color-mode="dark"] #postBody h5,
+html[data-color-mode="dark"] #postBody h6 {
+  color: #e6e6e6;
+}
+
+html[data-color-mode="dark"] #postBody strong, 
+html[data-color-mode="dark"] #postBody b {
+  font-weight: 700;
+  color: #60ddff;
+}
+
+html[data-color-mode="dark"] #postBody em,
+html[data-color-mode="dark"] #postBody i {
+  font-style: italic;
+  color: #ff9ecd;
+}
+
+html[data-color-mode="dark"] #postBody blockquote {
+  border-left: 4px solid #7e57ff;
+  background: rgba(126, 87, 255, 0.1);
+  color: #e0e0e0;
+}
+
+html[data-color-mode="dark"] #postBody a {
+  color: #60b8ff;
+  border-bottom: 1px solid rgba(96, 184, 255, 0.3);
+}
+
+html[data-color-mode="dark"] #postBody a:hover {
+  color: #8cd0ff;
+  border-bottom: 1px solid rgba(140, 208, 255, 0.5);
+  background-color: rgba(96, 184, 255, 0.1);
+}
+
+/* 暗色模式下的卡片样式 */
+html[data-color-mode="dark"] .Box, 
+html[data-color-mode="dark"] .Box-body {
+  background-color: rgba(18, 18, 42, 0.5) !important;
+  border: 1px solid rgba(126, 87, 255, 0.2) !important;
+  color: #e6e6e6 !important;
+}
+
+/* 暗色模式下的主内容区域容器 */
+html[data-color-mode="dark"] .container-wrapper, 
+html[data-color-mode="dark"] main, 
+html[data-color-mode="dark"] .markdown-body {
+  background-color: rgba(18, 18, 42, 0.6);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+  color: #e6e6e6;
+}
+
+/* 暗色模式下的主内容区域 */
+html[data-color-mode="dark"] .main-content, 
+html[data-color-mode="dark"] .container-lg, 
+html[data-color-mode="dark"] main, 
+html[data-color-mode="dark"] .markdown-body {
+  background-color: rgba(18, 18, 42, 0.6);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+  color: #e6e6e6;
+}
+
+/* 暗色模式下的通用文本颜色 */
+html[data-color-mode="dark"] body, 
+html[data-color-mode="dark"] .text-gray-dark,
+html[data-color-mode="dark"] .text-gray,
+html[data-color-mode="dark"] .Link--primary,
+html[data-color-mode="dark"] .Link--secondary,
+html[data-color-mode="dark"] .link-gray,
+html[data-color-mode="dark"] .link-gray-dark,
+html[data-color-mode="dark"] .link-secondary,
+html[data-color-mode="dark"] .text-normal {
+  color: #e6e6e6 !important;
+}
+
+/* 暗色模式下的链接颜色调整 */
+html[data-color-mode="dark"] a:not(.btn) {
+  color: #60b8ff !important;
+}
+
+html[data-color-mode="dark"] a:hover:not(.btn) {
+  color: #8cd0ff !important;
+}
+
+/* 暗色模式下的导航条和菜单 */
+html[data-color-mode="dark"] .SideNav {
+  background-color: rgba(18, 18, 42, 0.6) !important;
+  border-color: rgba(126, 87, 255, 0.3) !important;
+}
+
+html[data-color-mode="dark"] .SideNav-item {
+  color: #e6e6e6 !important;
+  border-color: rgba(126, 87, 255, 0.2) !important;
+}
+
+html[data-color-mode="dark"] .SideNav-icon {
+  color: #60b8ff !important;
+}
+
+html[data-color-mode="dark"] .SideNav-item:hover {
+  background-color: rgba(126, 87, 255, 0.1) !important;
+}
+
+/* 暗色模式下的标签样式 */
+html[data-color-mode="dark"] .Label {
+  background-color: rgba(126, 87, 255, 0.3) !important;
+  color: #e6e6e6 !important;
+}
+
+/* 暗色模式下的表格样式 */
+html[data-color-mode="dark"] table,
+html[data-color-mode="dark"] th,
+html[data-color-mode="dark"] td {
+  border-color: rgba(126, 87, 255, 0.2) !important;
+  color: #e6e6e6 !important;
+}
+
+html[data-color-mode="dark"] th {
+  background-color: rgba(126, 87, 255, 0.1) !important;
+}
+
+html[data-color-mode="dark"] tr:nth-child(even) {
+  background-color: rgba(18, 18, 42, 0.4) !important;
+}
+
+html[data-color-mode="dark"] tr:hover {
+  background-color: rgba(126, 87, 255, 0.1) !important;
+}
+
+/* 暗色模式下的头部导航 */
+html[data-color-mode="dark"] #header {
+  background: linear-gradient(to right, rgba(18, 18, 42, 0.8), rgba(24, 24, 48, 0.7)) !important;
+  border-bottom: 1px solid rgba(126, 87, 255, 0.3) !important;
+  color: #e6e6e6 !important;
+}
+
+/* 暗色模式下的搜索框 */
+html[data-color-mode="dark"] .form-control,
+html[data-color-mode="dark"] .subnav-search-input {
+  background-color: rgba(18, 18, 42, 0.7) !important;
+  border-color: rgba(126, 87, 255, 0.3) !important;
+  color: #e6e6e6 !important;
+}
+
+html[data-color-mode="dark"] .form-control::placeholder,
+html[data-color-mode="dark"] .subnav-search-input::placeholder {
+  color: #a0a0c0 !important;
+}
+
 .postTitle{
   margin-top: 1px !important;
+}
+
+/* Auto模式相关的样式 - 放在文件最末尾确保不被覆盖 */
+@media (prefers-color-scheme: dark) {
+  html[data-color-mode="auto"] {
+    --global-bg: #070720;
+    --text-color: #f0f0f0;
+    background: var(--global-bg) !important;
+    color: var(--text-color);
+  }
+  
+  html[data-color-mode="auto"] body {
+    color: var(--text-color);
+  }
+  
+  html[data-color-mode="auto"] #fixed-background::before {
+    background: 
+      radial-gradient(circle at 80% 10%, rgba(126, 87, 255, 0.2), transparent 30%),
+      radial-gradient(circle at 20% 30%, rgba(0, 220, 220, 0.2), transparent 25%),
+      radial-gradient(circle at 70% 65%, rgba(255, 79, 154, 0.2), transparent 35%),
+      radial-gradient(circle at 10% 85%, rgba(126, 87, 255, 0.2), transparent 25%);
+  }
+  
+  html[data-color-mode="auto"] body::before {
+    background: 
+      radial-gradient(circle at 80% 10%, rgba(126, 87, 255, 0.2), transparent 25%),
+      radial-gradient(circle at 20% 30%, rgba(0, 220, 220, 0.2), transparent 20%),
+      radial-gradient(circle at 70% 65%, rgba(255, 79, 154, 0.2), transparent 30%),
+      radial-gradient(circle at 10% 85%, rgba(126, 87, 255, 0.2), transparent 20%);
+    background-attachment: fixed !important;
+  }
+  
+  html[data-color-mode="auto"] #content > div:first-child {
+    background-color: rgba(18, 18, 42, 0.7);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    color: #f0f0f0;
+  }
+  
+  html[data-color-mode="auto"] #content > div:first-child:hover {
+    background-color: rgba(25, 25, 55, 0.8);
+    box-shadow: 0 8px 25px rgba(126, 87, 255, 0.3);
+  }
+  
+  html[data-color-mode="auto"] .SideNav-item {
+    color: #f0f0f0;
+  }
+  
+  html[data-color-mode="auto"] #postBody {
+    background-color: rgba(18, 18, 42, 0.4);
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+    color: #f0f0f0;
+  }
+  
+  html[data-color-mode="auto"] #postBody p,
+  html[data-color-mode="auto"] #postBody li,
+  html[data-color-mode="auto"] #postBody td,
+  html[data-color-mode="auto"] #postBody th,
+  html[data-color-mode="auto"] #postBody div {
+    color: #f0f0f0;
+  }
+  
+  html[data-color-mode="auto"] #postBody h1,
+  html[data-color-mode="auto"] #postBody h2,
+  html[data-color-mode="auto"] #postBody h3,
+  html[data-color-mode="auto"] #postBody h4,
+  html[data-color-mode="auto"] #postBody h5,
+  html[data-color-mode="auto"] #postBody h6 {
+    color: #e6e6e6;
+  }
+  
+  html[data-color-mode="auto"] .Box, 
+  html[data-color-mode="auto"] .Box-body {
+    background-color: rgba(18, 18, 42, 0.5) !important;
+    border: 1px solid rgba(126, 87, 255, 0.2) !important;
+    color: #e6e6e6 !important;
+  }
+  
+  html[data-color-mode="auto"] .container-wrapper, 
+  html[data-color-mode="auto"] main, 
+  html[data-color-mode="auto"] .markdown-body {
+    background-color: rgba(18, 18, 42, 0.6);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+    color: #e6e6e6;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  html[data-color-mode="auto"] {
+    background: 
+      radial-gradient(circle at 80% 10%, rgba(126, 87, 255, 0.2), transparent 30%) ,
+      radial-gradient(circle at 20% 30%, rgba(0, 220, 220, 0.2), transparent 25%),
+      radial-gradient(circle at 70% 65%, rgba(255, 79, 154, 0.2), transparent 35%),
+      radial-gradient(circle at 10% 85%, rgba(40, 9, 140, 0.2), transparent 25%),
+      repeating-linear-gradient(45deg, rgba(200, 210, 255, 0.4) 0%, rgba(220, 230, 255, 0.4) 10%),
+      linear-gradient(135deg, #d0e0ff 0%, #e8edff 100%) !important;
+    --text-color: #333;
+    color: var(--text-color);
+  }
+  
+  html[data-color-mode="auto"] #fixed-background::before {
+    background: 
+      radial-gradient(circle at 80% 10%, rgba(126, 87, 255, 0.2), transparent 30%),
+      radial-gradient(circle at 20% 30%, rgba(0, 220, 220, 0.2), transparent 25%),
+      radial-gradient(circle at 70% 65%, rgba(255, 79, 154, 0.2), transparent 35%),
+      radial-gradient(circle at 10% 85%, rgba(126, 87, 255, 0.2), transparent 25%),
+      repeating-linear-gradient(45deg, rgba(200, 210, 255, 0.4) 0%, rgba(220, 230, 255, 0.4) 10%),
+      linear-gradient(135deg, #d0e0ff 0%, #e8edff 100%) !important;
+    animation: backgroundShimmerLight 30s ease-in-out infinite alternate;
+    background-attachment: fixed !important;
+  }
+  
+  html[data-color-mode="auto"] body::before {
+    background: 
+      radial-gradient(circle at 80% 10%, rgba(126, 87, 255, 0.2), transparent 30%),
+      radial-gradient(circle at 20% 30%, rgba(0, 220, 220, 0.2), transparent 25%),
+      radial-gradient(circle at 70% 65%, rgba(255, 79, 154, 0.2), transparent 35%),
+      radial-gradient(circle at 10% 85%, rgba(126, 87, 255, 0.2), transparent 25%);
+    background-attachment: fixed !important;
+  }
+  
+  html[data-color-mode="auto"] body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(208, 224, 255, 0.1) 0%, rgba(232, 237, 255, 0.1) 100%);
+    pointer-events: none;
+    z-index: -1;
+  }
+  
+  html[data-color-mode="auto"] #content > div:first-child {
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+  
+  html[data-color-mode="auto"] #content > div:first-child:hover {
+    background-color: rgba(255, 255, 255, 0.9);
+  }
+  
+  html[data-color-mode="auto"] .SideNav-item {
+    color: #0071ff;
+  }
+  
+  html[data-color-mode="auto"] #postBody {
+    background-color: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.03);
+    color: #2d3748;
+  }
+}
+
+/* 黑暗模式相关的样式 - 放在文件最末尾确保不被覆盖 */
+html[data-color-mode="dark"] {
+  --global-bg: #070720;
+  --text-color: #f0f0f0;
+  background: var(--global-bg) !important;
+  color: var(--text-color);
+}
+
+html[data-color-mode="dark"] body {
+  color: var(--text-color);
+}
+
+html[data-color-mode="dark"] #fixed-background::before {
+  background: 
+    radial-gradient(circle at 80% 10%, rgba(126, 87, 255, 0.2), transparent 30%),
+    radial-gradient(circle at 20% 30%, rgba(0, 220, 220, 0.2), transparent 25%),
+    radial-gradient(circle at 70% 65%, rgba(255, 79, 154, 0.2), transparent 35%),
+    radial-gradient(circle at 10% 85%, rgba(126, 87, 255, 0.2), transparent 25%);
+}
+
+html[data-color-mode="dark"] body::before {
+  background: 
+    radial-gradient(circle at 80% 10%, rgba(126, 87, 255, 0.2), transparent 25%),
+    radial-gradient(circle at 20% 30%, rgba(0, 220, 220, 0.2), transparent 20%),
+    radial-gradient(circle at 70% 65%, rgba(255, 79, 154, 0.2), transparent 30%),
+    radial-gradient(circle at 10% 85%, rgba(126, 87, 255, 0.2), transparent 20%);
+  background-attachment: fixed !important;
+}
+
+html[data-color-mode="dark"] #content > div:first-child {
+  background-color: rgba(18, 18, 42, 0.7);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  color: #f0f0f0;
+}
+
+html[data-color-mode="dark"] #content > div:first-child:hover {
+  background-color: rgba(25, 25, 55, 0.8);
+  box-shadow: 0 8px 25px rgba(126, 87, 255, 0.3);
+}
+
+html[data-color-mode="dark"] .SideNav-item {
+  color: #e6e6e6 !important;
+  border-color: rgba(126, 87, 255, 0.2) !important;
+}
+
+html[data-color-mode="dark"] .SideNav-icon {
+  color: #60b8ff !important;
+}
+
+html[data-color-mode="dark"] .SideNav-item:hover {
+  background-color: rgba(126, 87, 255, 0.1) !important;
+}
+
+html[data-color-mode="dark"] #postBody {
+  background-color: rgba(18, 18, 42, 0.4) !important;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+  color: #f0f0f0 !important;
+}
+
+html[data-color-mode="dark"] #postBody p,
+html[data-color-mode="dark"] #postBody li,
+html[data-color-mode="dark"] #postBody td,
+html[data-color-mode="dark"] #postBody th,
+html[data-color-mode="dark"] #postBody div {
+  color: #f0f0f0 !important;
+}
+
+html[data-color-mode="dark"] #postBody h1,
+html[data-color-mode="dark"] #postBody h2,
+html[data-color-mode="dark"] #postBody h3,
+html[data-color-mode="dark"] #postBody h4,
+html[data-color-mode="dark"] #postBody h5,
+html[data-color-mode="dark"] #postBody h6 {
+  color: #e6e6e6 !important;
+}
+
+html[data-color-mode="dark"] #postBody strong,
+html[data-color-mode="dark"] #postBody b {
+  color: #60b8ff !important;
+}
+
+html[data-color-mode="dark"] #postBody em,
+html[data-color-mode="dark"] #postBody i {
+  color: #a496ff !important;
+}
+
+html[data-color-mode="dark"] #postBody blockquote {
+  border-left: 4px solid rgba(126, 87, 255, 0.5) !important;
+  color: #d0d0d0 !important;
+  background-color: rgba(18, 18, 42, 0.2) !important;
+}
+
+html[data-color-mode="dark"] .Box, 
+html[data-color-mode="dark"] .Box-body {
+  background-color: rgba(18, 18, 42, 0.5) !important;
+  border: 1px solid rgba(126, 87, 255, 0.2) !important;
+  color: #e6e6e6 !important;
+}
+
+html[data-color-mode="dark"] .SideNav {
+  background-color: rgba(18, 18, 42, 0.6) !important;
+  border: 1px solid rgba(126, 87, 255, 0.3) !important;
+}
+
+html[data-color-mode="dark"] .SideNav-item {
+  color: #e6e6e6 !important;
+}
+
+html[data-color-mode="dark"] .SideNav-item:hover {
+  background-color: rgba(126, 87, 255, 0.1) !important;
+}
+
+html[data-color-mode="dark"] .Label {
+  background-color: rgba(126, 87, 255, 0.3) !important;
+  color: #e6e6e6 !important;
+}
+
+html[data-color-mode="dark"] a {
+  color: #60b8ff !important;
+}
+
+html[data-color-mode="dark"] a:hover {
+  color: #8cd0ff !important;
+  text-decoration: underline !important;
+}
+
+html[data-color-mode="dark"] a:not(.btn) {
+  color: #60b8ff !important;
+}
+
+html[data-color-mode="dark"] a:hover:not(.btn) {
+  color: #8cd0ff !important;
+}
+
+html[data-color-mode="dark"] table {
+  border-color: rgba(126, 87, 255, 0.2) !important;
+}
+
+html[data-color-mode="dark"] table th {
+  background-color: rgba(18, 18, 42, 0.7) !important;
+  border-color: rgba(126, 87, 255, 0.2) !important;
+}
+
+html[data-color-mode="dark"] table tr:nth-child(2n) {
+  background-color: rgba(18, 18, 42, 0.4) !important;
+}
+
+html[data-color-mode="dark"] table tr:hover {
+  background-color: rgba(126, 87, 255, 0.1) !important;
+}
+
+html[data-color-mode="dark"] .container-wrapper, 
+html[data-color-mode="dark"] main, 
+html[data-color-mode="dark"] .markdown-body {
+  background-color: rgba(18, 18, 42, 0.6) !important;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.3) !important;
+  color: #e6e6e6 !important;
+}
+
+html[data-color-mode="dark"] .main-content, 
+html[data-color-mode="dark"] .container-lg, 
+html[data-color-mode="dark"] main, 
+html[data-color-mode="dark"] .markdown-body {
+  background-color: rgba(18, 18, 42, 0.6) !important;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.3) !important;
+  color: #e6e6e6 !important;
+}
+
+html[data-color-mode="dark"] .header-wrapper {
+  background: linear-gradient(to right, rgba(18, 18, 42, 0.8), rgba(40, 40, 80, 0.8)) !important;
+  border-bottom: 1px solid rgba(126, 87, 255, 0.3) !important;
+}
+
+html[data-color-mode="dark"] #header {
+  background: linear-gradient(to right, rgba(18, 18, 42, 0.8), rgba(24, 24, 48, 0.7)) !important;
+  border-bottom: 1px solid rgba(126, 87, 255, 0.3) !important;
+  color: #e6e6e6 !important;
+}
+
+html[data-color-mode="dark"] .header-search-wrapper {
+  background-color: rgba(18, 18, 42, 0.6) !important;
+  color: #e6e6e6 !important;
+}
+
+html[data-color-mode="dark"] .form-control,
+html[data-color-mode="dark"] .subnav-search-input {
+  background-color: rgba(18, 18, 42, 0.7) !important;
+  border-color: rgba(126, 87, 255, 0.3) !important;
+  color: #e6e6e6 !important;
+}
+
+html[data-color-mode="dark"] .form-control::placeholder,
+html[data-color-mode="dark"] .subnav-search-input::placeholder {
+  color: rgba(230, 230, 230, 0.6) !important;
+}
+
+/* 整合自动模式相关样式 */
+.postTitle{
+  margin-top: 1px !important;
+}
+
+/* Auto模式相关的样式 - 暗色系统主题适配 */
+@media (prefers-color-scheme: dark) {
+  html[data-color-mode="auto"] {
+    --global-bg: #070720;
+    --text-color: #f0f0f0;
+    background: var(--global-bg) !important;
+    color: var(--text-color);
+  }
+  
+  html[data-color-mode="auto"] body {
+    color: var(--text-color);
+  }
+  
+  html[data-color-mode="auto"] #fixed-background::before {
+    background: 
+      radial-gradient(circle at 80% 10%, rgba(126, 87, 255, 0.2), transparent 30%),
+      radial-gradient(circle at 20% 30%, rgba(0, 220, 220, 0.2), transparent 25%),
+      radial-gradient(circle at 70% 65%, rgba(255, 79, 154, 0.2), transparent 35%),
+      radial-gradient(circle at 10% 85%, rgba(126, 87, 255, 0.2), transparent 25%);
+  }
+  
+  html[data-color-mode="auto"] body::before {
+    background: 
+      radial-gradient(circle at 80% 10%, rgba(126, 87, 255, 0.2), transparent 25%),
+      radial-gradient(circle at 20% 30%, rgba(0, 220, 220, 0.2), transparent 20%),
+      radial-gradient(circle at 70% 65%, rgba(255, 79, 154, 0.2), transparent 30%),
+      radial-gradient(circle at 10% 85%, rgba(126, 87, 255, 0.2), transparent 20%);
+    background-attachment: fixed !important;
+  }
+  
+  html[data-color-mode="auto"] #content > div:first-child {
+    background-color: rgba(18, 18, 42, 0.7);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    color: #f0f0f0;
+  }
+  
+  html[data-color-mode="auto"] #content > div:first-child:hover {
+    background-color: rgba(25, 25, 55, 0.8);
+    box-shadow: 0 8px 25px rgba(126, 87, 255, 0.3);
+  }
+  
+  html[data-color-mode="auto"] .SideNav-item {
+    color: #f0f0f0;
+  }
+  
+  html[data-color-mode="auto"] #postBody {
+    background-color: rgba(18, 18, 42, 0.4);
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+    color: #f0f0f0;
+  }
+  
+  html[data-color-mode="auto"] #postBody p,
+  html[data-color-mode="auto"] #postBody li,
+  html[data-color-mode="auto"] #postBody td,
+  html[data-color-mode="auto"] #postBody th,
+  html[data-color-mode="auto"] #postBody div {
+    color: #f0f0f0;
+  }
+  
+  html[data-color-mode="auto"] #postBody h1,
+  html[data-color-mode="auto"] #postBody h2,
+  html[data-color-mode="auto"] #postBody h3,
+  html[data-color-mode="auto"] #postBody h4,
+  html[data-color-mode="auto"] #postBody h5,
+  html[data-color-mode="auto"] #postBody h6 {
+    color: #e6e6e6;
+  }
+  
+  html[data-color-mode="auto"] .Box, 
+  html[data-color-mode="auto"] .Box-body {
+    background-color: rgba(18, 18, 42, 0.5) !important;
+    border: 1px solid rgba(126, 87, 255, 0.2) !important;
+    color: #e6e6e6 !important;
+  }
+  
+  html[data-color-mode="auto"] .container-wrapper, 
+  html[data-color-mode="auto"] main, 
+  html[data-color-mode="auto"] .markdown-body {
+    background-color: rgba(18, 18, 42, 0.6);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+    color: #e6e6e6;
+  }
+}
+
+/* Auto模式相关的样式 - 亮色系统主题适配 */
+@media (prefers-color-scheme: light) {
+  html[data-color-mode="auto"] {
+    background: 
+      radial-gradient(circle at 80% 10%, rgba(126, 87, 255, 0.2), transparent 30%) ,
+      radial-gradient(circle at 20% 30%, rgba(0, 220, 220, 0.2), transparent 25%),
+      radial-gradient(circle at 70% 65%, rgba(255, 79, 154, 0.2), transparent 35%),
+      radial-gradient(circle at 10% 85%, rgba(40, 9, 140, 0.2), transparent 25%),
+      repeating-linear-gradient(45deg, rgba(200, 210, 255, 0.4) 0%, rgba(220, 230, 255, 0.4) 10%),
+      linear-gradient(135deg, #d0e0ff 0%, #e8edff 100%) !important;
+    --text-color: #333;
+    color: var(--text-color);
+  }
+  
+  html[data-color-mode="auto"] #fixed-background::before {
+    background: 
+      radial-gradient(circle at 80% 10%, rgba(126, 87, 255, 0.2), transparent 30%),
+      radial-gradient(circle at 20% 30%, rgba(0, 220, 220, 0.2), transparent 25%),
+      radial-gradient(circle at 70% 65%, rgba(255, 79, 154, 0.2), transparent 35%),
+      radial-gradient(circle at 10% 85%, rgba(126, 87, 255, 0.2), transparent 25%),
+      repeating-linear-gradient(45deg, rgba(200, 210, 255, 0.4) 0%, rgba(220, 230, 255, 0.4) 10%),
+      linear-gradient(135deg, #d0e0ff 0%, #e8edff 100%) !important;
+    animation: backgroundShimmerLight 30s ease-in-out infinite alternate;
+    background-attachment: fixed !important;
+  }
+  
+  html[data-color-mode="auto"] body::before {
+    background: 
+      radial-gradient(circle at 80% 10%, rgba(126, 87, 255, 0.2), transparent 30%),
+      radial-gradient(circle at 20% 30%, rgba(0, 220, 220, 0.2), transparent 25%),
+      radial-gradient(circle at 70% 65%, rgba(255, 79, 154, 0.2), transparent 35%),
+      radial-gradient(circle at 10% 85%, rgba(126, 87, 255, 0.2), transparent 25%);
+    background-attachment: fixed !important;
+  }
+  
+  html[data-color-mode="auto"] body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(208, 224, 255, 0.1) 0%, rgba(232, 237, 255, 0.1) 100%);
+    pointer-events: none;
+    z-index: -1;
+  }
+  
+  html[data-color-mode="auto"] #content > div:first-child {
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+  
+  html[data-color-mode="auto"] #content > div:first-child:hover {
+    background-color: rgba(255, 255, 255, 0.9);
+  }
+  
+  html[data-color-mode="auto"] .SideNav-item {
+    color: #0071ff;
+  }
+  
+  html[data-color-mode="auto"] #postBody {
+    background-color: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.03);
+    color: #2d3748;
+  }
 }

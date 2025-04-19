@@ -152,7 +152,7 @@ html[data-color-mode="light"] {
 /* Auto模式变体背景 - 跟随系统 */
 html[data-color-mode="auto"] {
   --global-bg: #f0f0f0;
-  --text-color: #333;
+  --text-color: #000000;
   color: var(--text-color);
 }
 
@@ -1961,7 +1961,8 @@ html[data-color-mode="dark"] #postBody h2,
 html[data-color-mode="dark"] #postBody h3,
 html[data-color-mode="dark"] #postBody h4,
 html[data-color-mode="dark"] #postBody h5,
-html[data-color-mode="dark"] #postBody h6 {
+html[data-color-mode="dark"] #postBody h6,
+html[data-color-mode="dark"] #postBody strong, #postBody b {
   color: #e6e6e6;
 }
 /* 为博客内容设置专业字体系统 */

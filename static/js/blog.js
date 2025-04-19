@@ -21,6 +21,9 @@ document.addEventListener('DOMContentLoaded', function() {
     document.documentElement.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--global-bg');
     document.body.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--global-bg');
     
+    // 强制设置postBody中的h标签margin和padding为0
+    injectHeadingStyles();
+    
     // SVG图标定义
     var IconList = {
         'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z',
@@ -105,6 +108,7 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('load', function() {
         forceApplyListStyles();
         enhanceListHoverEffects(); // 在load事件中也调用
+        injectHeadingStyles(); // 确保在页面完全加载后再次注入h标签样式
     });
 });
 
@@ -414,3 +418,37 @@ function createVercount() {
         forceApplyListStyles();
     });
 })();
+
+// 添加H标签样式注入函数
+function injectHeadingStyles() {
+    // 移除可能存在的旧样式
+    const oldStyle = document.getElementById('heading-zero-margin-style');
+    if (oldStyle) {
+        oldStyle.parentNode.removeChild(oldStyle);
+    }
+
+    // 创建新样式元素
+    const styleElement = document.createElement('style');
+    styleElement.id = 'heading-zero-margin-style';
+    styleElement.textContent = `
+        #postBody h1, 
+        #postBody h2, 
+        #postBody h3, 
+        #postBody h4, 
+        #postBody h5, 
+        #postBody h6 {
+            margin: 10px !important;
+            padding: 10px !important;
+            width: auto !important;
+        }
+        /* 引用块样式 */
+        #postBody blockquote p{
+            margin: 0 !important;
+        }
+    `;
+    
+    // 将样式添加到文档头部
+    document.head.appendChild(styleElement);
+    
+    console.log('已注入H标签零边距样式');
+}

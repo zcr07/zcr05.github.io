@@ -1,3 +1,6 @@
+
+## 网络穿透教程
+
 ⭐
 
 1.  下载cloudflare的安装包
@@ -102,6 +105,8 @@ CDN优选域名和IP教程：[点我](https://www.freedidi.com/10143.html)
 
 域名价格表：[点我](https://www.baota.me/post-410.html)
 
+## 🔥🔥🔥CDN加速教程
+
 节点优选流程如下
 
 步骤
@@ -128,7 +133,7 @@ CDN优选域名和IP教程：[点我](https://www.freedidi.com/10143.html)
 
 第四步：
 
-把【alist.A】指向到【fast.B】,关闭CF的代理
+把【**alist.A**】指向到【**fast.B**】,关闭CF的代理
 
 温馨提示：
 
@@ -154,9 +159,9 @@ CDN优选域名和IP教程：[点我](https://www.freedidi.com/10143.html)
 
 1.  在**加速域名B**的**回退源**设置了自定义主机**ssh.A**
 
-1.  **主域名ssh.A****这里的cname****不是****指向****fast.B**
+1.  **主域名ssh.A****这里的cname****不是****指向****fast.B（****不做域名加速配置****）**
 
-1.  **主域名ssh.A****保持隧道****Tunnels****自动生成的配置(ssh.A)，并且小黄云CF代理要开着,否则ssh.A无法访问**
+1.  **主域名ssh.A****保持隧道****Tunnels****自动生成的配置(ssh.A****)，并且小黄云CF代理要开着,否则ssh.A无法访问（自动生成的：**`**73833217-e9d4-4a02-954b-d5b0de078150.cfargotunnel.com**`**）**
 
 1.  **并且ssh.A也要去做一个application**
 
@@ -182,15 +187,15 @@ _`acme-challenge``**.ssh**` `**ssh.A.**``<hostname>.``6ec077ddb0899695.dcv.cloud
 
 [**在线网站测试**](https://www.itdog.cn/http/)
 
-![](http://www.kdocs.cn/api/v3/office/copy/TCtnSVpVN0JkUCtmN053dHFCOUxzUmNzZUxvbW9VelQzL3F0Mkh5TUg1bWNwUmFSL2drWjZwNWlWQVFWaUl3dlpqd2ZuMkVqQXBFUUlVQjdDanpCVUNhMnpzQVc2L3lTMDZoNEVlMmtlakR5VUZtbkVleUtSUlJaR1NlMTBFNVhSZ3NmL2xVLytONXVVeWFqMG1TY0ZWVFpYajlHa2xrcCtmR1dtNzdDNnV4aUE4UERYVnhwZkp3aGFSZXJkaVFCN1UxYmVOZ0xta1ZtRmtUYTZsY1pnc3JjRU41a0o2QkVobFpQKzVhTGh4VGlWa0ZEZUFIeHNvaGo1aDVmaUFybVhwUHNDazVaa0xnPQ==/attach/object/XEX5E2A7ABQFE?)
+![](http://www.kdocs.cn/api/v3/office/copy/QnRUczQ4eS9aSG1hQTZpVGZnN1dEYXMrazI5TW5zSnZuOEgrcGZ6c1Fjd2lwbEU3V3RXMkNqdWUrYTZXRm5RcEV0SXBGNEMwSU4xV1pWaW1LUUlwR2tJRmV6NXRBeTEvQy94VUhGY0dXWHk0aHRUYkZqQWtleGplWWdPVWVVYUZ0bUtSUFVIYzN1eDFPSlN4SnlneGpVcFdCSm5LUkxWRXhmMmY4cHMwODBuVXJtYXE3ejY1bTl1S3VZMzNBR0o3U0NIZ3hLQVFkeW94aE5kc2RoYkNPZlc5OG5FMGdJQmkzMkZYcHZYL0hDQ1oyMjl6dS9Sd1kyUkxJUFE3SkxZdGdYVlB1Y2FnSFQ0PQ==/attach/object/XEX5E2A7ABQFE?)
 
-![](http://www.kdocs.cn/api/v3/office/copy/TCtnSVpVN0JkUCtmN053dHFCOUxzUmNzZUxvbW9VelQzL3F0Mkh5TUg1bWNwUmFSL2drWjZwNWlWQVFWaUl3dlpqd2ZuMkVqQXBFUUlVQjdDanpCVUNhMnpzQVc2L3lTMDZoNEVlMmtlakR5VUZtbkVleUtSUlJaR1NlMTBFNVhSZ3NmL2xVLytONXVVeWFqMG1TY0ZWVFpYajlHa2xrcCtmR1dtNzdDNnV4aUE4UERYVnhwZkp3aGFSZXJkaVFCN1UxYmVOZ0xta1ZtRmtUYTZsY1pnc3JjRU41a0o2QkVobFpQKzVhTGh4VGlWa0ZEZUFIeHNvaGo1aDVmaUFybVhwUHNDazVaa0xnPQ==/attach/object/2ZQ5G2A7AAAAE?)
+![](http://www.kdocs.cn/api/v3/office/copy/QnRUczQ4eS9aSG1hQTZpVGZnN1dEYXMrazI5TW5zSnZuOEgrcGZ6c1Fjd2lwbEU3V3RXMkNqdWUrYTZXRm5RcEV0SXBGNEMwSU4xV1pWaW1LUUlwR2tJRmV6NXRBeTEvQy94VUhGY0dXWHk0aHRUYkZqQWtleGplWWdPVWVVYUZ0bUtSUFVIYzN1eDFPSlN4SnlneGpVcFdCSm5LUkxWRXhmMmY4cHMwODBuVXJtYXE3ejY1bTl1S3VZMzNBR0o3U0NIZ3hLQVFkeW94aE5kc2RoYkNPZlc5OG5FMGdJQmkzMkZYcHZYL0hDQ1oyMjl6dS9Sd1kyUkxJUFE3SkxZdGdYVlB1Y2FnSFQ0PQ==/attach/object/2ZQ5G2A7AAAAE?)
 
 ## 踩到的坑
 
 ⭐
 
-![](http://www.kdocs.cn/api/v3/office/copy/TCtnSVpVN0JkUCtmN053dHFCOUxzUmNzZUxvbW9VelQzL3F0Mkh5TUg1bWNwUmFSL2drWjZwNWlWQVFWaUl3dlpqd2ZuMkVqQXBFUUlVQjdDanpCVUNhMnpzQVc2L3lTMDZoNEVlMmtlakR5VUZtbkVleUtSUlJaR1NlMTBFNVhSZ3NmL2xVLytONXVVeWFqMG1TY0ZWVFpYajlHa2xrcCtmR1dtNzdDNnV4aUE4UERYVnhwZkp3aGFSZXJkaVFCN1UxYmVOZ0xta1ZtRmtUYTZsY1pnc3JjRU41a0o2QkVobFpQKzVhTGh4VGlWa0ZEZUFIeHNvaGo1aDVmaUFybVhwUHNDazVaa0xnPQ==/attach/object/37FR4WA7AAQBG?)
+![](http://www.kdocs.cn/api/v3/office/copy/QnRUczQ4eS9aSG1hQTZpVGZnN1dEYXMrazI5TW5zSnZuOEgrcGZ6c1Fjd2lwbEU3V3RXMkNqdWUrYTZXRm5RcEV0SXBGNEMwSU4xV1pWaW1LUUlwR2tJRmV6NXRBeTEvQy94VUhGY0dXWHk0aHRUYkZqQWtleGplWWdPVWVVYUZ0bUtSUFVIYzN1eDFPSlN4SnlneGpVcFdCSm5LUkxWRXhmMmY4cHMwODBuVXJtYXE3ejY1bTl1S3VZMzNBR0o3U0NIZ3hLQVFkeW94aE5kc2RoYkNPZlc5OG5FMGdJQmkzMkZYcHZYL0hDQ1oyMjl6dS9Sd1kyUkxJUFE3SkxZdGdYVlB1Y2FnSFQ0PQ==/attach/object/37FR4WA7AAQBG?)
 
 在**cloudflare中配置公共主机名**的时候，一定**不要设置路径**，**否则可能会造成js,css无法正常返回**
 
@@ -297,7 +302,7 @@ cpolar authtoken xxxxxxx
 
 **实验完毕，垃圾别用！！！**
 
-![](http://www.kdocs.cn/api/v3/office/copy/TCtnSVpVN0JkUCtmN053dHFCOUxzUmNzZUxvbW9VelQzL3F0Mkh5TUg1bWNwUmFSL2drWjZwNWlWQVFWaUl3dlpqd2ZuMkVqQXBFUUlVQjdDanpCVUNhMnpzQVc2L3lTMDZoNEVlMmtlakR5VUZtbkVleUtSUlJaR1NlMTBFNVhSZ3NmL2xVLytONXVVeWFqMG1TY0ZWVFpYajlHa2xrcCtmR1dtNzdDNnV4aUE4UERYVnhwZkp3aGFSZXJkaVFCN1UxYmVOZ0xta1ZtRmtUYTZsY1pnc3JjRU41a0o2QkVobFpQKzVhTGh4VGlWa0ZEZUFIeHNvaGo1aDVmaUFybVhwUHNDazVaa0xnPQ==/attach/object/7CEEE3Q7AAAFU?)
+![](http://www.kdocs.cn/api/v3/office/copy/QnRUczQ4eS9aSG1hQTZpVGZnN1dEYXMrazI5TW5zSnZuOEgrcGZ6c1Fjd2lwbEU3V3RXMkNqdWUrYTZXRm5RcEV0SXBGNEMwSU4xV1pWaW1LUUlwR2tJRmV6NXRBeTEvQy94VUhGY0dXWHk0aHRUYkZqQWtleGplWWdPVWVVYUZ0bUtSUFVIYzN1eDFPSlN4SnlneGpVcFdCSm5LUkxWRXhmMmY4cHMwODBuVXJtYXE3ejY1bTl1S3VZMzNBR0o3U0NIZ3hLQVFkeW94aE5kc2RoYkNPZlc5OG5FMGdJQmkzMkZYcHZYL0hDQ1oyMjl6dS9Sd1kyUkxJUFE3SkxZdGdYVlB1Y2FnSFQ0PQ==/attach/object/7CEEE3Q7AAAFU?)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTQwMDI3NTUwN119
+eyJoaXN0b3J5IjpbLTM3MjA4NzUyN119
 -->

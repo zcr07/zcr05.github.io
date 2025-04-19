@@ -15,6 +15,16 @@
     "description": "（🥰自研）图文批量生产工具（PPT数据写入-->切割PPT-->自定义图片）"
   },
   {
+    "name": "PDF工具",
+    "url": "https://tools.pdf24.org/zh/all-tools",
+    "description": "PDF24提供很多精心裁剪的针对特定问题的工具。"
+  },
+  {
+    "name": "网站测速",
+    "url": "https://www.itdog.cn/tcping/",
+    "description": "在线测速网站。"
+  },
+  {
     "name": "颜色转换工具",
     "url": "https://convertacolor.com",
     "description": "在HEX、RGB、HSL等颜色格式之间转换"

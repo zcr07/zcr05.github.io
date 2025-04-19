@@ -667,6 +667,26 @@ html[data-color-mode="light"] #content h6 a {
   border-bottom: 1px dotted rgba(126, 87, 255, 0.7);
 }
 
+html[data-color-mode="light"] #content h1 a, #content h1 strong{
+  color:#0098ff;
+} 
+html[data-color-mode="light"] #content h2 a, #content h2 strong{
+  color:#ff7cb7;
+} 
+html[data-color-mode="light"] #content h3 a, #content h3 strong{
+  color:#ff00ea;
+} 
+html[data-color-mode="light"] #content h4 a, #content h4 strong{
+  color:#8c00ff;
+} 
+html[data-color-mode="light"] #content h5 a, #content h5 strong{
+  color:#01b25f;
+} 
+html[data-color-mode="light"] #content h6 a, #content h6 strong{
+  color:#ff1ef7;
+} 
+
+
 /* 自动模式下的标题链接样式 */
 @media (prefers-color-scheme: dark) {
   html[data-color-mode="auto"] #content h1 a, 

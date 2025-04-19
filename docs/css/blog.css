@@ -1009,9 +1009,6 @@ html[data-color-mode="light"] #content .Box-row:hover {
   border-color: rgba(126, 87, 255, 0.3) !important;
   box-shadow: 0 8px 20px rgba(100, 120, 220, 0.15) !important;
 }
-html[data-color-mode="light"] #postBody a strong {
-  color: #ffaa26;
-}
 
 /* 访问计数器基本样式 */
 #vercount, #postVercount, [id*="vercount"], .mr-3.text-gray, 

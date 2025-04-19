@@ -14,7 +14,7 @@
   --h6-color: linear-gradient(135deg, #f727d7, #12ffff);
   --bg-primary: #0a0a20;
   --bg-secondary: #12122a;
-  --global-bg: #070720; /* 固定深蓝色背景 */
+  --global-bg: #070720; 
   --text-primary: #f0f0f0;
   --text-secondary: #b0b0b0;
   --border-radius: 8px;

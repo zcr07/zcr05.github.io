@@ -1,5 +1,145 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>爱捣鼓的小水木的博客</title><link>https://blog.mymaskking.dpdns.org/</link><description>一个等着裁员的java程序猿，每天无所事事，只想搞钱，喜欢钻研各种实用的技能，讨厌天天做工作上的项目，对自己毫无实用价值。&lt;BR/&gt;&lt;div class='listLabels'&gt;&lt;span class='Label LabelName'style='background-color:#efe1e1'&gt;&lt;object&gt;&lt;a style='color:#000000'href='https://v.douyin.com/UFXv95UxBbQ/'data-click-setup='true'&gt;抖音&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#a2eeef'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://kdocs.cn/l/clf4xOs5a3Q1'data-click-setup='true'&gt;WPS万能文档&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#ff0c0c'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://www.youtube.com/channel/UCeHFivb01FfFIL7kciY6KFg'data-click-setup='true'&gt;YouTobe&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelTime'style='background-color:#ff4f9a'&gt;&lt;a style='color:#fff'href='https://b23.tv/rGe89DU' data-click-setup='true'&gt;哔哩哔哩&lt;/a&gt;&lt;/span&gt;&lt;/div&gt;</description><copyright>爱捣鼓的小水木的博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/41733240?v=4</url><title>avatar</title><link>https://blog.mymaskking.dpdns.org/</link></image><lastBuildDate>Sat, 19 Apr 2025 03:19:39 +0000</lastBuildDate><managingEditor>爱捣鼓的小水木的博客</managingEditor><ttl>60</ttl><webMaster>爱捣鼓的小水木的博客</webMaster><item><title>Cursor的开发Rule设置</title><link>https://blog.mymaskking.dpdns.org//post/Cursor-de-kai-fa-Rule-she-zhi.html</link><description>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>爱捣鼓的小水木的博客</title><link>https://blog.mymaskking.dpdns.org/</link><description>一个等着裁员的java程序猿，每天无所事事，只想搞钱，喜欢钻研各种实用的技能，讨厌天天做工作上的项目，对自己毫无实用价值。&lt;BR/&gt;&lt;div class='listLabels'&gt;&lt;span class='Label LabelName'style='background-color:#efe1e1'&gt;&lt;object&gt;&lt;a style='color:#000000'href='https://v.douyin.com/UFXv95UxBbQ/'data-click-setup='true'&gt;抖音&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#a2eeef'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://kdocs.cn/l/clf4xOs5a3Q1'data-click-setup='true'&gt;WPS万能文档&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#ff0c0c'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://www.youtube.com/channel/UCeHFivb01FfFIL7kciY6KFg'data-click-setup='true'&gt;YouTobe&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelTime'style='background-color:#ff4f9a'&gt;&lt;a style='color:#fff'href='https://b23.tv/rGe89DU' data-click-setup='true'&gt;哔哩哔哩&lt;/a&gt;&lt;/span&gt;&lt;/div&gt;</description><copyright>爱捣鼓的小水木的博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/41733240?v=4</url><title>avatar</title><link>https://blog.mymaskking.dpdns.org/</link></image><lastBuildDate>Sat, 19 Apr 2025 06:28:44 +0000</lastBuildDate><managingEditor>爱捣鼓的小水木的博客</managingEditor><ttl>60</ttl><webMaster>爱捣鼓的小水木的博客</webMaster><item><title>万能文档(📋最新内容都在这！)</title><link>https://blog.mymaskking.dpdns.org//post/wan-neng-wen-dang-%28%F0%9F%93%8B-zui-xin-nei-rong-du-zai-zhe-%EF%BC%81%29.html</link><description>**😆****重要信息!!!作者不易，**[**🎵抖音**](https://v.douyin.com/UFXv95UxBbQ/)**|**[**📕小红书**](https://www.xiaohongshu.com/user/profile/678317b6000000000801c02f)**|**[**📽️B站**](https://b23.tv/rGe89DU)**|**[**📺Youtubu**](https://www.youtube.com/channel/UCeHFivb01FfFIL7kciY6KFg)**|**[**📖博客**](https://blog.mymaskking.dpdns.org/)**请点点关注点点赞啊！！！**
+
+# 文档导航（🥰快速找到你想看的）
+
+## 教程
+
+### [**🔥🔥🔥CURSOR使用和下载|疑难杂症**](https://kdocs.cn/l/clf4xOs5a3Q1?linkname=lH7b8NF0ft)
+
+### [在旧手机上搭建docker服务器，加上内网穿透就变成了云服务器，爽歪歪！](https://kdocs.cn/l/cheRD9wHnLXd)
+
+### [**世界那么大想去看看，教你如何上☄️魔法网络！**](https://kdocs.cn/l/cheRD9wHnLXd?linkname=mhTuTFdsnu)
+
+### [搭建📄个人博客Gmeek，原版有点难用，不过我在此基础上做了很多增强！](https://kdocs.cn/l/cuU1c4F0zYK2?linkname=v0VnkNkV9C)
+
+### [☄️魔法上网后一些好玩的网站合集](https://kdocs.cn/l/cbFDMudDad5B)
+
+## 副业（赚钱方式分享）
+
+### [🔥🔥🔥流量卡自用购买|当代理商赚钱](https://kdocs.cn/l/clf4xOs5a3Q1?linkname=Y7Syn6EUFv)
+
+### [**🔥🔥外卖返现|当个代理赚饭钱（苍蝇腿🤣）**](https://kdocs.cn/l/clf4xOs5a3Q1?linkname=xL10iUZBCf)
+
+### [**当up，发视频赚钱，有点难~**](https://kdocs.cn/l/clf4xOs5a3Q1?linkname=naCd2QZF8s)
+
+## 自研软件/网站
+
+### [抖音自动化获取粉丝|关注粉丝|粉丝互动](https://kdocs.cn/l/clf4xOs5a3Q1?linkname=LTHjU9IoNh)
+
+### [图文批量生产工具（PPT数据写入--&gt;切割PPT--&gt;自定义图片）](https://kdocs.cn/l/clf4xOs5a3Q1?linkname=qqTJ0S74Zw)
+
+# AI网站合集
+
+⭐
+
+1.  comfyui
+
+[https://ai-bot.cn/](https://ai-bot.cn/)
+
+# 🔥抖音自动化工具
+
+[**点我回到👉文档导航**](https://kdocs.cn/l/clf4xOs5a3Q1?linkname=MTuzCk7OTP)
+
+⭐
+
+**大致内容（Git地址：**[**https://github.com/MyMaskKing/douyin_auto_xifen.git**](https://github.com/MyMaskKing/douyin_auto_xifen.git)**）**
+
+-   **目前进度已完成，可以使用了**
+
+-   **WEB上的关注和粉丝只识别抖音的（抖音火山版的不识别）**
+
+1.  视频任务
+
+-   第一步：执行视频评论和提取用户任务
+
+-   第二步：执行关注视频评论者任务
+
+1.  关注列表任务
+
+-   第三步：执行取关任务
+
+-   第四步：执行检查关注列表任务
+
+1.  粉丝列表任务
+
+-   第五步：执行检查粉丝列表任务
+
+-   第六步：执行回关任务
+
+-   第七步：执行粉丝私信互动任务
+
+# 图文批量生产工具
+
+[**点我回到👉文档导航**](https://kdocs.cn/l/clf4xOs5a3Q1?linkname=MTuzCk7OTP)
+
+⭐
+
+**大致内容（Git地址：**[**https://github.com/MyMaskKing/redbook_imagetext_auto.git**](https://github.com/MyMaskKing/redbook_imagetext_auto.git)**）**
+
+1.  excel模板中导入数据
+
+1.  把excel的数据写入ppt
+
+1.  把ppt自动生成图片
+
+# 🔥🔥🔥CURSOR使用和下载|疑难杂症
+
+[**点我回到👉文档导航**](https://kdocs.cn/l/clf4xOs5a3Q1?linkname=MTuzCk7OTP)
+
+## 重要提示
+
+⭐
+
+目前解决方案，使用**临时邮箱**[**https://temp-mail.org/zh**](https://temp-mail.org/zh)**（注意每次打开都要使用隐私模式）**
+
+# 2025/03/19
+
+1.  **最新的办法**，使用**Telegram**上面的**MeMailerBot**可以获取临时邮箱（测试了两个可以使用）
+
+![](http://www.kdocs.cn/api/v3/office/copy/eGIvT09vd0k5Q0JrUGhMNXVOeCsrenIySng1YkI3UlRrY3EzMlhFMk94Z0krN28vUUdOUUZBQWw4S0J3ZmR6dHpwK0VTZXRzNGZlWW9CTlcwRndtVjA5b2pkcFR0aWlmVGRvNVA2YnRkVnV5eW5kQXF5RjlMQTRRazV0Ni8wK1pZakFwMklUdXpNbHhVS2hkczh5R2VQMXgwNHpYVDNFKzdCR3Q0NlBqWGpLMDhxTWFFWlZmc0s5UG5SaUNrZ2luOFBKQ1hiRjROVkNzaVJSemZuM3IzSUUvcHdMYTRSdzcxSjBJMFhQa1lWUFZ0UEY1ZGRFdE9nMnpKTXJhK245Y3VBOTA2QkNKZ1pNPQ==/attach/object/OSJUX4Q6ACQHQ?)
+
+其他办法，否则使用**字节的Trae**代替
+
+-   就是使用正常的邮箱：谷歌，微软，163等等
+
+1.  **第二个办法：**B站一位小伙伴提到的注册机方式
+
+-   Git地址：[https://github.com/yeongpin/cursor-free-vip.git](https://github.com/yeongpin/cursor-free-vip.git)
+
+-   **先关闭cursor**，然后**powershell管理员**执行(一键复制在下面的Shell代码框)
+
+`irm` [`https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/scripts/install.ps1`](https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/scripts/install.ps1) `| iex`
+
+```
+irm https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/scripts/install.ps1 | iex
+```
+
+### 解决日志（已不能使用的方式）
+
+⭐
+
+# **已停用**
+
+2025/03/17
+
+临时邮箱如果不行请**打开隐私模式获取新的邮箱，多试几个邮箱**，如果还不行请按下面步骤处理
+
+1.  重装最新版cursor
+
+1.  执行下方的mac地址命令（power shell管理员执行，）
+
+1.  使用提供的临时邮箱地址多试几个新的邮箱（一般能解决**“****unauthorized request****”**）
+
+1.  最终方法：重启电脑看是否解决
+
+2025/03/16
+
+1.  发现google无限邮箱会自动**使用真实的邮箱**，此方案不行
+
+1.  **并且每个账号只有50次免费机会**
+
+**目前2925邮箱注册的用户无法使用cursor，会出现****“****unauthorized request****”错误。</description><guid isPermaLink="true">https://blog.mymaskking.dpdns.org//post/wan-neng-wen-dang-%28%F0%9F%93%8B-zui-xin-nei-rong-du-zai-zhe-%EF%BC%81%29.html</guid><pubDate>Sat, 19 Apr 2025 06:28:19 +0000</pubDate></item><item><title>Cursor的开发Rule设置</title><link>https://blog.mymaskking.dpdns.org//post/Cursor-de-kai-fa-Rule-she-zhi.html</link><description>
 # Cursor的Rule（中文版）
 
 ```

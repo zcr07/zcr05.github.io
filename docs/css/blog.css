@@ -786,7 +786,7 @@ body .Box-row a.Link--primary:hover,
 html .Box-row a.Link--primary:hover,
 #content .Box-row a.Link--primary:hover {
   color: var(--secondary-color) !important;
-  transform: translateX(3px) !important;
+  transform: none !important;
   background-size: 100% 1px !important;
 }
 
@@ -1202,7 +1202,8 @@ html[data-color-mode="auto"] .SideNav-item {
 #blog-container > div:hover,
 main > div > div:hover,
 [id*="post"]:hover {
-  transform: translateY(-6px) translateX(3px) !important;
+  /* 完全移除所有位移效果，包括垂直方向 */
+  transform: none !important;
   box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1) !important;
   position: relative;
   z-index: 3 !important;
@@ -1267,8 +1268,8 @@ tr.post-item:hover a, .post-item:hover a,
 #blog-container > div:hover a,
 main > div > div:hover a,
 [id*="post"]:hover a {
-  transform: translateX(5px);
-  transition: transform 0.3s ease;
+  transform: none;
+  transition: color 0.3s ease;
 }
 
 /* 标题渐变色效果 */
@@ -1567,8 +1568,10 @@ tr.post-item:hover a, .post-item:hover a,
 #blog-container > div:hover a,
 main > div > div:hover a,
 [id*="post"]:hover a {
-  transform: translateX(5px);
-  transition: transform 0.3s ease;
+  /* 移除transform，防止内容向左晃动 */
+  transform: none;
+  color: var(--primary-color);
+  transition: color 0.3s ease;
 }
 
 /* 确保标题中的链接不会浮动 */

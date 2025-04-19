@@ -2,7 +2,17 @@
   {
     "name": "视频发布网站一键打开",
     "url": "https://blog.mymaskking.ggff.net/quick_release_video/",
-    "description": "一键打开多个网站，支持云同步数据。"
+    "description": "（🥰自研）一键打开多个网站，支持云同步数据。"
+  },
+  {
+    "name": "抖音自动化工具",
+    "url": "https://github.com/MyMaskKing/douyin_auto_xifen.git",
+    "description": "（🥰自研）抖音自动化获取粉丝|关注粉丝|粉丝互动"
+  },
+  {
+    "name": "图文批量生产工具",
+    "url": "https://github.com/MyMaskKing/redbook_imagetext_auto.git",
+    "description": "（🥰自研）图文批量生产工具（PPT数据写入-->切割PPT-->自定义图片）"
   },
   {
     "name": "颜色转换工具",

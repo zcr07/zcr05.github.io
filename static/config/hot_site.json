@@ -1,41 +1,51 @@
 [
   {
-    "name": "GitHub",
-    "url": "https://github.com",
+    "name": "万能文档（所有的教程和分享都在这）",
+    "url": "https://kdocs.cn/l/clf4xOs5a3Q1",
     "hot": 95
   },
   {
-    "name": "Stack Overflow",
+    "name": "GitHub",
+    "url": "https://github.com/MyMaskKing",
+    "hot": 95
+  },
+  {
+    "name": "CSDN",
+    "url": "https://blog.csdn.net/cyjdapao?type=blog",
+    "hot": 91
+  },
+  {
+    "name": "酷安",
+    "url": "https://www.coolapk.com/feed/55037345?shareKey=ZDM5NjUzODIzNzUzNjgwMzNmMGQ~&shareUid=22674125&shareFrom=com.coolapk.market_14.1.2",
+    "hot": 92
+  },
+  {
+    "name": "Stack Overflow(第三方)",
     "url": "https://stackoverflow.com",
     "hot": 90
   },
   {
-    "name": "掘金",
+    "name": "掘金(第三方)",
     "url": "https://juejin.cn",
     "hot": 85
   },
   {
-    "name": "CSDN",
-    "url": "https://www.csdn.net",
-    "hot": 80
-  },
-  {
-    "name": "InfoQ",
+    "name": "InfoQ （第三方）",
     "url": "https://www.infoq.cn",
     "hot": 75
   },
   {
-    "name": "知乎",
+    "name": "知乎(第三方)",
     "url": "https://www.zhihu.com",
     "hot": 70
   },
   {
-    "name": "V2EX",
+    "name": "V2EX(第三方)",
     "url": "https://www.v2ex.com",
     "hot": 65
   },
   {
-    "name": "博客园",
+    "name": "博客园(第三方)",
     "url": "https://www.cnblogs.com",
     "hot": 60
   }

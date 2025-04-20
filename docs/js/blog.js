@@ -24,6 +24,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // 强制设置postBody中的h标签margin和padding为0
     injectHeadingStyles();
     
+    // 添加鼠标特效
+    setupMouseEffect();
+    
     // SVG图标定义
     var IconList = {
         'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z',
@@ -451,4 +454,841 @@ function injectHeadingStyles() {
     document.head.appendChild(styleElement);
     
     console.log('已注入H标签零边距样式');
+}
+
+// 添加鼠标特效功能 - Canvas版本
+function setupMouseEffect() {
+    // 检测是否为移动设备 - 使用已有函数
+    if (isMobileDevice()) {
+        return; // 移动设备上不启用特效，提升性能
+    }
+    
+    // 创建两层Canvas提升性能 - 前景层用于活跃粒子，背景层用于涟漪效果
+    const foregroundCanvas = document.createElement('canvas');
+    const backgroundCanvas = document.createElement('canvas');
+    
+    // 前景Canvas - 用于绘制粒子
+    foregroundCanvas.className = 'mouse-effect-foreground';
+    foregroundCanvas.style.position = 'fixed';
+    foregroundCanvas.style.top = '0';
+    foregroundCanvas.style.left = '0';
+    foregroundCanvas.style.width = '100%';
+    foregroundCanvas.style.height = '100%';
+    foregroundCanvas.style.pointerEvents = 'none';
+    foregroundCanvas.style.zIndex = '9999';
+    
+    // 背景Canvas - 用于绘制涟漪效果
+    backgroundCanvas.className = 'mouse-effect-background';
+    backgroundCanvas.style.position = 'fixed';
+    backgroundCanvas.style.top = '0';
+    backgroundCanvas.style.left = '0';
+    backgroundCanvas.style.width = '100%';
+    backgroundCanvas.style.height = '100%';
+    backgroundCanvas.style.pointerEvents = 'none';
+    backgroundCanvas.style.zIndex = '9998';
+    
+    // 设置Canvas尺寸为窗口大小
+    function updateCanvasSizes() {
+        const dpr = window.devicePixelRatio || 1;
+        foregroundCanvas.width = window.innerWidth * dpr;
+        foregroundCanvas.height = window.innerHeight * dpr;
+        backgroundCanvas.width = window.innerWidth * dpr;
+        backgroundCanvas.height = window.innerHeight * dpr;
+        
+        // 根据设备像素比例缩放上下文，保证高分辨率显示
+        const fgCtx = foregroundCanvas.getContext('2d');
+        const bgCtx = backgroundCanvas.getContext('2d');
+        fgCtx.scale(dpr, dpr);
+        bgCtx.scale(dpr, dpr);
+    }
+    
+    updateCanvasSizes();
+    document.body.appendChild(backgroundCanvas);
+    document.body.appendChild(foregroundCanvas);
+    
+    // 获取2D绘图上下文
+    const fgCtx = foregroundCanvas.getContext('2d');
+    const bgCtx = backgroundCanvas.getContext('2d');
+    
+    // 鼠标状态追踪
+    let mouseX = 0, mouseY = 0;
+    let lastMouseX = 0, lastMouseY = 0;
+    let mouseSpeed = 0;
+    let lastParticleTime = 0;
+    
+    // 对象池 - 提高性能，避免频繁创建和销毁对象
+    const MAX_PARTICLES = 100;
+    const particlePool = [];
+    const ripplePool = [];
+    const activeParticles = [];
+    const activeRipples = [];
+    
+    // 性能控制参数
+    const FRAME_RATE = 30; // 目标帧率
+    const FRAME_INTERVAL = 1000 / FRAME_RATE;
+    let lastFrameTime = 0;
+    let animationId = null;
+    let isVisible = true;
+    
+    // 从CSS变量获取颜色 - 与网站风格保持一致
+    const getThemeColors = () => {
+        const style = getComputedStyle(document.documentElement);
+        const isDark = document.documentElement.getAttribute('data-color-mode') === 'dark';
+        
+        // 提取主要颜色
+        const primaryColor = style.getPropertyValue('--primary-color').trim() || '#7e57ff';
+        const secondaryColor = style.getPropertyValue('--secondary-color').trim() || '#ff4f9a';
+        const accentColor = style.getPropertyValue('--accent-color').trim() || '#00dcdc';
+        const borderRadius = parseInt(style.getPropertyValue('--border-radius').trim() || '8') + 'px';
+        
+        // 转换为带透明度的RGBA颜色
+        return {
+            isDark,
+            colors: [
+                toRGBA(primaryColor, 0.85),
+                toRGBA(secondaryColor, 0.8),
+                toRGBA(accentColor, 0.75),
+                toRGBA(isDark ? '#ffcc00' : '#0078d7', 0.7),
+                toRGBA('#ffffff', 0.85)
+            ],
+            borderRadius,
+            // 添加一些网站现有的阴影效果
+            boxShadow: style.getPropertyValue('--box-shadow').trim() || '0 5px 20px rgba(100, 120, 220, 0.15)'
+        };
+    };
+    
+    // 全局主题状态
+    let themeState = getThemeColors();
+    
+    // 颜色转换函数 - 支持hex和rgb格式转换成rgba
+    function toRGBA(color, alpha) {
+        if (!color) return `rgba(126, 87, 255, ${alpha})`;
+        
+        if (color.startsWith('#')) {
+            // Hex格式
+            const r = parseInt(color.slice(1, 3), 16);
+            const g = parseInt(color.slice(3, 5), 16);
+            const b = parseInt(color.slice(5, 7), 16);
+            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        } else if (color.startsWith('rgb')) {
+            // rgb或rgba格式
+            if (color.startsWith('rgba')) {
+                return color.replace(/[\d\.]+\)$/, `${alpha})`);
+            } else {
+                return color.replace('rgb', 'rgba').replace(')', `, ${alpha})`);
+            }
+        }
+        return color; // 未知格式，返回原始值
+    }
+    
+    // 特殊字符与网站设计协调
+    const specialChars = ['✧', '✦', '✺', '✫', '✿', '❀', '♥', '⭐', '∗'];
+    
+    // 粒子类 - 对象池模式
+    class Particle {
+        constructor() {
+            this.reset(); // 初始化属性
+            this.active = false; // 默认为非活跃状态
+        }
+        
+        reset() {
+            this.x = 0;
+            this.y = 0;
+            this.startX = 0;
+            this.startY = 0;
+            this.color = '';
+            this.shape = ''; // 粒子形状: 'star', 'dot', 'diamond', 'circle'
+            this.size = 0;
+            this.lifespan = 0;
+            this.createdAt = 0;
+            this.vx = 0;
+            this.vy = 0;
+            this.opacity = 0;
+            this.scale = 0;
+            this.rotation = 0;
+            this.rotationSpeed = 0;
+            this.glowSize = 0; // 发光效果大小
+            this.glowColor = ''; // 发光颜色
+            return this;
+        }
+        
+        // 初始化粒子状态
+        init(x, y, speed) {
+            this.reset();
+            this.active = true;
+            this.x = x;
+            this.y = y;
+            this.startX = x;
+            this.startY = y;
+            
+            // 从主题获取颜色
+            const colors = themeState.colors;
+            this.color = colors[Math.floor(Math.random() * colors.length)];
+            
+            // 随机决定粒子形状 - 与博客主题一致的几何形状
+            // 增加星星和菱形的比例，减少普通圆点
+            const shapeRandom = Math.random();
+            if (shapeRandom < 0.4) { // 40%概率是星星
+                this.shape = 'star';
+            } else if (shapeRandom < 0.7) { // 30%概率是菱形
+                this.shape = 'diamond';
+            } else if (shapeRandom < 0.9) { // 20%概率是圆形
+                this.shape = 'circle';
+            } else { // 10%概率是点
+                this.shape = 'dot';
+            }
+            
+            this.size = this.shape === 'star' ? Math.random() * 4 + 3 : Math.random() * 3 + 1;
+            
+            // 为星星形状设置发光效果
+            if (this.shape === 'star') {
+                this.glowSize = this.size * 2;
+                this.glowColor = this.color.replace(/[\d\.]+\)$/, '0.5)');
+            }
+            
+            // 生命周期和动画参数
+            this.lifespan = Math.random() * 500 + 300; // 生命周期300-800ms，更短促但更多数量
+            this.createdAt = Date.now();
+            
+            // 计算移动方向和速度 - 更随机的运动方向
+            const angle = Math.random() * Math.PI * 2;
+            const distance = (Math.random() * 20 + 15) * (speed / 40); // 更轻盈的移动距离
+            
+            // 计算终点坐标
+            this.vx = Math.cos(angle) * distance;
+            this.vy = Math.sin(angle) * distance - (Math.random() * 2); // 轻微上浮效果
+            
+            // 初始不透明度和缩放
+            this.opacity = 0;
+            this.scale = 0.5 + Math.random() * 0.5;
+            
+            // 旋转角度（弧度）
+            this.rotation = Math.random() * Math.PI * 2;
+            this.rotationSpeed = (Math.random() - 0.5) * 0.05; // 更快的旋转
+            
+            return this;
+        }
+        
+        // 更新粒子状态
+        update() {
+            const now = Date.now();
+            const age = now - this.createdAt;
+            const progress = Math.min(age / this.lifespan, 1);
+            
+            // 如果超过生命周期，设为非活跃并返回false
+            if (progress >= 1) {
+                this.active = false;
+                return false;
+            }
+            
+            // 缓动函数，使运动更自然
+            const easeOutQuad = function(t) { return t * (2 - t); };
+            const easedProgress = easeOutQuad(progress);
+            
+            // 更新位置 - 添加轻微波动效果
+            this.x = this.startX + this.vx * easedProgress;
+            this.y = this.startY + this.vy * easedProgress - Math.sin(progress * Math.PI) * 3; // 轻微上浮波动
+            
+            // 更新不透明度 - 快速淡入，缓慢淡出
+            if (progress < 0.2) {
+                this.opacity = progress / 0.2; // 前20%时间淡入
+            } else {
+                this.opacity = 1 - ((progress - 0.2) / 0.8); // 后80%时间淡出
+            }
+            
+            // 更新缩放 - 先快速放大，再缓慢缩小
+            if (progress < 0.2) {
+                this.scale = 0.5 + progress / 0.2 * 0.8; // 前20%时间放大
+            } else {
+                this.scale = 1.3 - ((progress - 0.2) / 0.8) * 0.8; // 后80%时间缩小
+            }
+            
+            // 更新旋转 - 使星星闪烁旋转效果更明显
+            this.rotation += this.rotationSpeed;
+            
+            // 更新发光效果
+            if (this.shape === 'star') {
+                this.glowSize = this.size * (2 + Math.sin(progress * Math.PI * 3) * 0.5); // 脉动发光
+            }
+            
+            // 返回粒子是否继续存活
+            return true;
+        }
+        
+        // 绘制粒子
+        draw(ctx) {
+            ctx.save();
+            
+            // 设置全局透明度
+            ctx.globalAlpha = this.opacity;
+            
+            // 移动到粒子位置并应用变换
+            ctx.translate(this.x, this.y);
+            ctx.rotate(this.rotation);
+            ctx.scale(this.scale, this.scale);
+            
+            // 设置发光效果
+            ctx.shadowBlur = this.shape === 'star' ? this.glowSize : this.size;
+            ctx.shadowColor = this.color;
+            ctx.fillStyle = this.color;
+            
+            // 根据形状绘制不同的粒子
+            switch (this.shape) {
+                case 'star':
+                    this.drawStar(ctx, 0, 0, 5, this.size, this.size/2.5);
+                    break;
+                case 'diamond':
+                    this.drawDiamond(ctx, 0, 0, this.size);
+                    break;
+                case 'dot':
+                    ctx.beginPath();
+                    ctx.arc(0, 0, this.size / 2, 0, Math.PI * 2);
+                    ctx.fill();
+                    break;
+                case 'circle':
+                default:
+                    ctx.beginPath();
+                    ctx.arc(0, 0, this.size / 2, 0, Math.PI * 2);
+                    ctx.fill();
+                    break;
+            }
+            
+            ctx.restore();
+        }
+        
+        // 绘制星星形状
+        drawStar(ctx, cx, cy, spikes, outerRadius, innerRadius) {
+            let rot = Math.PI / 2 * 3;
+            let x = cx;
+            let y = cy;
+            let step = Math.PI / spikes;
+            
+            ctx.beginPath();
+            ctx.moveTo(cx, cy - outerRadius);
+            
+            for (let i = 0; i < spikes; i++) {
+                x = cx + Math.cos(rot) * outerRadius;
+                y = cy + Math.sin(rot) * outerRadius;
+                ctx.lineTo(x, y);
+                rot += step;
+                
+                x = cx + Math.cos(rot) * innerRadius;
+                y = cy + Math.sin(rot) * innerRadius;
+                ctx.lineTo(x, y);
+                rot += step;
+            }
+            
+            ctx.lineTo(cx, cy - outerRadius);
+            ctx.closePath();
+            ctx.fill();
+        }
+        
+        // 绘制菱形
+        drawDiamond(ctx, cx, cy, size) {
+            ctx.beginPath();
+            ctx.moveTo(cx, cy - size);
+            ctx.lineTo(cx + size, cy);
+            ctx.lineTo(cx, cy + size);
+            ctx.lineTo(cx - size, cy);
+            ctx.closePath();
+            ctx.fill();
+        }
+    }
+    
+    // 涟漪效果类 - 对象池模式
+    class Ripple {
+        constructor() {
+            this.reset();
+            this.active = false;
+        }
+        
+        reset() {
+            this.x = 0;
+            this.y = 0;
+            this.size = 0;
+            this.maxSize = 0;
+            this.createdAt = 0;
+            this.duration = 0;
+            this.color = '';
+            this.spikes = 0;  // 星形涟漪的尖角数
+            this.innerRadius = 0; // 内部半径
+            this.outerRadius = 0; // 外部半径
+            this.rotation = 0; // 旋转角度
+            this.rotationSpeed = 0; // 旋转速度
+            return this;
+        }
+        
+        // 初始化涟漪
+        init(x, y) {
+            this.reset();
+            this.active = true;
+            this.x = x;
+            this.y = y;
+            this.size = 1;
+            this.maxSize = 80 + Math.random() * 40; // 80-120之间的随机大小
+            this.createdAt = Date.now();
+            this.duration = 1000 + Math.random() * 500; // 1-1.5秒持续时间
+            
+            // 从主题获取颜色
+            const colors = themeState.colors;
+            this.color = colors[Math.floor(Math.random() * colors.length)];
+            
+            // 设置星形涟漪的参数
+            this.spikes = 5 + Math.floor(Math.random() * 4); // 5-8个尖角
+            this.innerRadius = 0.4; // 内部半径比例
+            this.rotation = Math.random() * Math.PI * 2;
+            this.rotationSpeed = (Math.random() - 0.5) * 0.01; // 每帧旋转角度
+            
+            return this;
+        }
+        
+        // 更新涟漪状态
+        update() {
+            const now = Date.now();
+            const age = now - this.createdAt;
+            
+            // 如果超过持续时间，设为非活跃并返回false
+            if (age >= this.duration) {
+                this.active = false;
+                return false;
+            }
+            
+            // 更新旋转角度
+            this.rotation += this.rotationSpeed;
+            
+            // 返回涟漪是否继续存活
+            return true;
+        }
+        
+        // 绘制涟漪
+        draw(ctx) {
+            const now = Date.now();
+            const age = now - this.createdAt;
+            const progress = age / this.duration;
+            
+            // 计算当前大小和不透明度
+            const size = this.maxSize * progress;
+            const opacity = 1 - progress;
+            
+            // 保存上下文状态
+            ctx.save();
+            
+            // 设置阴影和模糊效果增强星光效果
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = this.color;
+            ctx.fillStyle = 'transparent';
+            ctx.strokeStyle = this.color.replace(/[\d\.]+\)$/, `${opacity * 0.7})`);
+            ctx.lineWidth = 2 - progress; // 线宽随时间减小
+            
+            // 绘制星形涟漪
+            ctx.translate(this.x, this.y);
+            ctx.rotate(this.rotation);
+            
+            // 绘制两个同心星形，增加立体感
+            this.drawStarPath(ctx, 0, 0, this.spikes, size, size * this.innerRadius);
+            ctx.stroke();
+            
+            // 绘制第二个更小更透明的星形 - 旋转45度形成错位效果
+            ctx.rotate(Math.PI / this.spikes);
+            ctx.strokeStyle = this.color.replace(/[\d\.]+\)$/, `${opacity * 0.3})`);
+            ctx.lineWidth = 1;
+            this.drawStarPath(ctx, 0, 0, this.spikes, size * 0.7, size * 0.3);
+            ctx.stroke();
+            
+            // 增加一个圆形光晕效果
+            ctx.beginPath();
+            ctx.arc(0, 0, size * 0.5, 0, Math.PI * 2);
+            ctx.strokeStyle = this.color.replace(/[\d\.]+\)$/, `${opacity * 0.15})`);
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+            
+            // 恢复上下文状态
+            ctx.restore();
+        }
+        
+        // 绘制星形路径 - 使用贝塞尔曲线让星形边缘更柔和
+        drawStarPath(ctx, cx, cy, spikes, outerRadius, innerRadius) {
+            const step = Math.PI / spikes;
+            let rot = Math.PI / 2 * 3;
+            
+            ctx.beginPath();
+            
+            // 移动到第一个顶点
+            let x = cx + Math.cos(rot) * outerRadius;
+            let y = cy + Math.sin(rot) * outerRadius;
+            ctx.moveTo(x, y);
+            
+            // 绘制星形路径 - 使用二次贝塞尔曲线
+            for (let i = 0; i < spikes; i++) {
+                // 外部顶点
+                rot += step;
+                const outerX = cx + Math.cos(rot) * innerRadius;
+                const outerY = cy + Math.sin(rot) * innerRadius;
+                
+                // 控制点 - 在内外半径之间
+                const ctrlX = cx + Math.cos(rot - step/2) * (innerRadius + outerRadius) * 0.4;
+                const ctrlY = cy + Math.sin(rot - step/2) * (innerRadius + outerRadius) * 0.4;
+                
+                // 使用二次贝塞尔曲线连接到内部点
+                ctx.quadraticCurveTo(ctrlX, ctrlY, outerX, outerY);
+                
+                // 内部顶点
+                rot += step;
+                const innerX = cx + Math.cos(rot) * outerRadius;
+                const innerY = cy + Math.sin(rot) * outerRadius;
+                
+                // 控制点 - 在内外半径之间
+                const ctrlX2 = cx + Math.cos(rot - step/2) * (innerRadius + outerRadius) * 0.4;
+                const ctrlY2 = cy + Math.sin(rot - step/2) * (innerRadius + outerRadius) * 0.4;
+                
+                // 使用二次贝塞尔曲线连接到外部点
+                ctx.quadraticCurveTo(ctrlX2, ctrlY2, innerX, innerY);
+            }
+            
+            ctx.closePath();
+        }
+    }
+    
+    // 初始化对象池
+    function initObjectPools() {
+        // 预创建粒子对象
+        for (let i = 0; i < MAX_PARTICLES; i++) {
+            particlePool.push(new Particle());
+            if (i < MAX_PARTICLES / 4) { // 涟漪数量较少
+                ripplePool.push(new Ripple());
+            }
+        }
+    }
+    
+    // 从对象池获取粒子
+    function getParticleFromPool() {
+        for (let i = 0; i < particlePool.length; i++) {
+            if (!particlePool[i].active) {
+                return particlePool[i];
+            }
+        }
+        // 如果池已满，创建新的粒子
+        const particle = new Particle();
+        particlePool.push(particle);
+        return particle;
+    }
+    
+    // 从对象池获取涟漪
+    function getRippleFromPool() {
+        for (let i = 0; i < ripplePool.length; i++) {
+            if (!ripplePool[i].active) {
+                return ripplePool[i];
+            }
+        }
+        // 如果池已满，创建新的涟漪
+        const ripple = new Ripple();
+        ripplePool.push(ripple);
+        return ripple;
+    }
+    
+    // 创建粒子
+    function createParticle(x, y, speed) {
+        const particle = getParticleFromPool().init(x, y, speed);
+        activeParticles.push(particle);
+        
+        // 限制活跃粒子数量
+        if (activeParticles.length > MAX_PARTICLES) {
+            // 移除最早创建的粒子
+            const oldestParticle = activeParticles.shift();
+            oldestParticle.active = false;
+        }
+    }
+    
+    // 创建涟漪
+    function createRipple(x, y) {
+        const ripple = getRippleFromPool().init(x, y);
+        activeRipples.push(ripple);
+        
+        // 限制活跃涟漪数量
+        if (activeRipples.length > 3) {
+            // 移除最早创建的涟漪
+            const oldestRipple = activeRipples.shift();
+            oldestRipple.active = false;
+        }
+    }
+    
+    // 鼠标移动事件处理
+    const handleMouseMove = function(e) {
+        // 更新位置
+        lastMouseX = mouseX;
+        lastMouseY = mouseY;
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        
+        // 计算鼠标移动速度
+        const dx = mouseX - lastMouseX;
+        const dy = mouseY - lastMouseY;
+        mouseSpeed = Math.sqrt(dx*dx + dy*dy);
+        
+        // 只在鼠标速度超过阈值时创建粒子
+        if (mouseSpeed > 5) { // 降低阈值，更容易触发
+            const now = Date.now();
+            if (now - lastParticleTime > 16) { // 增加创建频率，约每16ms一个粒子
+                // 粒子生成策略：速度越快，生成越多，但有上限
+                const particlesToCreate = Math.min(1 + Math.floor(mouseSpeed / 30), 2);
+                
+                for (let i = 0; i < particlesToCreate; i++) {
+                    // 在鼠标轨迹上随机位置生成粒子，而非鼠标精确位置
+                    const ratio = Math.random();
+                    const trailX = lastMouseX * ratio + mouseX * (1-ratio);
+                    const trailY = lastMouseY * ratio + mouseY * (1-ratio);
+                    
+                    // 添加小偏移，使粒子轨迹看起来更自然
+                    const offsetX = (Math.random() - 0.5) * 4;
+                    const offsetY = (Math.random() - 0.5) * 4;
+                    createParticle(trailX + offsetX, trailY + offsetY, mouseSpeed);
+                }
+                
+                lastParticleTime = now;
+            }
+        }
+    };
+    
+    // 节流函数 - 限制事件处理频率
+    function throttle(func, limit) {
+        let lastCall = 0;
+        return function(...args) {
+            const now = Date.now();
+            if (now - lastCall >= limit) {
+                lastCall = now;
+                func.apply(this, args);
+            }
+        };
+    }
+    
+    // 使用节流函数包装鼠标移动事件处理
+    const throttledMouseMove = throttle(handleMouseMove, 10);
+    
+    // 鼠标点击事件处理
+    const handleClick = function(e) {
+        // 不在输入框和按钮上触发特效
+        if (e.target.tagName.toLowerCase() === 'input' || 
+            e.target.tagName.toLowerCase() === 'textarea' || 
+            e.target.tagName.toLowerCase() === 'button' ||
+            e.target.tagName.toLowerCase() === 'a' ||
+            e.target.classList.contains('btn')) {
+            return;
+        }
+        
+        // 创建星形涟漪效果
+        createRipple(e.clientX, e.clientY);
+        
+        // 创建星星爆发效果 - 呈现放射状发散
+        const numParticles = 15; // 发射粒子数量
+        const angleStep = (Math.PI * 2) / numParticles;
+        
+        for (let i = 0; i < numParticles; i++) {
+            // 根据索引计算角度，实现均匀放射
+            const angle = i * angleStep + (Math.random() * 0.2 - 0.1); // 添加小随机偏移
+            
+            // 计算粒子位置 - 从中心稍微偏移
+            const distance = Math.random() * 8;
+            const x = e.clientX + Math.cos(angle) * distance;
+            const y = e.clientY + Math.sin(angle) * distance;
+            
+            // 延迟创建粒子，呈现逐步爆发效果
+            setTimeout(() => {
+                createParticle(x, y, 60 + Math.random() * 40);
+            }, i * 10);
+        }
+        
+        // 创建额外的随机散射粒子
+        setTimeout(() => {
+            for (let i = 0; i < 5; i++) {
+                const randomAngle = Math.random() * Math.PI * 2;
+                const randomDist = 5 + Math.random() * 10;
+                const x = e.clientX + Math.cos(randomAngle) * randomDist;
+                const y = e.clientY + Math.sin(randomAngle) * randomDist;
+                createParticle(x, y, 30 + Math.random() * 30);
+            }
+        }, 50);
+    };
+    
+    // 链接悬停效果
+    function setupLinkEffects() {
+        const links = document.querySelectorAll('a:not(.btn):not([role="button"]):not([data-effect-added])');
+        links.forEach(link => {
+            link.setAttribute('data-effect-added', 'true');
+            
+            link.addEventListener('mouseenter', function() {
+                const rect = this.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                
+                for (let i = 0; i < 2; i++) {
+                    setTimeout(() => {
+                        const angle = Math.random() * Math.PI * 2;
+                        const dist = 10 + Math.random() * 10;
+                        const x = centerX + Math.cos(angle) * dist;
+                        const y = centerY + Math.sin(angle) * dist;
+                        
+                        createParticle(x, y, 30);
+                    }, i * 50);
+                }
+            });
+        });
+    }
+    
+    // 页面可见性变化处理 - 当页面不可见时暂停动画
+    function handleVisibilityChange() {
+        if (document.hidden) {
+            isVisible = false;
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+        } else {
+            isVisible = true;
+            if (!animationId) {
+                lastFrameTime = performance.now();
+                animationId = requestAnimationFrame(render);
+            }
+        }
+    }
+    
+    // 绘制前景层（活跃粒子）
+    function drawForeground() {
+        // 清除画布
+        fgCtx.clearRect(0, 0, foregroundCanvas.width / window.devicePixelRatio, foregroundCanvas.height / window.devicePixelRatio);
+        
+        // 更新和绘制粒子
+        for (let i = activeParticles.length - 1; i >= 0; i--) {
+            if (activeParticles[i].update()) {
+                activeParticles[i].draw(fgCtx);
+            } else {
+                activeParticles[i].active = false;
+                activeParticles.splice(i, 1);
+            }
+        }
+    }
+    
+    // 绘制背景层（涟漪效果）
+    function drawBackground() {
+        // 清除画布
+        bgCtx.clearRect(0, 0, backgroundCanvas.width / window.devicePixelRatio, backgroundCanvas.height / window.devicePixelRatio);
+        
+        // 更新和绘制涟漪
+        for (let i = activeRipples.length - 1; i >= 0; i--) {
+            if (activeRipples[i].update()) {
+                activeRipples[i].draw(bgCtx);
+            } else {
+                activeRipples[i].active = false;
+                activeRipples.splice(i, 1);
+            }
+        }
+    }
+    
+    // 渲染循环
+    function render(timestamp) {
+        // 帧率控制
+        if (!lastFrameTime) lastFrameTime = timestamp;
+        
+        const elapsed = timestamp - lastFrameTime;
+        
+        if (elapsed > FRAME_INTERVAL) {
+            // 更新上一帧时间
+            lastFrameTime = timestamp - (elapsed % FRAME_INTERVAL);
+            
+            // 绘制背景和前景
+            drawBackground();
+            drawForeground();
+            
+            // 定期重置主题状态 - 适应可能的主题变化
+            if (Date.now() % 1000 < 16) { // 大约每秒检查一次
+                themeState = getThemeColors();
+            }
+            
+            // 定期添加链接特效
+            if (Date.now() % 2000 < 16) { // 大约每2秒检查一次
+                setupLinkEffects();
+            }
+        }
+        
+        // 继续渲染
+        if (isVisible) {
+            animationId = requestAnimationFrame(render);
+        }
+    }
+    
+    // 监听主题变化
+    const themeObserver = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.attributeName === 'data-color-mode') {
+                // 当主题变化时，更新颜色方案
+                themeState = getThemeColors();
+            }
+        });
+    });
+    
+    // 初始化
+    initObjectPools();
+    
+    // 事件监听器
+    window.addEventListener('resize', updateCanvasSizes);
+    document.addEventListener('mousemove', throttledMouseMove);
+    document.addEventListener('click', handleClick);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    // 监听主题变化
+    themeObserver.observe(document.documentElement, { 
+        attributes: true, 
+        attributeFilter: ['data-color-mode'] 
+    });
+    
+    // 使用Intersection Observer监听Canvas可见性
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.target === foregroundCanvas || entry.target === backgroundCanvas) {
+                isVisible = entry.isIntersecting;
+                
+                if (isVisible && !animationId) {
+                    lastFrameTime = performance.now();
+                    animationId = requestAnimationFrame(render);
+                } else if (!isVisible && animationId) {
+                    cancelAnimationFrame(animationId);
+                    animationId = null;
+                }
+            }
+        });
+    }, { threshold: 0 });
+    
+    observer.observe(foregroundCanvas);
+    observer.observe(backgroundCanvas);
+    
+    // 启动渲染循环
+    lastFrameTime = performance.now();
+    animationId = requestAnimationFrame(render);
+    
+    // 定期设置链接特效
+    setInterval(setupLinkEffects, 2000);
+    
+    // 返回清理函数
+    return function cleanup() {
+        isVisible = false;
+        if (animationId) {
+            cancelAnimationFrame(animationId);
+            animationId = null;
+        }
+        
+        document.removeEventListener('mousemove', throttledMouseMove);
+        document.removeEventListener('click', handleClick);
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+        window.removeEventListener('resize', updateCanvasSizes);
+        
+        themeObserver.disconnect();
+        observer.disconnect();
+        
+        if (foregroundCanvas && foregroundCanvas.parentNode) {
+            foregroundCanvas.parentNode.removeChild(foregroundCanvas);
+        }
+        
+        if (backgroundCanvas && backgroundCanvas.parentNode) {
+            backgroundCanvas.parentNode.removeChild(backgroundCanvas);
+        }
+    };
 }

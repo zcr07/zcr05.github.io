@@ -492,7 +492,6 @@ h1::before, h2::before, h3::before, h4::before, h5::before, h6::before {
 html[data-color-mode="dark"] #postBody h1 {
   margin: 1px !important;
   font-size: 2.5em !important;
-  margin-top: 2em !important;
   padding-bottom: 0.5em !important;
   border-bottom: 2px solid rgba(126, 87, 255, 0.3) !important;
   background: var(--h1-color-dark);
@@ -507,7 +506,7 @@ html[data-color-mode="dark"] #postBody h1 {
 html[data-color-mode="auto"] #postBody h1 {
   margin: 1px !important;
   font-size: 2.5em !important;
-  margin-top: 2em !important;
+
   padding-bottom: 0.5em !important;
   border-bottom: 2px solid rgba(126, 87, 255, 0.3) !important;
   background: var(--h1-color-auto);
@@ -519,6 +518,7 @@ html[data-color-mode="auto"] #postBody h1 {
   letter-spacing: 0.8px !important;
   text-shadow: 0 2px 10px rgba(126, 87, 255, 0.15);
 } 
+
 #postBody h2 {
   font-size: 1.8em !important;
   margin-top: 1.8em !important;

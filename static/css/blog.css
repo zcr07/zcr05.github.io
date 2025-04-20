@@ -13,7 +13,15 @@
   --h3-color: linear-gradient(135deg, #754bff, #40e7e7);
   --h4-color: linear-gradient(135deg, #008f11, #ff7cb7);
   --h5-color: linear-gradient(135deg, #f727d7, #12ffff);
-  --h6-color: linear-gradient(135deg, #ff4f9a, #ff7eb3);
+  --h6-color: linear-gradient(135deg, #ff4f9a, #fcff43);
+  --content-h1-a: #3700ff;
+  --content-h1-a-dark: #2a4cff;
+  --content-h1-a-auto: #4665ff;
+  --content-h2-a: #8521ff;
+  --content-h3-a: #754bff;
+  --content-h4-a: #008f11;
+  --content-h5-a: #f727d7;
+  --content-h6-a: #ff7cb7;
   --bg-primary: #0a0a20;
   --bg-secondary: #12122a;
   --global-bg: #070720; 
@@ -29,9 +37,6 @@
   --text-color: #f0f0f0;
   --text-secondary-color: #c4c4c4;
   --light-global-bg: #f0f0f0; /* 亮色模式背景 */
-  --content-h1-a: #3700ff;
-  --content-h1-a-dark: #2a4cff;
-  --content-h1-a-auto: #4665ff;
   /* 动画相关变量 */
   --gradient-animation-speed: 15s;
   --hover-transition-speed: 0.3s;
@@ -529,9 +534,18 @@ html[data-color-mode="auto"] #postBody h1 {
   background-clip: text;
   -webkit-text-fill-color: transparent;
   padding-left: 8px !important;
-  border-left: 4px solid rgba(255, 79, 154, 0.7) !important;
+  border-left: 4px solid rgba(72, 230, 106, 0.7) !important;
   font-family: "Poppins", sans-serif !important;
   letter-spacing: 0.6px !important;
+}
+#postBody h2::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(to right, rgba(72, 230, 106, 0.7), transparent);
 }
 
 #postBody h3 {
@@ -541,7 +555,7 @@ html[data-color-mode="auto"] #postBody h1 {
   background-clip: text;
   -webkit-text-fill-color: transparent;
   padding-left: 6px !important;
-  border-left: 3px solid rgba(0, 220, 220, 0.7) !important;
+  border-left: 3px solid rgba(13, 218, 218, 0.7) !important;
   letter-spacing: 0.4px !important;
   position: relative !important;
 }
@@ -553,7 +567,14 @@ html[data-color-mode="auto"] #postBody h1 {
   left: 0;
   width: 60px;
   height: 2px;
-  background: linear-gradient(to right, rgba(0, 220, 220, 0.7), transparent);
+  background: linear-gradient(to right, rgba(13, 218, 218, 0.7), transparent);
+}
+#postBody h4::before {
+  content: "# ";
+  font-weight: bold;
+  opacity: 0.6;
+  -webkit-text-fill-color: initial;
+  color: var(--primary-color);
 }
 
 #postBody h4 {
@@ -566,14 +587,17 @@ html[data-color-mode="auto"] #postBody h1 {
   position: relative !important;
   display: inline-block !important;
   letter-spacing: 0.3px !important;
+  border-left: 4px solid rgba(192, 147, 176) !important;
 }
 
-#postBody h4::before {
-  content: "# ";
-  font-weight: bold;
-  opacity: 0.6;
-  -webkit-text-fill-color: initial;
-  color: var(--primary-color);
+#postBody h4::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(to right, rgb(192, 147, 176), transparent);
 }
 
 #postBody h5 {
@@ -585,6 +609,7 @@ html[data-color-mode="auto"] #postBody h1 {
   font-weight: 600 !important;
   letter-spacing: 0.2px !important;
   text-transform: uppercase !important;
+  border-left: 4px solid rgb(173, 178, 250) !important;
 }
 
 #postBody h5::before {
@@ -594,7 +619,15 @@ html[data-color-mode="auto"] #postBody h1 {
   -webkit-text-fill-color: initial;
   color: var(--secondary-color);
 }
-
+#postBody h5::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(to right, rgb(173, 178, 250), transparent);
+}
 #postBody h6 {
   font-size: 1em !important;
   background: var(--h6-color);
@@ -604,6 +637,7 @@ html[data-color-mode="auto"] #postBody h1 {
   font-weight: 600 !important;
   font-style: italic !important;
   margin-left: 10px !important;
+  border-left: 4px solid rgb(207, 203, 116) !important;
 }
 
 #postBody h6::before {
@@ -612,6 +646,15 @@ html[data-color-mode="auto"] #postBody h1 {
   opacity: 0.6;
   -webkit-text-fill-color: initial;
   color: var(--accent-color);
+}
+#postBody h6::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(to right, rgb(207, 203, 116), transparent);
 }
 
 /* 标题中的链接样式 */
@@ -695,19 +738,19 @@ html[data-color-mode="dark"] #content h1 a, html[data-color-mode="dark"] #conten
   color:var(--content-h1-a-dark);
 } 
 html[data-color-mode="dark"] #content h2 a, html[data-color-mode="dark"] #content h2 strong{
-  color:#8521ff;
+  color:var(--content-h2-a);
 } 
 html[data-color-mode="dark"] #content h3 a, html[data-color-mode="dark"] #content h3 strong{
-  color:#754bff;
+  color:var(--content-h3-a);
 } 
 html[data-color-mode="dark"] #content h4 a, html[data-color-mode="dark"] #content h4 strong{
-  color:#008f11;
+  color:var(--content-h4-a);
 } 
 html[data-color-mode="dark"] #content h5 a, html[data-color-mode="dark"] #content h5 strong{
-  color:#f727d7;
+  color:var(--content-h5-a);
 } 
 html[data-color-mode="dark"] #content h6 a, html[data-color-mode="dark"] #content h6 strong{
-  color:#ff7cb7;
+  color:var(--content-h6-a);
 } 
 
 html[data-color-mode="light"] #content h1 a, 
@@ -724,19 +767,19 @@ html[data-color-mode="light"] #content h1 a, html[data-color-mode="light"] #cont
   color:var(--content-h1-a);
 } 
 html[data-color-mode="light"] #content h2 a, html[data-color-mode="light"] #content h2 strong{
-  color:#8521ff;
+  color:var(--content-h2-a);
 } 
 html[data-color-mode="light"] #content h3 a, html[data-color-mode="light"] #content h3 strong{
-  color:#754bff;
+  color:var(--content-h3-a);
 } 
 html[data-color-mode="light"] #content h4 a, html[data-color-mode="light"] #content h4 strong{
-  color:#008f11;
+  color:var(--content-h4-a);
 } 
 html[data-color-mode="light"] #content h5 a, html[data-color-mode="light"] #content h5 strong{
-  color:#f727d7;
+  color:var(--content-h5-a);
 } 
 html[data-color-mode="light"] #content h6 a, html[data-color-mode="light"] #content h6 strong{
-  color:#ff7cb7;
+  color:var(--content-h6-a);
 } 
 
 
@@ -767,19 +810,19 @@ html[data-color-mode="auto"] #postBody h1 a, html[data-color-mode="auto"] #postB
   color:var(--content-h1-a-auto);
 } 
 html[data-color-mode="auto"] #content h2 a, html[data-color-mode="auto"] #content h2 strong{
-  color:#8521ff;
+  color:var(--content-h2-a);
 } 
 html[data-color-mode="auto"] #content h3 a, html[data-color-mode="auto"] #content h3 strong{
-  color:#754bff;
+  color:var(--content-h3-a);
 } 
 html[data-color-mode="auto"] #content h4 a, html[data-color-mode="auto"] #content h4 strong{
-  color:#008f11;
+  color:var(--content-h4-a);
 } 
 html[data-color-mode="auto"] #content h5 a, html[data-color-mode="auto"] #content h5 strong{
-  color:#f727d7;
+  color:var(--content-h5-a);
 } 
 html[data-color-mode="auto"] #content h6 a, html[data-color-mode="auto"] #content h6 strong{
-  color:#ff7cb7;
+  color:var(--content-h6-a);
 } 
 /* 链接样式 */
 a {

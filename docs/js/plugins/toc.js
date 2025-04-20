@@ -402,7 +402,7 @@ function addTOCStyles() {
             width: 100%;
             max-height: calc(100vh - 150px);
             overflow-y: auto;
-            background-color: rgba(255, 255, 255, 0.95);
+            background-color: rgba(255, 255, 255, 0.98);
             border-radius: 12px;
             border: 1px solid rgba(126, 87, 255, 0.3);
             padding: 15px 12px;

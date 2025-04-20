@@ -202,7 +202,7 @@ function forceApplyListStyles() {
             html[data-color-mode="light"] #blog-container > div,
             html[data-color-mode="light"] main > div > div,
             html[data-color-mode="light"] [id*="post"] {
-                background-color: rgba(240, 240, 240, 0.85) !important;
+                background-color: rgba(255, 255, 255, 0.98) !important;
                 border: 1px solid rgba(3, 102, 214, 0.2) !important;
             }
             

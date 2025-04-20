@@ -6,12 +6,14 @@
   --primary-color: #7e57ff;
   --secondary-color: #ff4f9a;
   --accent-color: #00dcdc;
-  --h1-color: linear-gradient(135deg, #3c00ff, #00f50c);
-  --h2-color: linear-gradient(135deg, #ff4f9a, #ff7eb3);
-  --h3-color: linear-gradient(135deg, #7e57ff, #40e7e7);
-  --h4-color: linear-gradient(135deg, #9137ff, #59ff00);
-  --h5-color: linear-gradient(135deg, #007c0e, #ff7cb7);
-  --h6-color: linear-gradient(135deg, #f727d7, #12ffff);
+  --h1-color: linear-gradient(135deg, #3700ff, #00f50c);
+  --h1-color-dark: linear-gradient(135deg, #2a4cff, #00f50c);
+  --h1-color-auto: linear-gradient(135deg, #2f51ff, #00f50c);
+  --h2-color: linear-gradient(135deg, #8521ff, #59ff00);
+  --h3-color: linear-gradient(135deg, #754bff, #40e7e7);
+  --h4-color: linear-gradient(135deg, #008f11, #ff7cb7);
+  --h5-color: linear-gradient(135deg, #f727d7, #12ffff);
+  --h6-color: linear-gradient(135deg, #ff4f9a, #ff7eb3);
   --bg-primary: #0a0a20;
   --bg-secondary: #12122a;
   --global-bg: #070720; 
@@ -27,7 +29,9 @@
   --text-color: #f0f0f0;
   --text-secondary-color: #c4c4c4;
   --light-global-bg: #f0f0f0; /* 亮色模式背景 */
-  
+  --content-h1-a: #3700ff;
+  --content-h1-a-dark: #2a4cff;
+  --content-h1-a-auto: #4665ff;
   /* 动画相关变量 */
   --gradient-animation-speed: 15s;
   --hover-transition-speed: 0.3s;
@@ -485,7 +489,36 @@ h1::before, h2::before, h3::before, h4::before, h5::before, h6::before {
   letter-spacing: 0.8px !important;
   text-shadow: 0 2px 10px rgba(126, 87, 255, 0.15);
 }
-
+html[data-color-mode="dark"] #postBody h1 {
+  margin: 1px !important;
+  font-size: 2.5em !important;
+  margin-top: 2em !important;
+  padding-bottom: 0.5em !important;
+  border-bottom: 2px solid rgba(126, 87, 255, 0.3) !important;
+  background: var(--h1-color-dark);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  border-image: linear-gradient(to right, #7e57ff, transparent) 1 !important;
+  font-family: "Poppins", sans-serif !important;
+  letter-spacing: 0.8px !important;
+  text-shadow: 0 2px 10px rgba(126, 87, 255, 0.15);
+} 
+html[data-color-mode="auto"] #postBody h1 {
+  margin: 1px !important;
+  font-size: 2.5em !important;
+  margin-top: 2em !important;
+  padding-bottom: 0.5em !important;
+  border-bottom: 2px solid rgba(126, 87, 255, 0.3) !important;
+  background: var(--h1-color-auto);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  border-image: linear-gradient(to right, #7e57ff, transparent) 1 !important;
+  font-family: "Poppins", sans-serif !important;
+  letter-spacing: 0.8px !important;
+  text-shadow: 0 2px 10px rgba(126, 87, 255, 0.15);
+} 
 #postBody h2 {
   font-size: 1.8em !important;
   margin-top: 1.8em !important;
@@ -658,6 +691,25 @@ html[data-color-mode="dark"] #content h6 a {
   border-bottom: 1px dotted rgba(126, 87, 255, 0.5);
 }
 
+html[data-color-mode="dark"] #content h1 a, html[data-color-mode="dark"] #content h1 strong{
+  color:var(--content-h1-a-dark);
+} 
+html[data-color-mode="dark"] #content h2 a, html[data-color-mode="dark"] #content h2 strong{
+  color:#8521ff;
+} 
+html[data-color-mode="dark"] #content h3 a, html[data-color-mode="dark"] #content h3 strong{
+  color:#754bff;
+} 
+html[data-color-mode="dark"] #content h4 a, html[data-color-mode="dark"] #content h4 strong{
+  color:#008f11;
+} 
+html[data-color-mode="dark"] #content h5 a, html[data-color-mode="dark"] #content h5 strong{
+  color:#f727d7;
+} 
+html[data-color-mode="dark"] #content h6 a, html[data-color-mode="dark"] #content h6 strong{
+  color:#ff7cb7;
+} 
+
 html[data-color-mode="light"] #content h1 a, 
 html[data-color-mode="light"] #content h2 a, 
 html[data-color-mode="light"] #content h3 a,
@@ -667,23 +719,24 @@ html[data-color-mode="light"] #content h6 a {
   border-bottom: 1px dotted rgba(126, 87, 255, 0.7);
 }
 
-html[data-color-mode="light"] #content h1 a, #content h1 strong{
-  color:#0098ff;
+
+html[data-color-mode="light"] #content h1 a, html[data-color-mode="light"] #content h1 strong{
+  color:var(--content-h1-a);
 } 
-html[data-color-mode="light"] #content h2 a, #content h2 strong{
+html[data-color-mode="light"] #content h2 a, html[data-color-mode="light"] #content h2 strong{
+  color:#8521ff;
+} 
+html[data-color-mode="light"] #content h3 a, html[data-color-mode="light"] #content h3 strong{
+  color:#754bff;
+} 
+html[data-color-mode="light"] #content h4 a, html[data-color-mode="light"] #content h4 strong{
+  color:#008f11;
+} 
+html[data-color-mode="light"] #content h5 a, html[data-color-mode="light"] #content h5 strong{
+  color:#f727d7;
+} 
+html[data-color-mode="light"] #content h6 a, html[data-color-mode="light"] #content h6 strong{
   color:#ff7cb7;
-} 
-html[data-color-mode="light"] #content h3 a, #content h3 strong{
-  color:#ff00ea;
-} 
-html[data-color-mode="light"] #content h4 a, #content h4 strong{
-  color:#8c00ff;
-} 
-html[data-color-mode="light"] #content h5 a, #content h5 strong{
-  color:#01b25f;
-} 
-html[data-color-mode="light"] #content h6 a, #content h6 strong{
-  color:#ff1ef7;
 } 
 
 
@@ -710,6 +763,24 @@ html[data-color-mode="light"] #content h6 a, #content h6 strong{
   }
 }
 
+html[data-color-mode="auto"] #postBody h1 a, html[data-color-mode="auto"] #postBody h1 strong{
+  color:var(--content-h1-a-auto);
+} 
+html[data-color-mode="auto"] #content h2 a, html[data-color-mode="auto"] #content h2 strong{
+  color:#8521ff;
+} 
+html[data-color-mode="auto"] #content h3 a, html[data-color-mode="auto"] #content h3 strong{
+  color:#754bff;
+} 
+html[data-color-mode="auto"] #content h4 a, html[data-color-mode="auto"] #content h4 strong{
+  color:#008f11;
+} 
+html[data-color-mode="auto"] #content h5 a, html[data-color-mode="auto"] #content h5 strong{
+  color:#f727d7;
+} 
+html[data-color-mode="auto"] #content h6 a, html[data-color-mode="auto"] #content h6 strong{
+  color:#ff7cb7;
+} 
 /* 链接样式 */
 a {
   color: var(--primary-color);

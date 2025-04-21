@@ -1,5 +1,5 @@
 
-# Wan/Lan
+# Wan/Lan 
 
 路由器-->交换机
 
@@ -29,19 +29,19 @@ arm -a
 
 ### **数据发送**
 
-![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Linux基础网络知识/img_d7f91e0dc8.png)
+![](http://)
 
 ### **数据接收**
 
-![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Linux基础网络知识/img_9359f6a767.png)
+![](http://)
 
 ### 协议数据单元
 
-![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Linux基础网络知识/img_08c51acaa0.png)
+![](http://)
 
 ### 设备与层的对应关系
 
-![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Linux基础网络知识/img_93864646bf.png)
+![](http://)
 
 # IP地址
 
@@ -61,9 +61,7 @@ C类/24(255.255.255.0)
 
 > **其中8是因为255的2进制是8个1，****下面的D，E类IP主要用于政府和医院等机构**
 
-![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Linux基础网络知识/img_f4167725c6.png)
-
-![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Linux基础网络知识/img_6db80274cb.png)
+![](http://](http://)
 
 ## 私网IP段
 
@@ -212,5 +210,5 @@ Route#show ip route
 
 [https://kdocs.cn/l/cqVaMZULV9La](https://kdocs.cn/l/cqVaMZULV9La "vmvare虚拟机两种上网方式.docx")
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTQ2NTIyNjkzM119
+eyJoaXN0b3J5IjpbLTk4MjEwNzUzMF19
 -->

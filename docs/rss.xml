@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>爱捣鼓的小木水的博客</title><link>https://blog.mymaskking.dpdns.org/</link><description>一个等着裁员的java程序猿，每天无所事事，只想搞钱，喜欢钻研各种实用的技能，讨厌天天做工作上的项目，对自己毫无实用价值。&lt;BR/&gt;&lt;div class='listLabels'&gt;&lt;span class='Label LabelName'style='background-color:#efe1e1'&gt;&lt;object&gt;&lt;a style='color:#000000'href='https://v.douyin.com/UFXv95UxBbQ/'data-click-setup='true'&gt;抖音&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#a2eeef'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://kdocs.cn/l/clf4xOs5a3Q1'data-click-setup='true'&gt;WPS万能文档&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#ff0c0c'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://www.youtube.com/channel/UCeHFivb01FfFIL7kciY6KFg'data-click-setup='true'&gt;YouTobe&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelTime'style='background-color:#ff4f9a'&gt;&lt;a style='color:#fff'href='https://b23.tv/rGe89DU' data-click-setup='true'&gt;哔哩哔哩&lt;/a&gt;&lt;/span&gt;&lt;/div&gt;</description><copyright>爱捣鼓的小木水的博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/41733240?v=4</url><title>avatar</title><link>https://blog.mymaskking.dpdns.org/</link></image><lastBuildDate>Mon, 21 Apr 2025 08:00:16 +0000</lastBuildDate><managingEditor>爱捣鼓的小木水的博客</managingEditor><ttl>60</ttl><webMaster>爱捣鼓的小木水的博客</webMaster><item><title>测试Test</title><link>https://blog.mymaskking.dpdns.org//post/ce-shi-Test.html</link><description>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>爱捣鼓的小木水的博客</title><link>https://blog.mymaskking.dpdns.org/</link><description>一个等着裁员的java程序猿，每天无所事事，只想搞钱，喜欢钻研各种实用的技能，讨厌天天做工作上的项目，对自己毫无实用价值。&lt;BR/&gt;&lt;div class='listLabels'&gt;&lt;span class='Label LabelName'style='background-color:#efe1e1'&gt;&lt;object&gt;&lt;a style='color:#000000'href='https://v.douyin.com/UFXv95UxBbQ/'data-click-setup='true'&gt;抖音&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#a2eeef'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://kdocs.cn/l/clf4xOs5a3Q1'data-click-setup='true'&gt;WPS万能文档&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#ff0c0c'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://www.youtube.com/channel/UCeHFivb01FfFIL7kciY6KFg'data-click-setup='true'&gt;YouTobe&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelTime'style='background-color:#ff4f9a'&gt;&lt;a style='color:#fff'href='https://b23.tv/rGe89DU' data-click-setup='true'&gt;哔哩哔哩&lt;/a&gt;&lt;/span&gt;&lt;/div&gt;</description><copyright>爱捣鼓的小木水的博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/41733240?v=4</url><title>avatar</title><link>https://blog.mymaskking.dpdns.org/</link></image><lastBuildDate>Mon, 21 Apr 2025 08:07:39 +0000</lastBuildDate><managingEditor>爱捣鼓的小木水的博客</managingEditor><ttl>60</ttl><webMaster>爱捣鼓的小木水的博客</webMaster><item><title>测试Test</title><link>https://blog.mymaskking.dpdns.org//post/ce-shi-Test.html</link><description>
 # 先要知道的一些内容
 
 ## **手机的系统架构是什么？如何看？**
@@ -372,7 +372,7 @@ poweroff #关机
 eyJoaXN0b3J5IjpbMTI0MDAzNjM3XX0=
 --&gt;
 。</description><guid isPermaLink="true">https://blog.mymaskking.dpdns.org//post/Linux-zhi-shi-dian-%EF%BC%88-ji-chu-zhi-shi-%EF%BC%89.html</guid><pubDate>Sat, 12 Apr 2025 21:42:40 +0000</pubDate></item><item><title>Linux基础网络知识</title><link>https://blog.mymaskking.dpdns.org//post/Linux-ji-chu-wang-luo-zhi-shi.html</link><description>
-# Wan/Lan
+# Wan/Lan 
 
 路由器--&gt;交换机
 
@@ -402,19 +402,19 @@ arm -a
 
 ### **数据发送**
 
-![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Linux基础网络知识/img_d7f91e0dc8.png)
+![](http://)
 
 ### **数据接收**
 
-![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Linux基础网络知识/img_9359f6a767.png)
+![](http://)
 
 ### 协议数据单元
 
-![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Linux基础网络知识/img_08c51acaa0.png)
+![](http://)
 
 ### 设备与层的对应关系
 
-![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Linux基础网络知识/img_93864646bf.png)
+![](http://)
 
 # IP地址
 
@@ -434,9 +434,7 @@ C类/24(255.255.255.0)
 
 &gt; **其中8是因为255的2进制是8个1，****下面的D，E类IP主要用于政府和医院等机构**
 
-![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Linux基础网络知识/img_f4167725c6.png)
-
-![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Linux基础网络知识/img_6db80274cb.png)
+![](http://](http://)
 
 ## 私网IP段
 

@@ -1,5 +1,65 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>爱捣鼓的小木水的博客</title><link>https://blog.mymaskking.dpdns.org/</link><description>一个等着裁员的java程序猿，每天无所事事，只想搞钱，喜欢钻研各种实用的技能，讨厌天天做工作上的项目，对自己毫无实用价值。&lt;BR/&gt;&lt;div class='listLabels'&gt;&lt;span class='Label LabelName'style='background-color:#efe1e1'&gt;&lt;object&gt;&lt;a style='color:#000000'href='https://v.douyin.com/UFXv95UxBbQ/'data-click-setup='true'&gt;抖音&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#a2eeef'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://kdocs.cn/l/clf4xOs5a3Q1'data-click-setup='true'&gt;WPS万能文档&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#ff0c0c'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://www.youtube.com/channel/UCeHFivb01FfFIL7kciY6KFg'data-click-setup='true'&gt;YouTobe&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelTime'style='background-color:#ff4f9a'&gt;&lt;a style='color:#fff'href='https://b23.tv/rGe89DU' data-click-setup='true'&gt;哔哩哔哩&lt;/a&gt;&lt;/span&gt;&lt;/div&gt;</description><copyright>爱捣鼓的小木水的博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/41733240?v=4</url><title>avatar</title><link>https://blog.mymaskking.dpdns.org/</link></image><lastBuildDate>Mon, 21 Apr 2025 08:13:55 +0000</lastBuildDate><managingEditor>爱捣鼓的小木水的博客</managingEditor><ttl>60</ttl><webMaster>爱捣鼓的小木水的博客</webMaster><item><title>cloudflare做内网穿透(搭建安卓服务器:第二章)</title><link>https://blog.mymaskking.dpdns.org//post/cloudflare-zuo-nei-wang-chuan-tou-%28-da-jian-an-zhuo-fu-wu-qi---di-er-zhang-%29.html</link><description>## 网络穿透教程
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>爱捣鼓的小木水的博客</title><link>https://blog.mymaskking.dpdns.org/</link><description>一个等着裁员的java程序猿，每天无所事事，只想搞钱，喜欢钻研各种实用的技能，讨厌天天做工作上的项目，对自己毫无实用价值。&lt;BR/&gt;&lt;div class='listLabels'&gt;&lt;span class='Label LabelName'style='background-color:#efe1e1'&gt;&lt;object&gt;&lt;a style='color:#000000'href='https://v.douyin.com/UFXv95UxBbQ/'data-click-setup='true'&gt;抖音&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#a2eeef'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://kdocs.cn/l/clf4xOs5a3Q1'data-click-setup='true'&gt;WPS万能文档&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#ff0c0c'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://www.youtube.com/channel/UCeHFivb01FfFIL7kciY6KFg'data-click-setup='true'&gt;YouTobe&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelTime'style='background-color:#ff4f9a'&gt;&lt;a style='color:#fff'href='https://b23.tv/rGe89DU' data-click-setup='true'&gt;哔哩哔哩&lt;/a&gt;&lt;/span&gt;&lt;/div&gt;</description><copyright>爱捣鼓的小木水的博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/41733240?v=4</url><title>avatar</title><link>https://blog.mymaskking.dpdns.org/</link></image><lastBuildDate>Mon, 21 Apr 2025 08:27:00 +0000</lastBuildDate><managingEditor>爱捣鼓的小木水的博客</managingEditor><ttl>60</ttl><webMaster>爱捣鼓的小木水的博客</webMaster><item><title>cloudflare做内网穿透(搭建安卓服务器：第二章).1</title><link>https://blog.mymaskking.dpdns.org//post/cloudflare-zuo-nei-wang-chuan-tou-%28-da-jian-an-zhuo-fu-wu-qi-%EF%BC%9A-di-er-zhang-%29.1.html</link><description>## 网络穿透教程
+
+⭐
+
+1.  下载cloudflare的安装包
+
+`curl -L` [`https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64`](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64) `-o /usr/local/bin/cloudflared`
+
+1.  赋予执行权限
+
+`chmod +x /usr/local/bin/cloudflared`
+
+1.  确认是否安装成功
+
+`cloudflared version`
+
+1.  执行
+
+`cloudflared service install 你的密钥`
+
+**卸载命令**：`cloudflared service uninstall`
+
+**Docker版看这里**
+
+**参考这个链接**：[点我](https://sspai.com/post/79278)
+
+**docker的附加参数：**
+
+-   --link alist:alist #容器间相互通信
+
+-   --network host #容器内的应用就能直接访问宿主机的 localhost
+
+`docker run --link alist:alist cloudflare/cloudflared:latest tunnel --no-autoupdate run --token 你的token`
+
+已废弃部分
+
+⭐
+
+1.  下载cloudflare的ubuntu文件
+
+`curl -L --output cloudflared.deb` [`https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb`](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb)
+
+注意：这里curl可能会碰到https无法下载的问题，建议把文件放到http（**AList**）下面
+
+1.  sudo dpkg -i cloudflared.deb
+
+注意：这里可能会报错package architecture (amd64) does not match system (arm64)
+
+解决：sudo dpkg -i --force-architecture cloudflared.deb （[点击参考](https://github.com/kubernetes/minikube/issues/10001)）
+
+1.  sudo cloudflared service install 你的密钥
+
+成功会显示：`Illegal instruction`
+
+## 网页版SSH内网穿透
+
+⭐
+
+1.  **将服务器连接到 Cloudflare：**
+
+-   **创建 Cloudflare Tunnel：** 登录到 Cloudflare Zero Trust 仪表板，导航至“Networks” &gt; “Tunnels”，点击“Create a tunnel”。</description><guid isPermaLink="true">https://blog.mymaskking.dpdns.org//post/cloudflare-zuo-nei-wang-chuan-tou-%28-da-jian-an-zhuo-fu-wu-qi-%EF%BC%9A-di-er-zhang-%29.1.html</guid><pubDate>Mon, 21 Apr 2025 08:26:15 +0000</pubDate></item><item><title>cloudflare做内网穿透(搭建安卓服务器:第二章)</title><link>https://blog.mymaskking.dpdns.org//post/cloudflare-zuo-nei-wang-chuan-tou-%28-da-jian-an-zhuo-fu-wu-qi---di-er-zhang-%29.html</link><description>## 网络穿透教程
 
 ⭐
 
@@ -173,7 +233,7 @@
 
 1.  **最新的办法**，使用**Telegram**上面的**MeMailerBot**可以获取临时邮箱（测试了两个可以使用）
 
-![](http://www.kdocs.cn/api/v3/office/copy/ZEhyYTd0WFAxbXNxSmMrUGpRc0xlUzFYeXpVQnVCUW9paWRNL2pNdlRGMTJReWROM3IxdVRGdXBzOFlxSjEyMGdFcGtraDNsalNTVVdUVk1DbWZPMy9xS2llR29PdHJjaEZoQ1oxL3J6NGltUXB6YVlBcHJxZFZ6VVM3NVBTZU1PS2NFYUpXWTV1SUxBdU9lUC9DM3N1aGVEZDBKVzN6c3AzZi9TOWZ0cThJb2JFVTNDanF4aUtqNEV6US92Sk0rWllQcUVpWW1wcVRmcDVscklWcUdTK2p4bUs3ekJrekhBdzhMMHhkdUhjV09OTTBzb2xTNGVmbDVyck1od2VYVm1IUXJheGFKTW5JPQ==/attach/object/OSJUX4Q6ACQHQ?)
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/万能文档(📋最新内容都在这！)/img_d98a4a2ba7.png)
 
 其他办法，否则使用**字节的Trae**代替
 

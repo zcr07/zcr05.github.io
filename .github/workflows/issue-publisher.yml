@@ -6,6 +6,11 @@ on:
     paths:
       - 'issues/*.md'
 
+# 添加并发控制，防止同一仓库多个工作流实例同时运行导致冲突
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false  # 不取消运行中的工作流，确保所有变更都被处理
+
 permissions:
   contents: write
   issues: write
@@ -34,6 +39,18 @@ jobs:
           # 获取前一次提交的SHA
           PREVIOUS_SHA=$(git rev-parse HEAD~1)
           echo "🔧 前一次提交 SHA: $PREVIOUS_SHA"
+          
+          # 检查是否有多次提交一起触发了此工作流
+          echo "👀 检查可能的多次提交..."
+          COMMITS_COUNT=$(git rev-list --count $PREVIOUS_SHA..$GITHUB_SHA)
+          echo "📊 检测到 $COMMITS_COUNT 次提交"
+          
+          # 如果有多次提交，使用最早的提交作为基准
+          if [[ $COMMITS_COUNT -gt 1 ]]; then
+            echo "🔍 检测到多次提交，获取最早的提交作为基准..."
+            PREVIOUS_SHA=$(git rev-parse $GITHUB_SHA~$COMMITS_COUNT)
+            echo "🔧 更新基准提交 SHA: $PREVIOUS_SHA"
+          fi
 
           # 处理删除的文件 - 使用单独命令获取删除的文件
           echo "📋 获取删除的文件..."
@@ -113,9 +130,22 @@ jobs:
               # 尝试推送，如果失败则先拉取再推送
               if ! git push; then
                 echo "⚠️ 推送失败，尝试先拉取最新更改..."
+                
+                # 检查是否有未提交的更改，如果有则先提交
+                if [[ -n "$(git status --porcelain)" ]]; then
+                  echo "检测到未提交的更改，先进行临时提交..."
+                  git add -A
+                  git commit -m "临时提交未保存的更改 [skip ci]"
+                fi
+                
+                # 现在可以安全地拉取
                 git pull --rebase
+                
                 echo "🔄 再次尝试推送..."
-                git push || echo "❌ 推送失败，但继续执行流程"
+                git push || {
+                  echo "❌ 推送仍然失败，尝试强制推送..."
+                  git push --force || echo "⚠️ 强制推送也失败，可能需要手动处理冲突"
+                }
               fi
             else
               echo "ℹ️ 没有图片需要删除"
@@ -259,9 +289,22 @@ jobs:
                 # 尝试推送，如果失败则先拉取再推送
                 if ! git push; then
                   echo "⚠️ 推送失败，尝试先拉取最新更改..."
+                  
+                  # 检查是否有未提交的更改，如果有则先提交
+                  if [[ -n "$(git status --porcelain)" ]]; then
+                    echo "检测到未提交的更改，先进行临时提交..."
+                    git add -A
+                    git commit -m "临时提交未保存的更改 [skip ci]"
+                  fi
+                  
+                  # 现在可以安全地拉取
                   git pull --rebase
+                  
                   echo "🔄 再次尝试推送..."
-                  git push || echo "❌ 推送失败，但继续执行流程"
+                  git push || {
+                    echo "❌ 推送仍然失败，尝试强制推送..."
+                    git push --force || echo "⚠️ 强制推送也失败，可能需要手动处理冲突"
+                  }
                 fi
               else
                 echo "ℹ️ 没有图片需要删除"
@@ -548,9 +591,22 @@ jobs:
             # 尝试推送，如果失败则先拉取再推送
             if ! git push; then
               echo "⚠️ 推送失败，尝试先拉取最新更改..."
+              
+              # 检查是否有未提交的更改，如果有则先提交
+              if [[ -n "$(git status --porcelain)" ]]; then
+                echo "检测到未提交的更改，先进行临时提交..."
+                git add -A
+                git commit -m "临时提交未保存的更改 [skip ci]"
+              fi
+              
+              # 现在可以安全地拉取
               git pull --rebase
+              
               echo "🔄 再次尝试推送..."
-              git push || echo "❌ 推送失败，但继续执行流程"
+              git push || {
+                echo "❌ 推送仍然失败，尝试强制推送..."
+                git push --force || echo "⚠️ 强制推送也失败，可能需要手动处理冲突"
+              }
             fi
           else
             echo "ℹ️ 没有图片需要提交"
@@ -601,9 +657,22 @@ jobs:
               # 尝试推送，如果失败则先拉取再推送
               if ! git push; then
                 echo "⚠️ 推送失败，尝试先拉取最新更改..."
+                
+                # 检查是否有未提交的更改，如果有则先提交
+                if [[ -n "$(git status --porcelain)" ]]; then
+                  echo "检测到未提交的更改，先进行临时提交..."
+                  git add -A
+                  git commit -m "临时提交未保存的更改 [skip ci]"
+                fi
+                
+                # 现在可以安全地拉取
                 git pull --rebase
+                
                 echo "🔄 再次尝试推送..."
-                git push || echo "❌ 推送失败，但继续执行流程"
+                git push || {
+                  echo "❌ 推送仍然失败，尝试强制推送..."
+                  git push --force || echo "⚠️ 强制推送也失败，可能需要手动处理冲突"
+                }
               fi
             else
               echo "ℹ️ 没有未使用的图片文件夹需要清理"

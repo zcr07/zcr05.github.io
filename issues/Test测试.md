@@ -1,29 +1,25 @@
 
-### #3自定义主机证书的自动续订的问题
+## 踩到的坑
 
 ⭐
 
-自定义主机(主域名)**ssh.A下面****加一个CNAME**
+![](http://www.kdocs.cn/api/v3/office/copy/eFJCbDJ2T013anliL3NET2JQTms3cVh6VmNsSHpicFkzNVRzTGNwUDIvQkJFdEF5RTJPNkE2MmpMMWozQTVBVFQ3eWhZeFJVWFNJeitUdkwrY2M2cXVPZjJJQWFCTGlXcThuYlRsTS9YQlFPTE5PUzlQZm1OTnNocTdLd3FjSkRJdE1oTkIxTHJYNzRRVFlJZFgrVDhGeW80YlhnN2FqbkQ5R2JGU25kY2ZycjBmUjA0Tld4NW5WZ0ZLdHpybnVybUVWanhITTV1b1lIa00xME5rcmkzUDl4REZadjZyMGN6U2JXWlB6Q2l6TjVwTXpLa2tjRTRRVFFObllEVi92M2EzYWc4aDd6YlJnPQ==/attach/object/37FR4WA7AAQBG?)
 
-### **自定义主机名的 DCV 委派**
+在**cloudflare中配置公共主机名**的时候，一定**不要设置路径**，**否则可能会造成js,css无法正常返回**
 
-_`acme-challenge.<hostname>` `<hostname>.``6ec077ddb0899695.dcv.cloudflare.com`
-
-CNAME的Key里面只需要写sub域名**ssh**，cloudflare会自动补充完整域名的，但是value里面要写**ssh.A**
-
-_`acme-challenge``**.ssh**` `**ssh.A.**``<hostname>.``6ec077ddb0899695.dcv.cloudflare.com`
-
-温馨提示：实际内容请参考“**自定义主机名的 DCV 委派**”
-
-### CF加速成功验证
+## 关于内网穿透的一些补充内容
 
 ⭐
 
-[**在线网站测试**](https://www.itdog.cn/http/)
+用**cpolar**也可以做**内网穿透**（不过没有试验过，教程如下）
 
-![](http://www.kdocs.cn/api/v3/office/copy/eFJCbDJ2T013anliL3NET2JQTms3cVh6VmNsSHpicFkzNVRzTGNwUDIvQkJFdEF5RTJPNkE2MmpMMWozQTVBVFQ3eWhZeFJVWFNJeitUdkwrY2M2cXVPZjJJQWFCTGlXcThuYlRsTS9YQlFPTE5PUzlQZm1OTnNocTdLd3FjSkRJdE1oTkIxTHJYNzRRVFlJZFgrVDhGeW80YlhnN2FqbkQ5R2JGU25kY2ZycjBmUjA0Tld4NW5WZ0ZLdHpybnVybUVWanhITTV1b1lIa00xME5rcmkzUDl4REZadjZyMGN6U2JXWlB6Q2l6TjVwTXpLa2tjRTRRVFFObllEVi92M2EzYWc4aDd6YlJnPQ==/attach/object/XEX5E2A7ABQFE?)
+图文教程：[点我](https://developer.aliyun.com/article/1487189?spm=5176.26934562.main.1.763bb724frQ2gg)
 
-![](http://www.kdocs.cn/api/v3/office/copy/eFJCbDJ2T013anliL3NET2JQTms3cVh6VmNsSHpicFkzNVRzTGNwUDIvQkJFdEF5RTJPNkE2MmpMMWozQTVBVFQ3eWhZeFJVWFNJeitUdkwrY2M2cXVPZjJJQWFCTGlXcThuYlRsTS9YQlFPTE5PUzlQZm1OTnNocTdLd3FjSkRJdE1oTkIxTHJYNzRRVFlJZFgrVDhGeW80YlhnN2FqbkQ5R2JGU25kY2ZycjBmUjA0Tld4NW5WZ0ZLdHpybnVybUVWanhITTV1b1lIa00xME5rcmkzUDl4REZadjZyMGN6U2JXWlB6Q2l6TjVwTXpLa2tjRTRRVFFObllEVi92M2EzYWc4aDd6YlJnPQ==/attach/object/2ZQ5G2A7AAAAE?)![输入图片说明](/imgs/2025-04-21/WDlF2Vha4b7fTG0r.png)
+油管视频：[点我](https://www.youtube.com/watch?v=nMsyAUfPshE&t=246s)
+
+官方教程：[点我](https://www.cpolar.com/blog/cpolar-quick-start-tutorial-ubuntu-series)
+
+docker版安装：[点我](https://www.cpolar.com/blog/docker-container-installation-cpolar)![输入图片说明](/imgs/2025-04-21/yrH8eqaywZgP6vka.png)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNDQzNDQwNTk2XX0=
+eyJoaXN0b3J5IjpbNzg4MDgxNzc2XX0=
 -->

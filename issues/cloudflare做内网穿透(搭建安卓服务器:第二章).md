@@ -186,15 +186,15 @@ _`acme-challenge``**.ssh**` `**ssh.A.**``<hostname>.``6ec077ddb0899695.dcv.cloud
 
 [**在线网站测试**](https://www.itdog.cn/http/)
 
-![](http://www.kdocs.cn/api/v3/office/copy/ajR1Y0NCd1I2cWkyR08wNlRVNlV0bE5jZHdBZVdPWFNlQjFoZG84VWJyL2FaNlUzNGFNVjJ4R2IxeGd3QktHZW5rZnkyVDJMK1dvWXNmN1phYTJOaVcwendXYnNLd0JCbDR5S3hob0JoaWEzVkQ2MGxlTFk1QjdmcFp1dXRqU2hiWEo2UW95alNJQXVJYWV4Y3ViRjZJc1ZhL2M3WnJHa09lV0pBbURObjdoaFVqdGNXa2pCZG1GL1IrZkovaFBpeVVtb2wxWkhSeWdGc0ViYjh1UWh0UktIK0piNlROY3BMY1B5VlIyemhUQXlWcjJZWi9KdmdUOTN6WDduT1RlZXl0ZmNLbmRqaEtjPQ==/attach/object/XEX5E2A7ABQFE?)
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/cloudflare做内网穿透(搭建安卓服务器_第二章)/img_3b908c20b8.png)
 
-![](http://www.kdocs.cn/api/v3/office/copy/ajR1Y0NCd1I2cWkyR08wNlRVNlV0bE5jZHdBZVdPWFNlQjFoZG84VWJyL2FaNlUzNGFNVjJ4R2IxeGd3QktHZW5rZnkyVDJMK1dvWXNmN1phYTJOaVcwendXYnNLd0JCbDR5S3hob0JoaWEzVkQ2MGxlTFk1QjdmcFp1dXRqU2hiWEo2UW95alNJQXVJYWV4Y3ViRjZJc1ZhL2M3WnJHa09lV0pBbURObjdoaFVqdGNXa2pCZG1GL1IrZkovaFBpeVVtb2wxWkhSeWdGc0ViYjh1UWh0UktIK0piNlROY3BMY1B5VlIyemhUQXlWcjJZWi9KdmdUOTN6WDduT1RlZXl0ZmNLbmRqaEtjPQ==/attach/object/2ZQ5G2A7AAAAE?)
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/cloudflare做内网穿透(搭建安卓服务器_第二章)/img_877224537a.png)
 
 ## 踩到的坑
 
 ⭐
 
-![](http://www.kdocs.cn/api/v3/office/copy/ajR1Y0NCd1I2cWkyR08wNlRVNlV0bE5jZHdBZVdPWFNlQjFoZG84VWJyL2FaNlUzNGFNVjJ4R2IxeGd3QktHZW5rZnkyVDJMK1dvWXNmN1phYTJOaVcwendXYnNLd0JCbDR5S3hob0JoaWEzVkQ2MGxlTFk1QjdmcFp1dXRqU2hiWEo2UW95alNJQXVJYWV4Y3ViRjZJc1ZhL2M3WnJHa09lV0pBbURObjdoaFVqdGNXa2pCZG1GL1IrZkovaFBpeVVtb2wxWkhSeWdGc0ViYjh1UWh0UktIK0piNlROY3BMY1B5VlIyemhUQXlWcjJZWi9KdmdUOTN6WDduT1RlZXl0ZmNLbmRqaEtjPQ==/attach/object/37FR4WA7AAQBG?)
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/cloudflare做内网穿透(搭建安卓服务器_第二章)/img_1ae1eae448.png)
 
 在**cloudflare中配置公共主机名**的时候，一定**不要设置路径**，**否则可能会造成js,css无法正常返回**
 
@@ -301,7 +301,7 @@ cpolar authtoken xxxxxxx
 
 **实验完毕，垃圾别用！！！**
 
-![](http://www.kdocs.cn/api/v3/office/copy/ajR1Y0NCd1I2cWkyR08wNlRVNlV0bE5jZHdBZVdPWFNlQjFoZG84VWJyL2FaNlUzNGFNVjJ4R2IxeGd3QktHZW5rZnkyVDJMK1dvWXNmN1phYTJOaVcwendXYnNLd0JCbDR5S3hob0JoaWEzVkQ2MGxlTFk1QjdmcFp1dXRqU2hiWEo2UW95alNJQXVJYWV4Y3ViRjZJc1ZhL2M3WnJHa09lV0pBbURObjdoaFVqdGNXa2pCZG1GL1IrZkovaFBpeVVtb2wxWkhSeWdGc0ViYjh1UWh0UktIK0piNlROY3BMY1B5VlIyemhUQXlWcjJZWi9KdmdUOTN6WDduT1RlZXl0ZmNLbmRqaEtjPQ==/attach/object/7CEEE3Q7AAAFU?)
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/cloudflare做内网穿透(搭建安卓服务器_第二章)/img_223f7a24f2.png)
 <!--stackedit_data:
 eyJoaXN0b3J5IjpbLTc3OTUzMzkyNV19
 -->

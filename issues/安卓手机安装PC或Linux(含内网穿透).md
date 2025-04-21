@@ -9,10 +9,9 @@
 
 其他还是用第三方软件(如DevCheck[https://wwvj.lanzoum.com/b0065zsiaj](https://wwvj.lanzoum.com/b0065zsiaj)密码:cp5o)查看
 
-![](http://www.kdocs.cn/api/v3/office/copy/Q2dtczJwZjRYaVlKYVhhcDRZTkltTVZyblp1YVhFZmpNZWhSQUsyd293dkFKdzNOUkkxVVpORDN0aEFzeVFlMUNGRTNYYVQ2a096c25mR3ZGM0doTzF0MTc2U0l2ZEo1WnRLYVBvdWR3VjlsNXBwenJXYjJJeXZJOWhzbDBPMm11bS81UnUyOEdCb0JrSWYwZ1lLTzBERjdBdk5XV0FzeUVBeVZCbFFDeCs5NUFDaEoxWk9jY1pXS1F0Y0NEeDkvSzRUTjNleElHSU5LdEdKNHpYZVUvbUZWazhDWkJDQTRnM2daazhsZVdFeVUyQzNQRkNZdFh4T2plOGExcWdweENCSFBXYjhHRUhRPQ==/attach/object/WCEPEVY7ABAGU?)
+![](http://www.kdocs.cn/api/v3/office/copy/SU5MbE9PRlhxckFFcVB2dUljaWhIMVF5QW56ejlYWHphN3hjV2tQRTVrU0ZKMXZWbHdSYTU5TVd6R1VZSzNFOWorY24zcjVOLzBNdkp2TWcxTm5tY2RrTVMxWThxT1VyWlMwNEl1bHd6dk5aVUJoMEcwQlorZGFmZ2cwWUdzK3NlWXhtZE9paUk5RTJDSWFBSTlEazV2T3B2c0x2MTdjQTB1ZkFmOFN2QmJSMkgrcStkZmQ4VHZHd2tBbVB4UE1ZYnk0cVpHbzlKRForUWRYcWtRak16bWN1dUVldUtDK0ttZnAyRjEra2Q3MTdMNXdGamVzUGVnYnY5clVLQ294eGpNSkdpZlRsNmVnPQ==/attach/object/WCEPEVY7ABAGU?)
 
 ## **linux，乌班图，德班系统是在什么系统架构上运行的？**
-
 
 > Linux、Ubuntu 和 Debian 操作系统可以运行在多种系统架构上，主要包括：  
 > **x86（i386）**：32 位架构，适用于较旧的计算机系统。  
@@ -38,5 +37,5 @@ dpkg --print-architecture
 > **s390x**：IBM大型机系统的架构。  
 > **ppc64le**：IBM Power处理器的架构。
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTMxODU3OTQzOV19
+eyJoaXN0b3J5IjpbLTczODMwNTI5MF19
 -->

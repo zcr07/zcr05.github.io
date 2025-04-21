@@ -1,3 +1,4 @@
+
 # Wan/Lan
 
 路由器-->交换机
@@ -6,7 +7,7 @@
 
 # 网络模型
 
-![](http://www.kdocs.cn/api/v3/office/copy/Ny9nVFZFNXdyalpOVlZEdnZSTEh3NWNTdVBDYVVvRWhlNnZuM21SUjFYTkYxSDJFOVFsS3lncDNCV210d003QWxoYXdQc0tkOGUrWENQaEZpbDZsUUdHRGVOK3lCR1l4eFd5Wk1sdnYwTUpIaHg3ZTUrWjhRdFJoZjlSRGEvRGUrOGlkYTRla0lHdk5tQW85U1RyelJ2bjFuVTlNTkVOUVhqVnBZNHE3OWZRWGMxaHBRaEJTZTRaWnFBempzWk1LQitnM0lKVXBmN0xxMURZUWYvNlVhMGdOVVJPK093Z25QY2d2RklXc1BKUEl0MW5saS9SOXVhblFZc2xrN21zTnV3OVFjN3hMYmhJPQ==/attach/object/7V4HW5YXACQAI?)
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Linux基础网络知识/img_0a3857acb4.png)
 
 💡
 
@@ -28,19 +29,19 @@ arm -a
 
 ### **数据发送**
 
-![](http://www.kdocs.cn/api/v3/office/copy/Ny9nVFZFNXdyalpOVlZEdnZSTEh3NWNTdVBDYVVvRWhlNnZuM21SUjFYTkYxSDJFOVFsS3lncDNCV210d003QWxoYXdQc0tkOGUrWENQaEZpbDZsUUdHRGVOK3lCR1l4eFd5Wk1sdnYwTUpIaHg3ZTUrWjhRdFJoZjlSRGEvRGUrOGlkYTRla0lHdk5tQW85U1RyelJ2bjFuVTlNTkVOUVhqVnBZNHE3OWZRWGMxaHBRaEJTZTRaWnFBempzWk1LQitnM0lKVXBmN0xxMURZUWYvNlVhMGdOVVJPK093Z25QY2d2RklXc1BKUEl0MW5saS9SOXVhblFZc2xrN21zTnV3OVFjN3hMYmhJPQ==/attach/object/57FXW5YXACQAI?)
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Linux基础网络知识/img_d7f91e0dc8.png)
 
 ### **数据接收**
 
-![](http://www.kdocs.cn/api/v3/office/copy/Ny9nVFZFNXdyalpOVlZEdnZSTEh3NWNTdVBDYVVvRWhlNnZuM21SUjFYTkYxSDJFOVFsS3lncDNCV210d003QWxoYXdQc0tkOGUrWENQaEZpbDZsUUdHRGVOK3lCR1l4eFd5Wk1sdnYwTUpIaHg3ZTUrWjhRdFJoZjlSRGEvRGUrOGlkYTRla0lHdk5tQW85U1RyelJ2bjFuVTlNTkVOUVhqVnBZNHE3OWZRWGMxaHBRaEJTZTRaWnFBempzWk1LQitnM0lKVXBmN0xxMURZUWYvNlVhMGdOVVJPK093Z25QY2d2RklXc1BKUEl0MW5saS9SOXVhblFZc2xrN21zTnV3OVFjN3hMYmhJPQ==/attach/object/5JKHY5YXADADS?)
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Linux基础网络知识/img_9359f6a767.png)
 
 ### 协议数据单元
 
-![](http://www.kdocs.cn/api/v3/office/copy/Ny9nVFZFNXdyalpOVlZEdnZSTEh3NWNTdVBDYVVvRWhlNnZuM21SUjFYTkYxSDJFOVFsS3lncDNCV210d003QWxoYXdQc0tkOGUrWENQaEZpbDZsUUdHRGVOK3lCR1l4eFd5Wk1sdnYwTUpIaHg3ZTUrWjhRdFJoZjlSRGEvRGUrOGlkYTRla0lHdk5tQW85U1RyelJ2bjFuVTlNTkVOUVhqVnBZNHE3OWZRWGMxaHBRaEJTZTRaWnFBempzWk1LQitnM0lKVXBmN0xxMURZUWYvNlVhMGdOVVJPK093Z25QY2d2RklXc1BKUEl0MW5saS9SOXVhblFZc2xrN21zTnV3OVFjN3hMYmhJPQ==/attach/object/SVPX65YXABQAY?)
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Linux基础网络知识/img_08c51acaa0.png)
 
 ### 设备与层的对应关系
 
-![](http://www.kdocs.cn/api/v3/office/copy/Ny9nVFZFNXdyalpOVlZEdnZSTEh3NWNTdVBDYVVvRWhlNnZuM21SUjFYTkYxSDJFOVFsS3lncDNCV210d003QWxoYXdQc0tkOGUrWENQaEZpbDZsUUdHRGVOK3lCR1l4eFd5Wk1sdnYwTUpIaHg3ZTUrWjhRdFJoZjlSRGEvRGUrOGlkYTRla0lHdk5tQW85U1RyelJ2bjFuVTlNTkVOUVhqVnBZNHE3OWZRWGMxaHBRaEJTZTRaWnFBempzWk1LQitnM0lKVXBmN0xxMURZUWYvNlVhMGdOVVJPK093Z25QY2d2RklXc1BKUEl0MW5saS9SOXVhblFZc2xrN21zTnV3OVFjN3hMYmhJPQ==/attach/object/PNIIA5YXABQBA?)
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Linux基础网络知识/img_93864646bf.png)
 
 # IP地址
 
@@ -60,9 +61,9 @@ C类/24(255.255.255.0)
 
 > **其中8是因为255的2进制是8个1，****下面的D，E类IP主要用于政府和医院等机构**
 
-![](http://www.kdocs.cn/api/v3/office/copy/Ny9nVFZFNXdyalpOVlZEdnZSTEh3NWNTdVBDYVVvRWhlNnZuM21SUjFYTkYxSDJFOVFsS3lncDNCV210d003QWxoYXdQc0tkOGUrWENQaEZpbDZsUUdHRGVOK3lCR1l4eFd5Wk1sdnYwTUpIaHg3ZTUrWjhRdFJoZjlSRGEvRGUrOGlkYTRla0lHdk5tQW85U1RyelJ2bjFuVTlNTkVOUVhqVnBZNHE3OWZRWGMxaHBRaEJTZTRaWnFBempzWk1LQitnM0lKVXBmN0xxMURZUWYvNlVhMGdOVVJPK093Z25QY2d2RklXc1BKUEl0MW5saS9SOXVhblFZc2xrN21zTnV3OVFjN3hMYmhJPQ==/attach/object/ENJZLAIXADAEO?)
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Linux基础网络知识/img_f4167725c6.png)
 
-![](http://www.kdocs.cn/api/v3/office/copy/Ny9nVFZFNXdyalpOVlZEdnZSTEh3NWNTdVBDYVVvRWhlNnZuM21SUjFYTkYxSDJFOVFsS3lncDNCV210d003QWxoYXdQc0tkOGUrWENQaEZpbDZsUUdHRGVOK3lCR1l4eFd5Wk1sdnYwTUpIaHg3ZTUrWjhRdFJoZjlSRGEvRGUrOGlkYTRla0lHdk5tQW85U1RyelJ2bjFuVTlNTkVOUVhqVnBZNHE3OWZRWGMxaHBRaEJTZTRaWnFBempzWk1LQitnM0lKVXBmN0xxMURZUWYvNlVhMGdOVVJPK093Z25QY2d2RklXc1BKUEl0MW5saS9SOXVhblFZc2xrN21zTnV3OVFjN3hMYmhJPQ==/attach/object/7NSZXAIXAAQES?)
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Linux基础网络知识/img_6db80274cb.png)
 
 ## 私网IP段
 
@@ -211,5 +212,5 @@ Route#show ip route
 
 [https://kdocs.cn/l/cqVaMZULV9La](https://kdocs.cn/l/cqVaMZULV9La "vmvare虚拟机两种上网方式.docx")
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNDU4MTU5NTE4XX0=
+eyJoaXN0b3J5IjpbMTQ2NTIyNjkzM119
 -->

@@ -25,49 +25,44 @@ jobs:
           fetch-depth: 2  # 确保获取足够的历史记录比较变更
           token: ${{ secrets.GITHUB_TOKEN }}  # 使用带写权限的token
 
-      - name: 🔄 确保代码是最新的
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          
-          # 在任何操作之前，确保获取最新的远程更改
-          echo "🔄 拉取最新的远程更改..."
-          git pull --no-rebase
-          git status
-          
       - name: 🔍 获取本次提交变更的 issues/*.md 文件
         id: get_changed_files
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          # 设置Git身份，确保所有操作都有正确的身份
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
           echo "🔍 当前 GITHUB_SHA: $GITHUB_SHA"
           
-          # 获取前一次提交的SHA
-          PREVIOUS_SHA=$(git rev-parse HEAD~1)
-          echo "🔧 前一次提交 SHA: $PREVIOUS_SHA"
-          
-          # 检查是否有多次提交一起触发了此工作流
-          echo "👀 检查可能的多次提交..."
-          COMMITS_COUNT=$(git rev-list --count $PREVIOUS_SHA..$GITHUB_SHA)
-          echo "📊 检测到 $COMMITS_COUNT 次提交"
-          
-          # 如果有多次提交，使用最早的提交作为基准
-          if [[ $COMMITS_COUNT -gt 1 ]]; then
-            echo "🔍 检测到多次提交，获取最早的提交作为基准..."
-            PREVIOUS_SHA=$(git rev-parse $GITHUB_SHA~$COMMITS_COUNT)
-            echo "🔧 更新基准提交 SHA: $PREVIOUS_SHA"
+          # 获取触发此工作流的提交SHA
+          TRIGGER_SHA="${{ github.event.before }}"
+          if [[ -z "$TRIGGER_SHA" || "$TRIGGER_SHA" == "0000000000000000000000000000000000000000" ]]; then
+            # 如果before为空或者是初始提交，使用HEAD~1
+            TRIGGER_SHA=$(git rev-parse HEAD~1)
           fi
-
-          # 处理删除的文件 - 使用单独命令获取删除的文件
+          echo "🔧 触发此工作流的提交 SHA: $TRIGGER_SHA"
+          echo "🔧 当前提交 SHA: $GITHUB_SHA"
+          
+          # 从触发提交中直接获取变更文件，而不依赖之前的提交
+          echo "📋 获取本次触发提交中变更的文件..."
+          echo "$ git diff --name-status $TRIGGER_SHA $GITHUB_SHA"
+          CHANGED_FILES=$(git diff --name-status $TRIGGER_SHA $GITHUB_SHA)
+          echo "变更文件列表："
+          echo "$CHANGED_FILES"
+          
+          # 处理删除的文件 - 使用文件状态信息来分类
           echo "📋 获取删除的文件..."
-          git diff --diff-filter=D --name-only $PREVIOUS_SHA $GITHUB_SHA | while read -r file; do
+          echo "$CHANGED_FILES" | grep "^D" | awk '{print $2}' | while read -r file; do
             echo "检查删除文件: $file"
             # 移除可能的引号
             file=$(echo "$file" | sed 's/^"//;s/"$//')
-            # 解码转义序列
+            # 解码转义序列，确保中文文件名能正确显示
             decoded_file=$(printf '%b' "$file")
             echo "解码后的文件路径: $decoded_file"
             
+            # 安全检查文件路径
             if [[ "$decoded_file" == issues/* && "$decoded_file" == *.md ]]; then
               echo "🗑️ 检测到删除的md文件: $decoded_file"
               # 保存到删除文件列表
@@ -133,6 +128,10 @@ jobs:
               git commit -m "🗑️ 删除不再使用的图片 [skip ci] [skip gmeek]"
               
               echo "🚀 准备推送到GitHub..."
+              # 在推送前检查当前的更改内容
+              echo "📂 当前的更改文件列表:"
+              git status --porcelain
+              
               # 在推送前确保拉取最新代码，处理潜在的冲突
               echo "🔄 推送前再次拉取最新更改..."
               git pull --no-rebase
@@ -149,16 +148,18 @@ jobs:
             echo "✅ 没有删除任何md文件"
           fi
 
-          # 获取本次提交中新增或修改的文件 - 使用单独命令获取新增或修改的文件
+          # 获取本次提交中新增或修改的文件
           echo "📋 获取新增或修改的文件..."
-          git diff --diff-filter=AM --name-only $PREVIOUS_SHA $GITHUB_SHA | while read -r file; do
+          echo "$CHANGED_FILES" | grep -E "^[AM]" | awk '{print $2}' | while read -r file; do
             echo "检查新增/修改文件: $file"
+            
             # 移除可能的引号
             file=$(echo "$file" | sed 's/^"//;s/"$//')
-            # 解码转义序列
+            # 解码转义序列，确保中文文件名能正确显示
             decoded_file=$(printf '%b' "$file")
             echo "解码后的文件路径: $decoded_file"
             
+            # 安全检查文件路径
             if [[ "$decoded_file" == issues/* && "$decoded_file" == *.md ]]; then
               echo "📝 检测到新增或修改的md文件: $decoded_file"
               # 保存到修改文件列表
@@ -174,14 +175,14 @@ jobs:
           echo "📂 新增或修改的md文件: $MODIFIED_MD_FILES"
           
           # 如果只执行了删除操作，并且没有任何新增或修改的md文件，则标记为只处理删除
-          if [[ "$DELETE_PERFORMED" == "true" && -z "$MODIFIED_MD_FILES" ]]; then
+          if [[ "$DELETE_PERFORMED" == "true" && -z "$DELETED_MD_FILES" && -z "$MODIFIED_MD_FILES" ]]; then
             echo "✅ 已完成删除操作，没有新增或修改的md文件，只执行图片清理"
             echo "ONLY_HANDLE_DELETIONS=true" >> $GITHUB_ENV
             echo "HAS_MD_FILES=false" >> $GITHUB_ENV
           fi
           
           # 如果没有需要处理的文件，则中止程序
-          if [[ -z "$MODIFIED_MD_FILES" && "$DELETE_PERFORMED" != "true" ]]; then
+          if [[ -z "$DELETED_MD_FILES" && -z "$MODIFIED_MD_FILES" ]]; then
             echo "✅ 本次提交没有新增、修改或删除的md文件，中止程序"
             echo "HAS_MD_FILES=false" >> $GITHUB_ENV
             echo "ONLY_HANDLE_DELETIONS=false" >> $GITHUB_ENV
@@ -218,6 +219,12 @@ jobs:
           echo "ISSUES_FILES_LIST=/tmp/final_md_files.txt" >> $GITHUB_ENV
           echo "HAS_MD_FILES=true" >> $GITHUB_ENV
           echo "📂 本次将处理的md文件: $(cat /tmp/final_md_files.txt)"
+          
+          # 现在再拉取最新代码，确保后续操作基于最新代码
+          echo "🔄 拉取最新的远程更改..."
+          git pull --no-rebase
+          echo "📋 拉取后的状态:"
+          git status
 
       # 新增：处理Markdown文件中的图片链接
       - name: 🖼️ 处理MD文件中的图片链接

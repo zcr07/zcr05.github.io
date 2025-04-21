@@ -97,11 +97,11 @@ ISSUE_LABELS: 技术, 教程, 心得
 
 ## Gmeek官方UI
 
-![](http://www.kdocs.cn/api/v3/office/copy/UU1tUGpQN3ptcU1IUGVvV21SOVFNZm9UVmIvN0VkVEo4elJmSmVldGVUOWFWWFQza0tRMlQ3bkxsenBPdnNtcE9GYkphNVlCRFAxOUw4MGZkYjh1bG9XSHJjQnZ3SHdYWXAraTlvK250OVBuS1l1SFk1WGVjWHFJV3NtQmdVWDNJK3FlTjd2ZDBTckV6ZEVBcjlaYmt4eTFPd214ajd5Y0JSc0pnN0t0RU9HM1JXb0dLV3pEakQrUkNmSWJnRE9IMVhhSHo0RkRpSGtmd3NScFZnY2tBOXh3QjdOOGpBUE5qblg1ZThsV09tTUxKL2lER21Md0sydnAzVmo0cWU3bVdBaUs3cENBdmc4PQ==/attach/object/CXW327Q7ADQCG?)
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Gmeek个人博客(增强版)/img_5f7c6e923c.png)
 
 ### Gmeek增强版UI
 
-![](http://www.kdocs.cn/api/v3/office/copy/UU1tUGpQN3ptcU1IUGVvV21SOVFNZm9UVmIvN0VkVEo4elJmSmVldGVUOWFWWFQza0tRMlQ3bkxsenBPdnNtcE9GYkphNVlCRFAxOUw4MGZkYjh1bG9XSHJjQnZ3SHdYWXAraTlvK250OVBuS1l1SFk1WGVjWHFJV3NtQmdVWDNJK3FlTjd2ZDBTckV6ZEVBcjlaYmt4eTFPd214ajd5Y0JSc0pnN0t0RU9HM1JXb0dLV3pEakQrUkNmSWJnRE9IMVhhSHo0RkRpSGtmd3NScFZnY2tBOXh3QjdOOGpBUE5qblg1ZThsV09tTUxKL2lER21Md0sydnAzVmo0cWU3bVdBaUs3cENBdmc4PQ==/attach/object/D7W327Q7ADQCQ?)
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Gmeek个人博客(增强版)/img_2e4d9ed912.png)
 <!--stackedit_data:
 eyJoaXN0b3J5IjpbLTEyMjAzNDQ0OTBdfQ==
 -->

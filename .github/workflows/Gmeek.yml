@@ -14,8 +14,8 @@ on:
     paths-ignore:
       - 'README.md'
       - 'issues/*.md'
-      - 'workflows/'
-      - 'assets/'
+      - '.github/workflows/**'
+      - 'assets/images/**'  # 假设图片保存在这个目录下
 jobs:
   build:
     name: Generate blog

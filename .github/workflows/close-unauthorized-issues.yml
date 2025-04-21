@@ -4,6 +4,9 @@ on:
   issues:
     types: [opened]
 
+permissions:
+  issues: write  # 添加issues的写入权限
+
 jobs:
   close-issue:
     runs-on: ubuntu-latest

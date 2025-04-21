@@ -9,7 +9,7 @@
 
 其他还是用第三方软件(如DevCheck[https://wwvj.lanzoum.com/b0065zsiaj](https://wwvj.lanzoum.com/b0065zsiaj)密码:cp5o)查看
 
-![](http://www.kdocs.cn/api/v3/office/copy/eFJCbDJ2T013anliL3NET2JQTms3cVh6VmNsSHpicFkzNVRzTGNwUDIvQkJFdEF5RTJPNkE2MmpMMWozQTVBVFQ3eWhZeFJVWFNJeitUdkwrY2M2cXVPZjJJQWFCTGlXcThuYlRsTS9YQlFPTE5PUzlQZm1OTnNocTdLd3FjSkRJdE1oTkIxTHJYNzRRVFlJZFgrVDhGeW80YlhnN2FqbkQ5R2JGU25kY2ZycjBmUjA0Tld4NW5WZ0ZLdHpybnVybUVWanhITTV1b1lIa00xME5rcmkzUDl4REZadjZyMGN6U2JXWlB6Q2l6TjVwTXpLa2tjRTRRVFFObllEVi92M2EzYWc4aDd6YlJnPQ==/attach/object/WCEPEVY7ABAGU?)
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/安卓手机安装PC或Linux(含内网穿透)/img_92d8ba81cd.jpg)
 
 ## **linux，乌班图，德班系统是在什么系统架构上运行的？**
 

@@ -6,9 +6,9 @@ on:
     paths:
       - 'issues/*.md'
 
-# 添加并发控制，防止同一仓库多个工作流实例同时运行导致冲突
+# 修改并发控制，确保每个提交都能被独立处理
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: issue-publisher-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}-${{ github.event.after || github.event.before || github.sha }}
   cancel-in-progress: false  # 不取消运行中的工作流，确保所有变更都被处理
 
 permissions:

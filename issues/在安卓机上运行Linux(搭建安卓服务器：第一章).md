@@ -1,5 +1,4 @@
-
-## 安装软件介绍
+## 安装软件介绍2
 
 ⭐
 
@@ -488,5 +487,5 @@ docker run -d --restart=always -v /data/alist:/opt/alist/data -p 1744:5244 --nam
 
 docker run hello-world
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEyNTA2MzA5OF19
+eyJoaXN0b3J5IjpbLTIwMjM5NDc4MTIsLTEyNTA2MzA5OF19
 -->

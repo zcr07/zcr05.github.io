@@ -8,7 +8,7 @@ on:
       - 'issues/*.md'
 
 permissions:
-  contents: read
+  contents: write  # 修改为write以允许提交更改
   issues: write
 
 jobs:
@@ -157,6 +157,273 @@ jobs:
           echo "ISSUES_FILES_LIST=/tmp/final_md_files.txt" >> $GITHUB_ENV
           echo "HAS_MD_FILES=true" >> $GITHUB_ENV
           echo "📂 本次将处理的md文件: $(cat /tmp/final_md_files.txt)"
+
+      - name: 📦 处理Markdown文件中的图片
+        if: env.HAS_MD_FILES == 'true'
+        run: |
+          # 确保assets目录存在
+          mkdir -p assets/images
+          
+          # 安装md5sum工具，如果不存在
+          if ! command -v md5sum &> /dev/null; then
+            echo "安装md5sum工具..."
+            sudo apt-get update && sudo apt-get install -y coreutils
+          fi
+          
+          # 获取仓库基础URL
+          REPO_URL="https://raw.githubusercontent.com/${{ github.repository }}/main"
+          echo "仓库原始文件URL基础地址: $REPO_URL"
+          
+          # 遍历修改的md文件
+          while IFS= read -r FILE; do
+            echo "处理文件 $FILE 中的图片"
+            
+            # 暂存修改状态标志
+            MODIFIED=false
+            
+            # 创建临时文件
+            TMP_FILE=$(mktemp)
+            
+            # 提取文件中的所有图片URL - 改进提取方法以支持更多格式的链接
+            # 使用更灵活的正则表达式提取Markdown中的图片链接
+            # 先提取整个图片标记![...](...)
+            IMAGE_TAGS=$(grep -o '!\[[^]]*\]([^)]\+)' "$FILE" || echo "")
+            
+            if [[ -n "$IMAGE_TAGS" ]]; then
+              echo "检测到图片标记: $(echo "$IMAGE_TAGS" | wc -l)个"
+              
+              # 处理每个图片标记
+              while IFS= read -r IMG_TAG; do
+                # 提取链接部分
+                IMG_URL=$(echo "$IMG_TAG" | grep -o '([^)]\+)' | tr -d '()')
+                echo "处理图片: $IMG_URL"
+                
+                # 过滤掉已经指向仓库的图片链接
+                if [[ "$IMG_URL" == *"$REPO_URL"* ]]; then
+                  echo "图片已在仓库中，跳过: $IMG_URL"
+                  continue
+                fi
+                
+                # 处理特殊链接格式 (如金山文档等带有查询参数的链接)
+                # 生成文件名（使用URL的MD5哈希作为文件名）
+                IMG_NAME=$(echo "$IMG_URL" | md5sum | cut -d' ' -f1)
+                
+                # 尝试从URL中提取文件扩展名
+                if [[ "$IMG_URL" =~ \.(jpg|jpeg|png|gif|webp|svg|bmp)([?#].*)?$ ]]; then
+                  # 从正则匹配中获取扩展名
+                  EXT=".${BASH_REMATCH[1]}"
+                  echo "从URL检测到扩展名: $EXT"
+                elif [[ "$IMG_URL" =~ (attach/object/[^/?]+)([?#].*)?$ ]]; then
+                  # 对于类似金山文档的链接，可能在路径部分包含对象标识符
+                  echo "检测到attach/object格式链接，使用默认扩展名"
+                  EXT=".png"  # 对于金山文档链接，默认使用png
+                else
+                  # 无法检测到扩展名，使用默认扩展名
+                  echo "无法检测文件类型，使用默认扩展名"
+                  EXT=".png"
+                fi
+                
+                IMG_PATH="assets/images/$IMG_NAME$EXT"
+                LOCAL_PATH="$IMG_PATH"
+                REPO_IMG_URL="$REPO_URL/$IMG_PATH"
+                
+                echo "图片将保存为: $LOCAL_PATH"
+                echo "新图片URL将为: $REPO_IMG_URL"
+                
+                # 如果文件不存在则下载
+                if [[ ! -f "$LOCAL_PATH" ]]; then
+                  echo "下载图片..."
+                  
+                  # 对于复杂URL，使用引号确保正确处理
+                  curl -s -L --create-dirs "$IMG_URL" -o "$LOCAL_PATH"
+                  
+                  # 检查下载是否成功
+                  if [[ ! -f "$LOCAL_PATH" || ! -s "$LOCAL_PATH" ]]; then
+                    echo "⚠️ 图片下载失败，尝试调整请求头..."
+                    
+                    # 某些服务可能需要特定的User-Agent和Referer
+                    curl -s -L --create-dirs -H "User-Agent: Mozilla/5.0" -H "Referer: $IMG_URL" "$IMG_URL" -o "$LOCAL_PATH"
+                    
+                    if [[ ! -f "$LOCAL_PATH" || ! -s "$LOCAL_PATH" ]]; then
+                      echo "⚠️ 图片下载仍然失败，跳过: $IMG_URL"
+                      continue
+                    fi
+                  fi
+                  
+                  echo "图片下载成功: $LOCAL_PATH"
+                else
+                  echo "图片已存在，跳过下载: $LOCAL_PATH"
+                fi
+                
+                # 替换Markdown中的图片链接
+                # 对于复杂链接需要特殊处理，使用原始图片标记进行精确替换
+                
+                # 转义原始图片标记用于正则表达式
+                IMG_TAG_ESCAPED=$(echo "$IMG_TAG" | sed 's/[\/&]/\\&/g')
+                
+                # 构建新的图片标记，保留原始alt文本
+                ALT_TEXT=$(echo "$IMG_TAG" | grep -o '!\[\([^]]*\)\]' | sed 's/!\[\(.*\)\]/\1/')
+                NEW_IMG_TAG="![$ALT_TEXT]($REPO_IMG_URL)"
+                NEW_IMG_TAG_ESCAPED=$(echo "$NEW_IMG_TAG" | sed 's/[\/&]/\\&/g')
+                
+                # 读取文件内容
+                cat "$FILE" > "$TMP_FILE"
+                
+                # 替换链接并写回文件
+                sed -i "s|$IMG_TAG_ESCAPED|$NEW_IMG_TAG_ESCAPED|g" "$TMP_FILE"
+                
+                # 检查是否实际进行了替换
+                if cmp -s "$FILE" "$TMP_FILE"; then
+                  echo "⚠️ 使用图片标记替换失败，尝试直接替换URL..."
+                  
+                  # 尝试直接替换URL部分
+                  IMG_URL_ESCAPED=$(echo "$IMG_URL" | sed 's/[\/&]/\\&/g')
+                  REPO_IMG_URL_ESCAPED=$(echo "$REPO_IMG_URL" | sed 's/[\/&]/\\&/g')
+                  
+                  cat "$FILE" > "$TMP_FILE"
+                  sed -i "s|$IMG_URL_ESCAPED|$REPO_IMG_URL_ESCAPED|g" "$TMP_FILE"
+                  
+                  if cmp -s "$FILE" "$TMP_FILE"; then
+                    echo "⚠️ URL替换也失败，尝试使用perl精确匹配..."
+                    
+                    cat "$FILE" > "$TMP_FILE"
+                    perl -i -pe "s|\Q$IMG_URL\E|$REPO_IMG_URL|g" "$TMP_FILE"
+                    
+                    if cmp -s "$FILE" "$TMP_FILE"; then
+                      echo "⚠️ 所有替换方法均失败，尝试最后一种方法..."
+                      
+                      # 最后一种尝试：直接使用perl替换整个图片标记
+                      cat "$FILE" > "$TMP_FILE"
+                      # 使用perl的引用捕获替换，保留alt文本
+                      perl -i -0 -pe "s|\Q$IMG_TAG\E|![$ALT_TEXT]($REPO_IMG_URL)|g" "$TMP_FILE"
+                      
+                      if cmp -s "$FILE" "$TMP_FILE"; then
+                        echo "⚠️ 所有替换方法均失败，跳过此图片"
+                        continue
+                      fi
+                    fi
+                  fi
+                fi
+                
+                # 复制回原文件
+                cat "$TMP_FILE" > "$FILE"
+                echo "✅ 图片链接已更新: $IMG_URL -> $REPO_IMG_URL"
+                MODIFIED=true
+              done < <(echo "$IMAGE_TAGS")
+            else
+              echo "未检测到图片链接，尝试使用另一种方法检测..."
+              
+              # 尝试使用更宽松的模式来匹配特殊格式的图片链接
+              IMAGE_LINKS=$(grep -o '!\[.*\](http[^)]*' "$FILE" | sed 's/!\[.*\](//' || echo "")
+              
+              if [[ -n "$IMAGE_LINKS" ]]; then
+                echo "使用备用方法检测到图片链接: $(echo "$IMAGE_LINKS" | wc -l)个"
+                
+                while IFS= read -r IMG_URL; do
+                  echo "处理备用模式图片: $IMG_URL"
+                  
+                  # 过滤掉已经指向仓库的图片链接
+                  if [[ "$IMG_URL" == *"$REPO_URL"* ]]; then
+                    echo "图片已在仓库中，跳过: $IMG_URL"
+                    continue
+                  fi
+                  
+                  # 生成文件名（使用URL的MD5哈希作为文件名）
+                  IMG_NAME=$(echo "$IMG_URL" | md5sum | cut -d' ' -f1)
+                  
+                  # 使用默认扩展名
+                  EXT=".png"
+                  
+                  IMG_PATH="assets/images/$IMG_NAME$EXT"
+                  LOCAL_PATH="$IMG_PATH"
+                  REPO_IMG_URL="$REPO_URL/$IMG_PATH"
+                  
+                  echo "图片将保存为: $LOCAL_PATH"
+                  echo "新图片URL将为: $REPO_IMG_URL"
+                  
+                  # 如果文件不存在则下载
+                  if [[ ! -f "$LOCAL_PATH" ]]; then
+                    echo "下载图片..."
+                    curl -s -L --create-dirs "$IMG_URL" -o "$LOCAL_PATH"
+                    
+                    # 检查下载是否成功
+                    if [[ ! -f "$LOCAL_PATH" || ! -s "$LOCAL_PATH" ]]; then
+                      echo "⚠️ 图片下载失败，尝试调整请求头..."
+                      curl -s -L --create-dirs -H "User-Agent: Mozilla/5.0" -H "Referer: $IMG_URL" "$IMG_URL" -o "$LOCAL_PATH"
+                      
+                      if [[ ! -f "$LOCAL_PATH" || ! -s "$LOCAL_PATH" ]]; then
+                        echo "⚠️ 图片下载仍然失败，跳过: $IMG_URL"
+                        continue
+                      fi
+                    fi
+                    
+                    echo "图片下载成功: $LOCAL_PATH"
+                  else
+                    echo "图片已存在，跳过下载: $LOCAL_PATH"
+                  fi
+                  
+                  # 替换文件中的图片链接
+                  IMG_URL_ESCAPED=$(echo "$IMG_URL" | sed 's/[\/&]/\\&/g')
+                  REPO_IMG_URL_ESCAPED=$(echo "$REPO_IMG_URL" | sed 's/[\/&]/\\&/g')
+                  
+                  # 读取文件内容
+                  cat "$FILE" > "$TMP_FILE"
+                  
+                  # 替换链接并写回文件
+                  sed -i "s|$IMG_URL_ESCAPED|$REPO_IMG_URL_ESCAPED|g" "$TMP_FILE"
+                  
+                  # 检查是否实际进行了替换
+                  if cmp -s "$FILE" "$TMP_FILE"; then
+                    echo "⚠️ 替换失败，尝试使用perl..."
+                    cat "$FILE" > "$TMP_FILE"
+                    perl -i -pe "s|\Q$IMG_URL\E|$REPO_IMG_URL|g" "$TMP_FILE"
+                    
+                    if cmp -s "$FILE" "$TMP_FILE"; then
+                      echo "⚠️ 所有替换方法均失败，跳过此图片"
+                      continue
+                    fi
+                  fi
+                  
+                  # 复制回原文件
+                  cat "$TMP_FILE" > "$FILE"
+                  echo "✅ 图片链接已更新: $IMG_URL -> $REPO_IMG_URL"
+                  MODIFIED=true
+                done < <(echo "$IMAGE_LINKS")
+              else
+                echo "所有方法均未检测到图片链接，无需处理"
+              fi
+            fi
+            
+            # 清理临时文件
+            rm -f "$TMP_FILE"
+            
+            if [[ "$MODIFIED" == "true" ]]; then
+              echo "✅ 文件 $FILE 中的图片链接已更新"
+            else
+              echo "ℹ️ 文件 $FILE 无需修改"
+            fi
+          done < "${{ env.ISSUES_FILES_LIST }}"
+          
+          # 检查是否有图片被添加
+          if [[ -n "$(git status --porcelain assets/images/)" || -n "$(git status --porcelain issues/)" ]]; then
+            echo "👉 检测到更改，提交更新的图片和Markdown文件"
+          
+            # 配置Git
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            
+            # 添加并提交更改
+            git add assets/images/
+            git add issues/
+            git commit -m "🖼️ 将临时图片转储到仓库并更新Markdown链接" || echo "没有变更需要提交"
+            
+            # 推送更改
+            git push
+            
+            echo "✅ 更改已提交并推送"
+          else
+            echo "✅ 没有检测到需要提交的更改"
+          fi
 
       - name: 📄 处理每个md文件
         id: process_files

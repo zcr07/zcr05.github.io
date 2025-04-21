@@ -15,6 +15,7 @@ on:
       - 'README.md'
       - 'issues/*.md'
       - 'workflows/'
+      - 'assets/'
 jobs:
   build:
     name: Generate blog

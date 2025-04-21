@@ -25,16 +25,22 @@ jobs:
           fetch-depth: 2  # 确保获取足够的历史记录比较变更
           token: ${{ secrets.GITHUB_TOKEN }}  # 使用带写权限的token
 
+      - name: 🔄 确保代码是最新的
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # 在任何操作之前，确保获取最新的远程更改
+          echo "🔄 拉取最新的远程更改..."
+          git pull --no-rebase
+          git status
+          
       - name: 🔍 获取本次提交变更的 issues/*.md 文件
         id: get_changed_files
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           echo "🔍 当前 GITHUB_SHA: $GITHUB_SHA"
-          
-          # 设置Git身份，确保所有操作都有正确的身份
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
           # 获取前一次提交的SHA
           PREVIOUS_SHA=$(git rev-parse HEAD~1)
@@ -127,26 +133,15 @@ jobs:
               git commit -m "🗑️ 删除不再使用的图片 [skip ci] [skip gmeek]"
               
               echo "🚀 准备推送到GitHub..."
-              # 尝试推送，如果失败则先拉取再推送
-              if ! git push; then
-                echo "⚠️ 推送失败，尝试先拉取最新更改..."
-                
-                # 检查是否有未提交的更改，如果有则先提交
-                if [[ -n "$(git status --porcelain)" ]]; then
-                  echo "检测到未提交的更改，先进行临时提交..."
-                  git add -A
-                  git commit -m "临时提交未保存的更改 [skip ci] [skip gmeek]"
-                fi
-                
-                # 现在可以安全地拉取
-                git pull --rebase
-                
-                echo "🔄 再次尝试推送..."
-                git push || {
-                  echo "❌ 推送仍然失败，尝试强制推送..."
-                  git push --force || echo "⚠️ 强制推送也失败，可能需要手动处理冲突"
-                }
-              fi
+              # 在推送前确保拉取最新代码，处理潜在的冲突
+              echo "🔄 推送前再次拉取最新更改..."
+              git pull --no-rebase
+              
+              echo "🚀 推送到GitHub..."
+              git push || {
+                echo "⚠️ 推送失败，尝试强制推送..."
+                git push --force || echo "⚠️ 强制推送也失败，可能需要手动处理冲突"
+              }
             else
               echo "ℹ️ 没有图片需要删除"
             fi
@@ -286,26 +281,15 @@ jobs:
                 git commit -m "🗑️ 删除不再使用的图片 [skip ci] [skip gmeek]"
                 
                 echo "🚀 准备推送到GitHub..."
-                # 尝试推送，如果失败则先拉取再推送
-                if ! git push; then
-                  echo "⚠️ 推送失败，尝试先拉取最新更改..."
-                  
-                  # 检查是否有未提交的更改，如果有则先提交
-                  if [[ -n "$(git status --porcelain)" ]]; then
-                    echo "检测到未提交的更改，先进行临时提交..."
-                    git add -A
-                    git commit -m "临时提交未保存的更改 [skip ci] [skip gmeek]"
-                  fi
-                  
-                  # 现在可以安全地拉取
-                  git pull --rebase
-                  
-                  echo "🔄 再次尝试推送..."
-                  git push || {
-                    echo "❌ 推送仍然失败，尝试强制推送..."
-                    git push --force || echo "⚠️ 强制推送也失败，可能需要手动处理冲突"
-                  }
-                fi
+                # 在推送前确保拉取最新代码，处理潜在的冲突
+                echo "🔄 推送前再次拉取最新更改..."
+                git pull --no-rebase
+                
+                echo "🚀 推送到GitHub..."
+                git push || {
+                  echo "⚠️ 推送失败，尝试强制推送..."
+                  git push --force || echo "⚠️ 强制推送也失败，可能需要手动处理冲突"
+                }
               else
                 echo "ℹ️ 没有图片需要删除"
               fi
@@ -336,6 +320,8 @@ jobs:
             
             # 确保图片目录存在
             mkdir -p "$IMG_DIR"
+            
+            echo "📂 此文件的图片将保存在目录: $IMG_DIR (独立于其他MD文件)"
             
             # 创建临时文件
             TMP_FILE=$(mktemp)
@@ -588,26 +574,19 @@ jobs:
             git commit -m "📝 更新图片资源 [skip ci] [skip gmeek]"
             
             echo "🚀 准备推送到GitHub..."
-            # 尝试推送，如果失败则先拉取再推送
-            if ! git push; then
-              echo "⚠️ 推送失败，尝试先拉取最新更改..."
-              
-              # 检查是否有未提交的更改，如果有则先提交
-              if [[ -n "$(git status --porcelain)" ]]; then
-                echo "检测到未提交的更改，先进行临时提交..."
-                git add -A
-                git commit -m "临时提交未保存的更改 [skip ci] [skip gmeek]"
-              fi
-              
-              # 现在可以安全地拉取
-              git pull --rebase
-              
-              echo "🔄 再次尝试推送..."
-              git push || {
-                echo "❌ 推送仍然失败，尝试强制推送..."
-                git push --force || echo "⚠️ 强制推送也失败，可能需要手动处理冲突"
-              }
-            fi
+            # 在推送前检查当前的更改内容
+            echo "📂 当前的更改文件列表:"
+            git status --porcelain
+            
+            # 在推送前确保拉取最新代码，处理潜在的冲突
+            echo "🔄 推送前再次拉取最新更改..."
+            git pull --no-rebase
+            
+            echo "🚀 推送到GitHub..."
+            git push || {
+              echo "⚠️ 推送失败，尝试强制推送..."
+              git push --force || echo "⚠️ 强制推送也失败，可能需要手动处理冲突"
+            }
           else
             echo "ℹ️ 没有图片需要提交"
           fi
@@ -654,26 +633,15 @@ jobs:
               git commit -m "🧹 清理未使用的图片文件夹 [skip ci] [skip gmeek]"
               
               echo "🚀 准备推送到GitHub..."
-              # 尝试推送，如果失败则先拉取再推送
-              if ! git push; then
-                echo "⚠️ 推送失败，尝试先拉取最新更改..."
-                
-                # 检查是否有未提交的更改，如果有则先提交
-                if [[ -n "$(git status --porcelain)" ]]; then
-                  echo "检测到未提交的更改，先进行临时提交..."
-                  git add -A
-                  git commit -m "临时提交未保存的更改 [skip ci] [skip gmeek]"
-                fi
-                
-                # 现在可以安全地拉取
-                git pull --rebase
-                
-                echo "🔄 再次尝试推送..."
-                git push || {
-                  echo "❌ 推送仍然失败，尝试强制推送..."
-                  git push --force || echo "⚠️ 强制推送也失败，可能需要手动处理冲突"
-                }
-              fi
+              # 在推送前确保拉取最新代码，处理潜在的冲突
+              echo "🔄 推送前再次拉取最新更改..."
+              git pull --no-rebase
+              
+              echo "🚀 推送到GitHub..."
+              git push || {
+                echo "⚠️ 推送失败，尝试强制推送..."
+                git push --force || echo "⚠️ 强制推送也失败，可能需要手动处理冲突"
+              }
             else
               echo "ℹ️ 没有未使用的图片文件夹需要清理"
             fi

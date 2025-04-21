@@ -38,9 +38,10 @@
 - When a problem remains unsolved after more than two attempts, you should approach it from a different perspective and initiate a second - level of thinking.
 - When a problem occurs, you should use more logs to determine the cause of the problem.
 ```
+
 # 使用方法
 
-![](http://www.kdocs.cn/api/v3/office/copy/Ylh1WUZBTG5VSVdUbEVWRUI0d21nVDgvQmhnRGxST01Oc0dPWm90T2NLVUNHNGNXUkI2OENFYWl5NE9hVkh6VlgxcUhtOXpYMUNGYW1lRWZKN0JPZFJRSXBoU2NVMTdxTUgzczBsN3N5SWIzYUQybTd6ZjZZWEhId2k1WHNUTmVFUDZ3ZG10TkdIMmt0VWZvRXFnM0IxRU1kUFJHcEVkSngwZ01RVGZuWW9MWG5aM3htQUp2R2NvVlBYcTVKbEkzOHJXY0MyR1IvWllibXp2SlFPZUttbDhiVzQrcHRFdmtPSVQ5WjlTMFdWT2pTLy9oaE5rZVNwRkN3cHE0ZmR3TTV1MVp5eDhhN2k0PQ==/attach/object/OVFTY7Q7ACAD6?)
+![](http://www.kdocs.cn/api/v3/office/copy/MStWTGlJVkR5WnZGY0F0d3lrZmhVSklmWE1lcUd0SkE1Wlo5aU4yRGtadzFtQ1NjdlpCNnF5WnFCTDBCOGNjNnVnbHlpTDdOMUE5Rmc2L1FJdUxtbTVSK3lSbzY1bFlmOXhuQ2Q0KzdvOTEvdjRJdy9hUmt2c0s0b1BZcGZidlJGSmcwYXlPb3dtSnBaVXEwS2wrekphLzZ5WUwrd3YzMWlmd1dTK1c3R2ExOWcwTDR1RGl6cTJHbGIvNlhvU1JkRG9IR1h0cUo1MzJMQlY3cm5zbHBCL3QwYWNLTTYxdVpEUk5vQThycGtqNmVPUHhHaDF5S25Ndkp2eVVWY3FnMUFQTUdaeGVlVktjPQ==/attach/object/OVFTY7Q7ACAD6?)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTE0NTM4NTk2XX0=
+eyJoaXN0b3J5IjpbMTE4NTQwMjQ5NF19
 -->

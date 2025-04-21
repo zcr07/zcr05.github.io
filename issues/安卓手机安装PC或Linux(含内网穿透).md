@@ -3,7 +3,7 @@
 
 ## **手机的系统架构是什么？如何看？**
 
-> 手机的 CPU 通常使用 ARM 架构（如 ARMv7, ARMv8）或较少见的 x86 架构。ARM 架构是当前手机领域最常见的架构。
+> 手机的 CPU 通常使用 ARM 架构（如 ARMv7, ARMv8）或较少见的 x86 架构。ARM 架构是当前手机领域最常见的架构。 
 
 一些手机可以在【关于手机-->硬件信息中查看】
 
@@ -37,5 +37,5 @@ dpkg --print-architecture
 > **s390x**：IBM大型机系统的架构。  
 > **ppc64le**：IBM Power处理器的架构。
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTYxMTIyNDk1Ml19
+eyJoaXN0b3J5IjpbLTY2MTUwNjU2MCwtNjExMjI0OTUyXX0=
 -->

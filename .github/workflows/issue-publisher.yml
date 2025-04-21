@@ -168,6 +168,20 @@ jobs:
           echo "📌 安装所需工具..."
           sudo apt-get update && sudo apt-get install -y curl jq
 
+          # 检查环境变量
+          echo "👀 检查环境变量:"
+          echo "  GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
+          echo "  GITHUB_TOKEN (长度): ${#GH_TOKEN}"
+          echo "  GITHUB_SHA: $GITHUB_SHA"
+          
+          # 验证GitHub CLI是否可用
+          echo "👀 验证GitHub CLI:"
+          gh --version
+          
+          # 测试GitHub CLI权限
+          echo "👀 测试GitHub CLI权限:"
+          gh api /user || echo "⚠️ API调用失败"
+
           # 读取文件列表
           if [[ ! -f "${{ env.ISSUES_FILES_LIST }}" ]]; then
             echo "❌ 文件列表不存在，跳过处理"
@@ -180,32 +194,51 @@ jobs:
             
             # 创建临时文件
             TMP_FILE=$(mktemp)
+            echo "👀 临时文件路径: $TMP_FILE"
             
             # 复制原始文件内容到临时文件
             cp "$FILE" "$TMP_FILE"
+            echo "👀 原始文件大小: $(wc -c < "$FILE") 字节"
             
             # 使用正则表达式查找所有图片链接 - 支持多种格式的图片链接
             # 注意: 这里我们排除已经是GitHub链接的图片
-            IMAGE_LINKS=$(grep -oE '!\[[^]]*\]\([^)]+\)|!\[\]\([^)]+\)' "$FILE" | grep -v 'github.com/user-attachments')
+            echo "👀 开始查找图片链接..."
+            IMAGE_LINKS=$(grep -oE '!\[[^]]*\]\([^)]+\)|!\[\]\([^)]+\)' "$FILE" | grep -v 'github.com/user-attachments' || echo "")
+            
+            echo "👀 找到图片链接数量: $(echo "$IMAGE_LINKS" | grep -c '^' || echo 0)"
+            echo "👀 图片链接详情:"
+            echo "$IMAGE_LINKS" | nl || echo "无图片链接"
             
             if [[ -n "$IMAGE_LINKS" ]]; then
               echo "🖼️ 发现图片链接，开始处理..."
               
               # 依次处理每个图片链接
               echo "$IMAGE_LINKS" | while read -r IMG_LINK; do
+                echo "👀 处理图片链接: $IMG_LINK"
+                
                 # 提取图片URL
-                IMG_URL=$(echo "$IMG_LINK" | grep -oE 'http[^)]+')
+                IMG_URL=$(echo "$IMG_LINK" | grep -oE 'http[^)]+' || echo "")
                 
                 if [[ -n "$IMG_URL" ]]; then
                   echo "📥 下载图片: $IMG_URL"
                   
                   # 创建临时图片文件
                   IMG_TMP=$(mktemp)
+                  echo "👀 临时图片文件: $IMG_TMP"
                   
                   # 下载图片到临时文件
-                  if curl -s -L "$IMG_URL" -o "$IMG_TMP"; then
+                  echo "👀 开始下载图片..."
+                  curl -v -L "$IMG_URL" -o "$IMG_TMP" 2>&1 | grep -E "^>" || echo "curl详细输出获取失败"
+                  
+                  if [[ -f "$IMG_TMP" && -s "$IMG_TMP" ]]; then
+                    echo "👀 图片下载成功，文件大小: $(wc -c < "$IMG_TMP") 字节"
+                    echo "👀 查看图片类型..."
+                    file "$IMG_TMP"
+                    
                     # 确定图片类型和扩展名
-                    MIME_TYPE=$(file -b --mime-type "$IMG_TMP")
+                    MIME_TYPE=$(file -b --mime-type "$IMG_TMP" || echo "image/jpeg")
+                    echo "👀 MIME类型: $MIME_TYPE"
+                    
                     case "$MIME_TYPE" in
                       image/jpeg)
                         EXT=".jpg"
@@ -225,68 +258,156 @@ jobs:
                     esac
                     
                     FILENAME="image_$(date +%s%N)$EXT"
+                    echo "👀 生成文件名: $FILENAME"
                     
                     echo "📤 上传图片到GitHub..."
+                    echo "👀 开始API调用，上传图片..."
                     
-                    # 使用GitHub CLI上传图片附件
-                    # 注意：这里使用了临时文件作为输入重定向，避免命令行过长
-                    UPLOAD_RESPONSE=$(gh api \
-                      --method POST \
-                      -H "Accept: application/vnd.github+json" \
-                      -H "X-GitHub-Api-Version: 2022-11-28" \
-                      --input "$IMG_TMP" \
-                      "/repos/$GITHUB_REPOSITORY/user-content/" 2>/dev/null)
+                    # 显示可用的GitHub API操作
+                    echo "👀 显示repos API可用操作:"
+                    gh api --method GET /repos | jq -r 'keys[]' || echo "无法获取API信息"
                     
-                    if [[ -n "$UPLOAD_RESPONSE" ]]; then
-                      # 从响应中提取图片URL
-                      GITHUB_IMG_URL=$(echo "$UPLOAD_RESPONSE" | jq -r '.url')
+                    # 使用gh issue create而不是直接API调用
+                    echo "👀 创建临时issue上传图片..."
+                    TEMP_ISSUE_TITLE="TempImageUpload-$(date +%s)"
+                    TEMP_ISSUE=$(gh issue create -t "$TEMP_ISSUE_TITLE" -b "Temporary issue for image uploads" --repo "$GITHUB_REPOSITORY" || echo "")
+                    
+                    if [[ -n "$TEMP_ISSUE" ]]; then
+                      echo "👀 临时issue创建成功: $TEMP_ISSUE"
+                      TEMP_ISSUE_NUMBER=$(echo "$TEMP_ISSUE" | grep -oE '#[0-9]+' | tr -d '#' || echo "")
                       
-                      if [[ -n "$GITHUB_IMG_URL" && "$GITHUB_IMG_URL" != "null" ]]; then
-                        echo "✅ 图片上传成功: $GITHUB_IMG_URL"
+                      if [[ -n "$TEMP_ISSUE_NUMBER" ]]; then
+                        echo "👀 临时issue号: $TEMP_ISSUE_NUMBER"
                         
-                        # 替换原始Markdown中的图片链接
-                        # 转义URL中的特殊字符，避免sed命令失败
-                        ESCAPED_IMG_URL=$(echo "$IMG_URL" | sed 's/[\/&]/\\&/g')
-                        ESCAPED_GITHUB_URL=$(echo "$GITHUB_IMG_URL" | sed 's/[\/&]/\\&/g')
+                        # 上传图片作为issue评论
+                        echo "👀 上传图片作为issue评论..."
+                        COMMENT_URL=$(gh issue comment "$TEMP_ISSUE_NUMBER" --body "Image upload" --body-file "$IMG_TMP" || echo "")
                         
-                        # 创建新的图片Markdown语法
-                        # 判断是否有Alt Text
-                        if [[ "$IMG_LINK" =~ !\[\] ]]; then
-                          NEW_IMG_LINK="![Image]($GITHUB_IMG_URL)"
+                        if [[ -n "$COMMENT_URL" ]]; then
+                          echo "👀 评论添加成功: $COMMENT_URL"
+                          
+                          # 获取评论ID
+                          COMMENT_ID=$(echo "$COMMENT_URL" | grep -oE 'issuecomment-[0-9]+' | grep -oE '[0-9]+' || echo "")
+                          
+                          if [[ -n "$COMMENT_ID" ]]; then
+                            echo "👀 评论ID: $COMMENT_ID"
+                            
+                            # 获取评论内容中的图片URL
+                            echo "👀 获取评论内容..."
+                            COMMENT_JSON=$(gh api --method GET "/repos/$GITHUB_REPOSITORY/issues/comments/$COMMENT_ID" || echo "{}")
+                            echo "👀 评论JSON: $COMMENT_JSON"
+                            
+                            COMMENT_BODY=$(echo "$COMMENT_JSON" | jq -r '.body' || echo "")
+                            echo "👀 评论内容: $COMMENT_BODY"
+                            
+                            GITHUB_IMG_URL=$(echo "$COMMENT_BODY" | grep -oE 'https://github.com/[^/]+/[^/]+/assets/[^ )"]+' || echo "")
+                            
+                            if [[ -n "$GITHUB_IMG_URL" ]]; then
+                              echo "✅ 图片上传成功: $GITHUB_IMG_URL"
+                              
+                              # 创建新的图片Markdown语法
+                              if [[ "$IMG_LINK" =~ !\[\] ]]; then
+                                NEW_IMG_LINK="![Image]($GITHUB_IMG_URL)"
+                              else
+                                # 提取原始Alt Text
+                                ALT_TEXT=$(echo "$IMG_LINK" | sed -E 's/!\[([^]]*)\].*/\1/')
+                                NEW_IMG_LINK="![$ALT_TEXT]($GITHUB_IMG_URL)"
+                              fi
+                              
+                              echo "👀 新的图片链接: $NEW_IMG_LINK"
+                              
+                              # 转义用于替换的特殊字符
+                              ESCAPED_OLD_LINK=$(echo "$IMG_LINK" | sed 's/[\/&]/\\&/g')
+                              ESCAPED_NEW_LINK=$(echo "$NEW_IMG_LINK" | sed 's/[\/&]/\\&/g')
+                              
+                              echo "👀 原始链接(转义后): $ESCAPED_OLD_LINK"
+                              echo "👀 新链接(转义后): $ESCAPED_NEW_LINK"
+                              
+                              # 替换临时文件中的图片链接，使用|作为分隔符避免/符号问题
+                              echo "👀 执行替换..."
+                              sed -i "s|$ESCAPED_OLD_LINK|$ESCAPED_NEW_LINK|g" "$TMP_FILE"
+                              
+                              echo "👀 替换后的文件大小: $(wc -c < "$TMP_FILE") 字节"
+                              
+                              echo "🔄 替换图片链接完成"
+                            else
+                              echo "❌ 无法从评论中提取图片URL"
+                              echo "👀 评论内容中没有找到图片URL"
+                            fi
+                          else
+                            echo "❌ 无法获取评论ID"
+                          fi
                         else
-                          # 提取原始Alt Text
-                          ALT_TEXT=$(echo "$IMG_LINK" | sed -E 's/!\[([^]]*)\].*/\1/')
-                          NEW_IMG_LINK="![$ALT_TEXT]($GITHUB_IMG_URL)"
+                          echo "❌ 添加评论失败"
                         fi
                         
-                        # 转义用于替换的特殊字符
-                        ESCAPED_OLD_LINK=$(echo "$IMG_LINK" | sed 's/[\/&]/\\&/g')
-                        ESCAPED_NEW_LINK=$(echo "$NEW_IMG_LINK" | sed 's/[\/&]/\\&/g')
-                        
-                        # 替换临时文件中的图片链接
-                        sed -i "s/$ESCAPED_OLD_LINK/$ESCAPED_NEW_LINK/g" "$TMP_FILE"
-                        
-                        echo "🔄 替换图片链接完成"
+                        # 关闭临时issue
+                        echo "👀 关闭临时issue..."
+                        gh issue close "$TEMP_ISSUE_NUMBER" --comment "Temporary issue for image upload"
                       else
-                        echo "❌ 无法从上传响应中获取URL"
+                        echo "❌ 无法获取issue号"
                       fi
                     else
-                      echo "❌ 图片上传失败"
+                      echo "❌ 创建临时issue失败"
                     fi
                     
-                    # 删除临时图片文件
-                    rm -f "$IMG_TMP"
+                    # 尝试替代方案：使用API直接上传
+                    if [[ -z "$GITHUB_IMG_URL" ]]; then
+                      echo "👀 尝试替代上传方法..."
+                      
+                      echo "👀 构建multipart请求..."
+                      # 使用curl直接上传到issue附件
+                      TEMP_BOUNDARY="---------------------------$(date +%s)"
+                      TEMP_DATA=$(mktemp)
+                      
+                      # 创建multipart请求
+                      {
+                        echo "--$TEMP_BOUNDARY"
+                        echo 'Content-Disposition: form-data; name="description"'
+                        echo ""
+                        echo "Image upload via workflow"
+                        echo "--$TEMP_BOUNDARY"
+                        echo "Content-Disposition: form-data; name=\"file\"; filename=\"$FILENAME\""
+                        echo "Content-Type: $MIME_TYPE"
+                        echo ""
+                        cat "$IMG_TMP"
+                        echo ""
+                        echo "--$TEMP_BOUNDARY--"
+                      } > "$TEMP_DATA"
+                      
+                      echo "👀 发送upload请求..."
+                      UPLOAD_RESPONSE=$(curl -v -X POST \
+                        -H "Authorization: token $GH_TOKEN" \
+                        -H "Content-Type: multipart/form-data; boundary=$TEMP_BOUNDARY" \
+                        --data-binary @"$TEMP_DATA" \
+                        "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/assets/upload" 2>&1)
+                      
+                      echo "👀 上传响应: $UPLOAD_RESPONSE"
+                      
+                      # 清理临时数据文件
+                      rm -f "$TEMP_DATA"
+                    fi
                   else
-                    echo "❌ 图片下载失败: $IMG_URL"
+                    echo "❌ 图片下载失败或文件为空"
+                    echo "👀 临时文件: $IMG_TMP"
+                    if [[ -f "$IMG_TMP" ]]; then
+                      echo "👀 文件存在但可能为空，大小: $(wc -c < "$IMG_TMP") 字节"
+                    else
+                      echo "👀 文件不存在"
+                    fi
                   fi
+                  
+                  # 删除临时图片文件
+                  rm -f "$IMG_TMP"
+                else
+                  echo "⚠️ 无法从链接提取URL: $IMG_LINK"
                 fi
               done
               
               # 使用处理后的内容替换原始文件
+              echo "👀 更新原始文件..."
               cp "$TMP_FILE" "$FILE"
-              
-              # 删除临时文件
-              rm -f "$TMP_FILE"
+              echo "👀 更新后的文件大小: $(wc -c < "$FILE") 字节"
               
               echo "✅ 图片链接处理完成: $FILE"
             else

@@ -9,7 +9,7 @@
 
 其他还是用第三方软件(如DevCheck[https://wwvj.lanzoum.com/b0065zsiaj](https://wwvj.lanzoum.com/b0065zsiaj)密码:cp5o)查看
 
-![](http://www.kdocs.cn/api/v3/office/copy/ayt1Qlk0dDJuRzdIb0JidndEUlhJMVFhM0RXVVQ1Q1lDbUdEK0hQRjJWV055dE44YkU5YTBkRWlYVGRaRDFnbTR6ZVlqbm5qLytXUk5jcVFGRHdZYjhKR3hDK2UyOHRqbnJPbFZlNE9LaXphZm1Nbm1JV3VaV2ZBUGw5dTFpNVNCRDNSSmNqNnIydW1CTWI5VkU5a2w5NFZuL3NrdWQva2pWc0VIZzF0cjBhSURoTGRJWEowc3QyU0hDWHpqRVNJQnlnZEl4UktWR29abURhMDd1ZzNzQUpYKzNUQ0laWEUvekg4czErUWVSQklhTUhHa2lyUWpodEtTREc0MktLOHlGT3hhbjdoR25jPQ==/attach/object/WCEPEVY7ABAGU?)
+![](http://www.kdocs.cn/api/v3/office/copy/dDQwOXhUeXF3Z0x1a2gxM3J6Vnp5ejBQOVZGZWVzR1U2QXdoSEhSU1g1aWN0a1BoaUk2N2h3d1QzT0dPRXBrNXlzYVZWeTc2RXJ2K0xxc1B1QWZMbUxPUzcrZ0RCb0dzQ2EvY3pNYXArenE3VGpuSnRYc2xpNFUwS1cwU01MWXdPWk81ZElGS1FzZ1JGN21Ra1A0R3pXcDUwUkFuNTlydWxPNWlOUDF6VmVsMWtJaUpQKzVQTXNhRmVaZkVTWmVGdFliMk5ZTS84dWhlbENKc25obWlyVTRCQ2JCTW5pMkppWldTL3UwUjlQVUxIZTc5T05nN0w3c053R3p4N3VSTVMzOFptUStJMWhFPQ==/attach/object/WCEPEVY7ABAGU?)
 
 ## **linux，乌班图，德班系统是在什么系统架构上运行的？**
 
@@ -37,5 +37,5 @@ dpkg --print-architecture
 > **s390x**：IBM大型机系统的架构。  
 > **ppc64le**：IBM Power处理器的架构。
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTQ5MTcxNTEwOF19
+eyJoaXN0b3J5IjpbLTE4OTAwMjYwMDFdfQ==
 -->

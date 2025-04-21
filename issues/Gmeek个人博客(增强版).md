@@ -91,7 +91,7 @@ ISSUE_LABELS: 技术, 教程, 心得
 2.  推送更改到GitHub
 3.  系统会自动关闭对应的Issue
 
-#### **4. 图片处理**：
+#### **4. 图片处理**
 
 -   文章中的图片会被自动下载并存储在`assets/images/文章名称/`目录下
 -   图片链接会被自动更新为指向仓库中的图片
@@ -110,5 +110,6 @@ ISSUE_LABELS: 技术, 教程, 心得
 
 ![](http://www.kdocs.cn/api/v3/office/copy/WFA1WjRFY2JlZ2w2dlFDazJ4M1drR08zcVRMYU5ab3NjaGRWV1FqcjZyQngyN2VYK0FrYW9ZbzcwQ1kxcG9qeFRlNTZCSEdKdllxRkdFU3FxK0xHU3ZWY3p4UHBoeXhmMlk5VXprSFQydDRUcGtOd1Z0TzlCeHZVMlRQTlN4dWRISWcxZko0bjlpU3Znb0dNRWVVNTUySlRrQXZpdHdjN2ZSK1dqUXV4eE9XVkViaEcvaXp3Z01VNitrOEtNVmtqdVo0MEtMU3d2ME1WQm9HcDNZRHcvekw5T1Mzc0lUZHR2d2F4cUN6SkdHTjkvckw1V2hlZTNjNWZYZzFWcE9mYXpSRGJSdnZ6MU93PQ==/attach/object/WLHBZHI7ACAB6?)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNTk2MDc0ODA0LC0xMjIwMzQ0NDkwXX0=
+eyJoaXN0b3J5IjpbLTIxNDU4NTY1NjIsLTEyMjAzNDQ0OTBdfQ
+==
 -->

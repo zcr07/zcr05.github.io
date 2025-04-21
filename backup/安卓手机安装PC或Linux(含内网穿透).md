@@ -1,5 +1,5 @@
 
-# 先要知道的一些内容2
+# 先要知道的一些内容
 
 ## **手机的系统架构是什么？如何看？**
 
@@ -7,10 +7,9 @@
 
 一些手机可以在【关于手机-->硬件信息中查看】
 
-
 其他还是用第三方软件(如DevCheck[https://wwvj.lanzoum.com/b0065zsiaj](https://wwvj.lanzoum.com/b0065zsiaj)密码:cp5o)查看
 
-![](http://www.kdocs.cn/api/v3/office/copy/SU5MbE9PRlhxckFFcVB2dUljaWhIMVF5QW56ejlYWHphN3hjV2tQRTVrU0ZKMXZWbHdSYTU5TVd6R1VZSzNFOWorY24zcjVOLzBNdkp2TWcxTm5tY2RrTVMxWThxT1VyWlMwNEl1bHd6dk5aVUJoMEcwQlorZGFmZ2cwWUdzK3NlWXhtZE9paUk5RTJDSWFBSTlEazV2T3B2c0x2MTdjQTB1ZkFmOFN2QmJSMkgrcStkZmQ4VHZHd2tBbVB4UE1ZYnk0cVpHbzlKRForUWRYcWtRak16bWN1dUVldUtDK0ttZnAyRjEra2Q3MTdMNXdGamVzUGVnYnY5clVLQ294eGpNSkdpZlRsNmVnPQ==/attach/object/WCEPEVY7ABAGU?)
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/img_92d8ba81cd.jpg)
 
 ## **linux，乌班图，德班系统是在什么系统架构上运行的？**
 
@@ -38,5 +37,5 @@ dpkg --print-architecture
 > **s390x**：IBM大型机系统的架构。  
 > **ppc64le**：IBM Power处理器的架构。
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTQwMTY5NDE5Nl19
+eyJoaXN0b3J5IjpbLTQ5MTcxNTEwOF19
 -->

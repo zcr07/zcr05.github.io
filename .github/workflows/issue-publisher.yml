@@ -503,6 +503,56 @@ jobs:
             echo "ℹ️ 没有图片需要提交"
           fi
 
+          # 清理所有不再与Markdown文件关联的图片文件夹
+          echo "🧹 清理未使用的图片文件夹..."
+          # 确保图片主目录存在
+          if [[ -d "assets/images" ]]; then
+            # 获取所有图片文件夹
+            IMAGE_DIRS=$(find "assets/images" -type d -mindepth 1 -maxdepth 1)
+            
+            # 获取所有Markdown文件
+            ALL_MD_FILES=$(find issues -name "*.md" -type f)
+            
+            # 遍历所有图片文件夹
+            for IMG_DIR in $IMAGE_DIRS; do
+              DIR_NAME=$(basename "$IMG_DIR")
+              echo "👀 检查图片文件夹: $DIR_NAME"
+              
+              # 检查是否有对应的Markdown文件
+              FOUND=false
+              
+              for MD_FILE in $ALL_MD_FILES; do
+                FILE_BASE=$(basename "$MD_FILE" .md)
+                FILE_DIR_NAME=$(echo "$FILE_BASE" | sed 's/[\/\?<>\\:\*\|":]/_/g')
+                
+                if [[ "$FILE_DIR_NAME" == "$DIR_NAME" ]]; then
+                  FOUND=true
+                  echo "✅ 找到对应的Markdown文件: $MD_FILE"
+                  break
+                fi
+              done
+              
+              # 如果没有找到对应的Markdown文件，删除该文件夹
+              if [[ "$FOUND" == "false" ]]; then
+                echo "🗑️ 删除未使用的图片文件夹: $IMG_DIR"
+                git rm -rf "$IMG_DIR"
+              fi
+            done
+            
+            # 如果有图片变动，提交并推送
+            if git status --porcelain | grep -q "assets/images/"; then
+              echo "🚀 提交图片文件夹清理更改..."
+              git commit -m "🧹 清理未使用的图片文件夹 [skip ci]"
+              
+              echo "🚀 推送到GitHub..."
+              git push || echo "无法推送到GitHub，但继续执行"
+            else
+              echo "ℹ️ 没有未使用的图片文件夹需要清理"
+            fi
+          else
+            echo "ℹ️ 图片主目录不存在，无需清理"
+          fi
+
       - name: 📄 处理每个md文件
         id: process_files
         if: env.HAS_MD_FILES == 'true'

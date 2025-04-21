@@ -23,7 +23,7 @@ _`acme-challenge``**.ssh**` `**ssh.A.**``<hostname>.``6ec077ddb0899695.dcv.cloud
 
 ![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Test测试/img_3b908c20b8.png)
 
-![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Test测试/img_877224537a.png)
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Test测试/img_877224537a.png)![输入图片说明](/imgs/2025-04-21/WDlF2Vha4b7fTG0r.png)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbOTA2MzgzMzYzXX0=
+eyJoaXN0b3J5IjpbNDQzNDQwNTk2XX0=
 -->

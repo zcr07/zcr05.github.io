@@ -1,5 +1,5 @@
 
-## 踩到的坑
+## 踩到的坑2
 
 ⭐
 
@@ -21,5 +21,5 @@
 
 docker版安装：[点我](https://www.cpolar.com/blog/docker-container-installation-cpolar)![输入图片说明](/imgs/2025-04-21/yrH8eqaywZgP6vka.png)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNzg4MDgxNzc2XX0=
+eyJoaXN0b3J5IjpbMTIxMjU0OTcyMl19
 -->

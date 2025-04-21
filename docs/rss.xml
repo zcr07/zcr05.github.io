@@ -1,5 +1,328 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>爱捣鼓的小木水的博客</title><link>https://blog.mymaskking.dpdns.org/</link><description>一个等着裁员的java程序猿，每天无所事事，只想搞钱，喜欢钻研各种实用的技能，讨厌天天做工作上的项目，对自己毫无实用价值。&lt;BR/&gt;&lt;div class='listLabels'&gt;&lt;span class='Label LabelName'style='background-color:#efe1e1'&gt;&lt;object&gt;&lt;a style='color:#000000'href='https://v.douyin.com/UFXv95UxBbQ/'data-click-setup='true'&gt;抖音&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#a2eeef'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://kdocs.cn/l/clf4xOs5a3Q1'data-click-setup='true'&gt;WPS万能文档&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#ff0c0c'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://www.youtube.com/channel/UCeHFivb01FfFIL7kciY6KFg'data-click-setup='true'&gt;YouTobe&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelTime'style='background-color:#ff4f9a'&gt;&lt;a style='color:#fff'href='https://b23.tv/rGe89DU' data-click-setup='true'&gt;哔哩哔哩&lt;/a&gt;&lt;/span&gt;&lt;/div&gt;</description><copyright>爱捣鼓的小木水的博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/41733240?v=4</url><title>avatar</title><link>https://blog.mymaskking.dpdns.org/</link></image><lastBuildDate>Mon, 21 Apr 2025 08:47:14 +0000</lastBuildDate><managingEditor>爱捣鼓的小木水的博客</managingEditor><ttl>60</ttl><webMaster>爱捣鼓的小木水的博客</webMaster><item><title>先要知道的一些内容(搭建安卓服务器：基础篇)</title><link>https://blog.mymaskking.dpdns.org//post/xian-yao-zhi-dao-de-yi-xie-nei-rong-%28-da-jian-an-zhuo-fu-wu-qi-%EF%BC%9A-ji-chu-pian-%29.html</link><description>## **手机的系统架构是什么？如何看1？**
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>爱捣鼓的小木水的博客</title><link>https://blog.mymaskking.dpdns.org/</link><description>一个等着裁员的java程序猿，每天无所事事，只想搞钱，喜欢钻研各种实用的技能，讨厌天天做工作上的项目，对自己毫无实用价值。&lt;BR/&gt;&lt;div class='listLabels'&gt;&lt;span class='Label LabelName'style='background-color:#efe1e1'&gt;&lt;object&gt;&lt;a style='color:#000000'href='https://v.douyin.com/UFXv95UxBbQ/'data-click-setup='true'&gt;抖音&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#a2eeef'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://kdocs.cn/l/clf4xOs5a3Q1'data-click-setup='true'&gt;WPS万能文档&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#ff0c0c'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://www.youtube.com/channel/UCeHFivb01FfFIL7kciY6KFg'data-click-setup='true'&gt;YouTobe&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelTime'style='background-color:#ff4f9a'&gt;&lt;a style='color:#fff'href='https://b23.tv/rGe89DU' data-click-setup='true'&gt;哔哩哔哩&lt;/a&gt;&lt;/span&gt;&lt;/div&gt;</description><copyright>爱捣鼓的小木水的博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/41733240?v=4</url><title>avatar</title><link>https://blog.mymaskking.dpdns.org/</link></image><lastBuildDate>Mon, 21 Apr 2025 09:09:55 +0000</lastBuildDate><managingEditor>爱捣鼓的小木水的博客</managingEditor><ttl>60</ttl><webMaster>爱捣鼓的小木水的博客</webMaster><item><title>在安卓机上运行Linux(搭建安卓服务器：第一章)</title><link>https://blog.mymaskking.dpdns.org//post/zai-an-zhuo-ji-shang-yun-xing-Linux%28-da-jian-an-zhuo-fu-wu-qi-%EF%BC%9A-di-yi-zhang-%29.html</link><description>
+## 安装软件介绍
+
+⭐
+
+**目前网上****(含ChatGPT)**给出的最优方案就是使用**Termux(**[去官网点我](https://github.com/termux/termux-app)**)+QEMU**
+
+----------
+
+**正在使用的方案(魔改后的Termux)：**
+
+A：已经内置了**alpine系统的Termux(**[去官网点我](https://github.com/FakeRajbhx/alpine-term)**)(****配置过低时使用)**
+
+原博客使用教程：[点我](https://www.cnblogs.com/yanqb/p/17367504.html)
+
+直接查看使用教程：[点我](https://kdocs.cn/l/cheRD9wHnLXd?linkname=zvWJTuBssB)
+
+优点：
+
+-   内置docker，sshd，Nginx
+
+-   apk大小为606M
+
+-   可以在更低配置上运行(高配置手机可能无法运行)
+
+缺点：
+
+-   基于QEMU，每次重启都要重新设置映射端口(命令如下)
+
+`hostfwd_add tcp::2222-:22`
+
+B：内置了**alpine系统的Termux增强版(****🌟****优先推荐使用)**
+
+原博客使用教程：[点我](https://blog.csdn.net/LJZxiaolongbao/article/details/139145986)
+
+直接查看使用教程：[点我](https://www.cnblogs.com/yanqb/p/17367504.html)
+
+直接下载APK：[点我](https://d.icdown.club/repository/main/Alpine_Termux.apk)
+
+优点：
+
+-   魔改了QEMU，端口映射一次设置就可以了
+
+-   apk大小为126M
+
+缺点：
+
+-   没有内置docker，sshd，需要手动安装
+
+-   无法在低配置上运行(高配置手机可以运行)
+
+**测试的安卓配置：**
+
+1.  `CPU：1.3GHz晓龙450八核`
+
+1.  `4G运行内存+32G储存空间`
+
+1.  `Android7.1.2`
+
+----------
+
+国外大佬使用原版**Termux**的视频（[点我](https://www.youtube.com/watch?v=xiMJpaWi5Nk)）
+
+## A：内置了**alpine系统的Termux使用教程**
+
+&gt; APK源和DNS更换这一步，如果**没有魔法网络**请**务必提前做了**，否则都会从国外的镜像来下载软件
+
+### apk安装完成后左滑，在**弹出画面中选择****QEMU****，输入下面****端口映射命令(SSH连接使用)**
+
+```
+hostfwd_add tcp::2222-:22 
+```
+
+注意：正常情况输入完成回车是没有任何打印内容的
+
+### 左滑弹出画面选择**[2]/dev/ttyS0****，等待alpine系统启动完成后****切换到root**
+
+&gt; 登录用户 `alpine` 密码: `alpine`  
+&gt; 切换到`root`账户，输入`sudo -s` 密码：`alpine`
+
+### 修改sshd的配置文件
+
+```
+方式1：
+sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+sed -i 's/PermitRootLogin no/PermitRootLogin yes/g' /etc/ssh/sshd_config
+service sshd restart
+```
+
+```
+#方式2：
+apt install vim #可能需要安装vim
+vim /etc/ssh/sshd_config
+#修改下面内容为yes：
+PasswordAuthentication yes
+PermitRootLogin yes
+#重启sshd服务
+service sshd restart
+```
+
+### 设置内置Docker服务为开机自启
+
+```
+rc-update add docker
+service docker start
+
+#后台启动
+setsid containerd
+setsid dockerd
+# 测试
+docker info
+```
+
+### 修改docker的镜像源
+
+&gt; vi /etc/docker/daemon.json  
+&gt; 把下面内容复制进去
+
+```
+{
+    'registry-mirrors': [
+    'https://docker.1panelproxy.com',
+    'https://2a6bf1988cb6428c877f723ec7530dbc.mirror.swr.myhuaweicloud.com',
+    'https://docker.m.daocloud.io',
+    'https://hub-mirror.c.163.com',
+    'https://mirror.baidubce.com',
+    'https://your_preferred_mirror',
+    'https://dockerhub.icu',
+    'https://docker.registry.cyou',
+    'https://docker-cf.registry.cyou',
+    'https://dockercf.jsdelivr.fyi',
+    'https://docker.jsdelivr.fyi',
+    'https://dockertest.jsdelivr.fyi',
+    'https://mirror.aliyuncs.com',
+    'https://dockerproxy.com',
+    'https://mirror.baidubce.com',
+    'https://docker.m.daocloud.io',
+    'https://docker.nju.edu.cn',
+    'https://docker.mirrors.sjtug.sjtu.edu.cn',
+    'https://docker.mirrors.ustc.edu.cn',
+    'https://mirror.iscas.ac.cn',
+    'https://docker.rainbond.cc'
+    ]
+}
+```
+
+**检测镜像源是否被使用**
+
+```
+docker info
+```
+
+### (国内使用必须配置)APK源和DNS更换，时区修改
+
+&gt; 更换阿里云+DNSPOD 的DNS
+
+```
+sed -i '/^#/! s/^/#/' /etc/apk/repositories
+echo 'https://mirrors.aliyun.com/alpine/v3.9/main' &gt;&gt; /etc/apk/repositories
+echo 'https://mirrors.aliyun.com/alpine/v3.9/community' &gt;&gt; /etc/apk/repositories
+
+sed -i '/^#/! s/^/#/' /etc/resolv.conf
+echo 'nameserver 223.5.5.5' &gt;&gt; /etc/resolv.conf
+echo 'nameserver 223.6.6.6' &gt;&gt; /etc/resolv.conf
+
+apk update
+```
+
+&gt; 时区修改
+
+```
+setup-timezone
+等到提示Which timezone are you in? ('?' for list) [UTC]，然后输入
+Asia/Shanghai
+```
+
+### (补充)安装Docker Compose
+
+&gt; 1.检查最新版本号：
+
+```
+DOCKER_COMPOSE_VERSION=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | jq -r .tag_name)
+```
+
+⭐
+
+遇到mksh: adk: inaccessible or not found
+
+请执行`apk update;apk add curl;apk add jq`
+
+&gt; 2.下载并安装 Docker Compose:
+
+```
+curl -L 'https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)' -o /usr/local/bin/docker-compose
+```
+
+&gt; 3.给 Docker Compose 添加执行权限并检查版本
+
+```
+chmod +x /usr/local/bin/docker-compose
+docker-compose --version
+```
+
+## B：内置alpine系统的Termux增强版**使用教程**
+
+### apk安装后会有弹出画面，点击Settings设置SSH服务端口映射
+
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/在安卓机上运行Linux(搭建安卓服务器：第一章)/img_3b839af132.png)
+
+```
+tcp:2022:22
+#端口：2022是你用XShell连接时用的
+#端口：22是alpinex系统的默认端口
+```
+
+### 系统启动完成后直接输入root免密登录
+
+&gt; APK源和DNS更换这一步，如果**没有魔法网络**请**务必提前做了**，否则都会从国外的镜像来下载软件  
+&gt; [**点我**](https://kdocs.cn/l/cheRD9wHnLXd?linkname=R3mSsqR6Oa)**去看修改APK源和DNS方法**
+
+### 安装SSH服务
+
+```
+apk update
+#安装ssh
+apk add openssh
+#启动ssh
+rc-service sshd start
+# 设置开机启动
+rc-update add sshd
+```
+
+&gt; 修改ssd_config的配置文件，并且设置root密码，运行root登录
+
+```
+sed -i 's/PermitRootLogin no/PermitRootLogin yes/g' /etc/ssh/sshd_config
+passwd abc123456 #设置root密码
+```
+
+### 安装docker服务
+
+```
+#安装docker
+apk add docker
+#启动docker
+service docker start
+docker version
+#开机自启
+rc-update add docker boot
+```
+
+&gt; 修改Docker镜像源：[**点我**](https://kdocs.cn/l/cheRD9wHnLXd?linkname=hxebueOkWr)
+
+&gt; 安装Docker Compose ：[**点我**](https://kdocs.cn/l/cheRD9wHnLXd?linkname=No8HoMRicO)
+
+## 补充资料
+
+### 安卓APK(linux系统)
+
+&gt; 这是我在找**安卓**上的**linux系统apk**的时候找到的软件，下面的软件都支持linux系统，**最好用的是****userLand****，谷歌商店评分4.7。</description><guid isPermaLink="true">https://blog.mymaskking.dpdns.org//post/zai-an-zhuo-ji-shang-yun-xing-Linux%28-da-jian-an-zhuo-fu-wu-qi-%EF%BC%9A-di-yi-zhang-%29.html</guid><pubDate>Mon, 21 Apr 2025 09:08:56 +0000</pubDate></item><item><title>cloudflare做内网穿透(搭建安卓服务器：第二章)</title><link>https://blog.mymaskking.dpdns.org//post/cloudflare-zuo-nei-wang-chuan-tou-%28-da-jian-an-zhuo-fu-wu-qi-%EF%BC%9A-di-er-zhang-%29.html</link><description>
+## 网络穿透教程
+
+⭐
+
+1.  下载cloudflare的安装包
+
+`curl -L` [`https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64`](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64) `-o /usr/local/bin/cloudflared`
+
+1.  赋予执行权限
+
+`chmod +x /usr/local/bin/cloudflared`
+
+1.  确认是否安装成功
+
+`cloudflared version`
+
+1.  执行
+
+`cloudflared service install 你的密钥`
+
+**卸载命令**：`cloudflared service uninstall`
+
+**Docker版看这里**
+
+**参考这个链接**：[点我](https://sspai.com/post/79278)
+
+**docker的附加参数：**
+
+-   --link alist:alist #容器间相互通信
+
+-   --network host #容器内的应用就能直接访问宿主机的 localhost
+
+`docker run --link alist:alist cloudflare/cloudflared:latest tunnel --no-autoupdate run --token 你的token`
+
+已废弃部分
+
+⭐
+
+1.  下载cloudflare的ubuntu文件
+
+`curl -L --output cloudflared.deb` [`https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb`](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb)
+
+注意：这里curl可能会碰到https无法下载的问题，建议把文件放到http（**AList**）下面
+
+1.  sudo dpkg -i cloudflared.deb
+
+注意：这里可能会报错package architecture (amd64) does not match system (arm64)
+
+解决：sudo dpkg -i --force-architecture cloudflared.deb （[点击参考](https://github.com/kubernetes/minikube/issues/10001)）
+
+1.  sudo cloudflared service install 你的密钥
+
+成功会显示：`Illegal instruction`
+
+## 网页版SSH内网穿透
+
+⭐
+
+1.  **将服务器连接到 Cloudflare：**
+
+-   **创建 Cloudflare Tunnel：** 登录到 Cloudflare Zero Trust 仪表板，导航至“Networks” &gt; “Tunnels”，点击“Create a tunnel”。</description><guid isPermaLink="true">https://blog.mymaskking.dpdns.org//post/cloudflare-zuo-nei-wang-chuan-tou-%28-da-jian-an-zhuo-fu-wu-qi-%EF%BC%9A-di-er-zhang-%29.html</guid><pubDate>Mon, 21 Apr 2025 09:08:55 +0000</pubDate></item><item><title>先要知道的一些内容(搭建安卓服务器：基础篇)</title><link>https://blog.mymaskking.dpdns.org//post/xian-yao-zhi-dao-de-yi-xie-nei-rong-%28-da-jian-an-zhuo-fu-wu-qi-%EF%BC%9A-ji-chu-pian-%29.html</link><description>
+# 先要知道的一些内容
+
+## **手机的系统架构是什么？如何看？**
 
 &gt; 手机的 CPU 通常使用 ARM 架构（如 ARMv7, ARMv8）或较少见的 x86 架构。</description><guid isPermaLink="true">https://blog.mymaskking.dpdns.org//post/xian-yao-zhi-dao-de-yi-xie-nei-rong-%28-da-jian-an-zhuo-fu-wu-qi-%EF%BC%9A-ji-chu-pian-%29.html</guid><pubDate>Mon, 21 Apr 2025 08:36:46 +0000</pubDate></item><item><title>cloudflare做内网穿透(搭建安卓服务器:第二章)</title><link>https://blog.mymaskking.dpdns.org//post/cloudflare-zuo-nei-wang-chuan-tou-%28-da-jian-an-zhuo-fu-wu-qi---di-er-zhang-%29.html</link><description>## 网络穿透教程
 

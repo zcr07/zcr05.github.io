@@ -38,9 +38,10 @@
 - When a problem remains unsolved after more than two attempts, you should approach it from a different perspective and initiate a second - level of thinking.
 - When a problem occurs, you should use more logs to determine the cause of the problem.
 ```
+
 # 使用方法
 
-![](http://www.kdocs.cn/api/v3/office/copy/Ylh1WUZBTG5VSVdUbEVWRUI0d21nVDgvQmhnRGxST01Oc0dPWm90T2NLVUNHNGNXUkI2OENFYWl5NE9hVkh6VlgxcUhtOXpYMUNGYW1lRWZKN0JPZFJRSXBoU2NVMTdxTUgzczBsN3N5SWIzYUQybTd6ZjZZWEhId2k1WHNUTmVFUDZ3ZG10TkdIMmt0VWZvRXFnM0IxRU1kUFJHcEVkSngwZ01RVGZuWW9MWG5aM3htQUp2R2NvVlBYcTVKbEkzOHJXY0MyR1IvWllibXp2SlFPZUttbDhiVzQrcHRFdmtPSVQ5WjlTMFdWT2pTLy9oaE5rZVNwRkN3cHE0ZmR3TTV1MVp5eDhhN2k0PQ==/attach/object/OVFTY7Q7ACAD6?)
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Cursor的开发Rule设置/img_1b9b6f6e1b.png)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTE0NTM4NTk2XX0=
+eyJoaXN0b3J5IjpbMzU3OTQ3NTAzXX0=
 -->

@@ -1,3 +1,4 @@
+
 # 先要知道的一些内容
 
 ## **手机的系统架构是什么？如何看？**
@@ -8,7 +9,7 @@
 
 其他还是用第三方软件(如DevCheck[https://wwvj.lanzoum.com/b0065zsiaj](https://wwvj.lanzoum.com/b0065zsiaj)密码:cp5o)查看
 
-![](http://www.kdocs.cn/api/v3/office/copy/TCtnSVpVN0JkUCtmN053dHFCOUxzUmNzZUxvbW9VelQzL3F0Mkh5TUg1bWNwUmFSL2drWjZwNWlWQVFWaUl3dlpqd2ZuMkVqQXBFUUlVQjdDanpCVUNhMnpzQVc2L3lTMDZoNEVlMmtlakR5VUZtbkVleUtSUlJaR1NlMTBFNVhSZ3NmL2xVLytONXVVeWFqMG1TY0ZWVFpYajlHa2xrcCtmR1dtNzdDNnV4aUE4UERYVnhwZkp3aGFSZXJkaVFCN1UxYmVOZ0xta1ZtRmtUYTZsY1pnc3JjRU41a0o2QkVobFpQKzVhTGh4VGlWa0ZEZUFIeHNvaGo1aDVmaUFybVhwUHNDazVaa0xnPQ==/attach/object/WCEPEVY7ABAGU?)
+![](http://www.kdocs.cn/api/v3/office/copy/Q2dtczJwZjRYaVlKYVhhcDRZTkltTVZyblp1YVhFZmpNZWhSQUsyd293dkFKdzNOUkkxVVpORDN0aEFzeVFlMUNGRTNYYVQ2a096c25mR3ZGM0doTzF0MTc2U0l2ZEo1WnRLYVBvdWR3VjlsNXBwenJXYjJJeXZJOWhzbDBPMm11bS81UnUyOEdCb0JrSWYwZ1lLTzBERjdBdk5XV0FzeUVBeVZCbFFDeCs5NUFDaEoxWk9jY1pXS1F0Y0NEeDkvSzRUTjNleElHSU5LdEdKNHpYZVUvbUZWazhDWkJDQTRnM2daazhsZVdFeVUyQzNQRkNZdFh4T2plOGExcWdweENCSFBXYjhHRUhRPQ==/attach/object/WCEPEVY7ABAGU?)
 
 ## **linux，乌班图，德班系统是在什么系统架构上运行的？**
 
@@ -36,5 +37,5 @@ dpkg --print-architecture
 > **s390x**：IBM大型机系统的架构。  
 > **ppc64le**：IBM Power处理器的架构。
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTA3MTQ5MzI0N119
+eyJoaXN0b3J5IjpbLTE2NTI1MDQwNjNdfQ==
 -->

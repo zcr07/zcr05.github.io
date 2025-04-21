@@ -113,17 +113,18 @@ jobs:
           fi
           echo "📂 新增或修改的md文件: $MODIFIED_MD_FILES"
           
-          # 如果只执行了删除操作，并且没有任何新增或修改的md文件，则中止程序
+          # 如果只执行了删除操作，并且没有任何新增或修改的md文件，则标记为只处理删除
           if [[ "$DELETE_PERFORMED" == "true" && -z "$MODIFIED_MD_FILES" ]]; then
-            echo "✅ 已完成删除操作，没有新增或修改的md文件，中止程序"
+            echo "✅ 已完成删除操作，没有新增或修改的md文件，只执行图片清理"
+            echo "ONLY_HANDLE_DELETIONS=true" >> $GITHUB_ENV
             echo "HAS_MD_FILES=false" >> $GITHUB_ENV
-            exit 0
           fi
           
           # 如果没有需要处理的文件，则中止程序
-          if [[ -z "$MODIFIED_MD_FILES" ]]; then
-            echo "✅ 本次提交没有新增或修改的md文件，中止程序"
+          if [[ -z "$MODIFIED_MD_FILES" && "$DELETE_PERFORMED" != "true" ]]; then
+            echo "✅ 本次提交没有新增、修改或删除的md文件，中止程序"
             echo "HAS_MD_FILES=false" >> $GITHUB_ENV
+            echo "ONLY_HANDLE_DELETIONS=false" >> $GITHUB_ENV
             exit 0
           fi
           
@@ -161,7 +162,7 @@ jobs:
       # 新增：处理Markdown文件中的图片链接
       - name: 🖼️ 处理MD文件中的图片链接
         id: process_images
-        if: env.HAS_MD_FILES == 'true'
+        if: env.HAS_MD_FILES == 'true' || env.ONLY_HANDLE_DELETIONS == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -174,6 +175,7 @@ jobs:
           echo "  GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
           echo "  GITHUB_TOKEN (长度): ${#GH_TOKEN}"
           echo "  GITHUB_SHA: $GITHUB_SHA"
+          echo "  ONLY_HANDLE_DELETIONS: ${{ env.ONLY_HANDLE_DELETIONS }}"
           
           # 验证GitHub CLI是否可用
           echo "👀 验证GitHub CLI:"
@@ -188,50 +190,66 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          # 创建目标目录
-          mkdir -p "assets/images"
-          
-          # 创建临时目录用于追踪新使用的图片
-          USED_IMAGES_DIR=$(mktemp -d)
-          echo "👀 创建临时目录跟踪使用的图片: $USED_IMAGES_DIR"
-          
-          # 读取文件列表
-          if [[ ! -f "${{ env.ISSUES_FILES_LIST }}" ]]; then
-            echo "❌ 文件列表不存在，跳过处理"
+          # 检查是否只处理删除
+          if [[ "${{ env.ONLY_HANDLE_DELETIONS }}" == "true" ]]; then
+            echo "🧹 只处理删除操作的图片清理..."
+            
+            # 读取被删除的文件列表
+            if [[ -f "/tmp/deleted_md_files.txt" ]]; then
+              echo "📋 处理删除的文件列表..."
+              
+              while IFS= read -r FILE; do
+                echo "🔍 处理删除的文件：$FILE"
+                
+                # 获取文件名（不含扩展名）作为目录名
+                FILE_BASE=$(basename "$FILE" .md)
+                FILE_DIR_NAME=$(echo "$FILE_BASE" | tr -c '[:alnum:]' '_' | tr '[:upper:]' '[:lower:]')
+                IMG_DIR="assets/images/$FILE_DIR_NAME"
+                
+                if [[ -d "$IMG_DIR" ]]; then
+                  echo "🗑️ 删除图片目录: $IMG_DIR"
+                  git rm -rf "$IMG_DIR" || echo "⚠️ 删除目录失败: $IMG_DIR"
+                else
+                  echo "👀 图片目录不存在: $IMG_DIR"
+                fi
+              done < "/tmp/deleted_md_files.txt"
+              
+              # 如果有图片变动，提交并推送
+              if git status --porcelain | grep -q "assets/images/"; then
+                echo "🚀 提交图片删除更改..."
+                git commit -m "🗑️ 删除不再使用的图片 [skip ci]"
+                
+                echo "🚀 推送到GitHub..."
+                git push || echo "无法推送到GitHub，但继续执行"
+              else
+                echo "ℹ️ 没有图片需要删除"
+              fi
+            else
+              echo "⚠️ 删除文件列表不存在，无法清理图片"
+            fi
+            
+            echo "✅ 删除操作的图片清理完成"
             exit 0
           fi
           
-          # 先读取所有markdown文件中的图片链接，包括已经转换为GitHub的链接
-          echo "🔍 扫描所有Markdown文件中的图片链接..."
-          ALL_MD_FILES=$(find issues -name "*.md" -type f)
-          
-          # 统计所有正在使用的GitHub图片链接
-          echo "👀 分析所有已使用的GitHub图片..."
-          for MD_FILE in $ALL_MD_FILES; do
-            # 查找GitHub图片链接
-            GH_IMAGES=$(grep -oE '!\[[^]]*\]\(https://raw\.githubusercontent\.com/[^)]+\)' "$MD_FILE" || echo "")
-            
-            if [[ -n "$GH_IMAGES" ]]; then
-              echo "👀 在 $MD_FILE 中找到 GitHub 图片链接"
-              
-              # 提取图片文件名并记录为正在使用
-              echo "$GH_IMAGES" | while read -r IMG_LINK; do
-                # 提取链接部分
-                IMG_URL=$(echo "$IMG_LINK" | grep -oE 'https://raw\.githubusercontent\.com/[^)]+')
-                
-                # 提取文件名
-                IMG_FILENAME=$(basename "$IMG_URL")
-                
-                # 标记为使用中
-                echo "👀 找到使用中的图片: $IMG_FILENAME"
-                touch "$USED_IMAGES_DIR/$IMG_FILENAME"
-              done
-            fi
-          done
-          
-          # 处理每个需要更新的Markdown文件
+          # 处理每个需要更新的Markdown文件（仅当前提交的文件）
           while IFS= read -r FILE; do
-            echo "🔍 处理文件中的图片链接：$FILE"
+            echo "🔍 处理当前提交的文件：$FILE"
+            
+            # 获取文件名（不含扩展名）作为目录名
+            FILE_BASE=$(basename "$FILE" .md)
+            FILE_DIR_NAME=$(echo "$FILE_BASE" | tr -c '[:alnum:]' '_' | tr '[:upper:]' '[:lower:]')
+            echo "👀 为文件创建图片目录: $FILE_DIR_NAME"
+            
+            # 创建/清空图片目录 - 实现全量更新
+            IMG_DIR="assets/images/$FILE_DIR_NAME"
+            if [[ -d "$IMG_DIR" ]]; then
+              echo "🧹 清空现有图片目录，准备全量更新: $IMG_DIR"
+              rm -rf "$IMG_DIR"/*
+            fi
+            
+            # 确保图片目录存在
+            mkdir -p "$IMG_DIR"
             
             # 创建临时文件
             TMP_FILE=$(mktemp)
@@ -241,19 +259,79 @@ jobs:
             cp "$FILE" "$TMP_FILE"
             echo "👀 原始文件大小: $(wc -c < "$FILE") 字节"
             
-            # 使用正则表达式查找所有外部图片链接 - 排除GitHub链接
-            echo "👀 开始查找外部图片链接..."
-            IMAGE_LINKS=$(grep -oE '!\[[^]]*\]\([^)]+\)|!\[\]\([^)]+\)' "$FILE" | grep -v 'github.com\|githubusercontent.com' || echo "")
+            # 使用正则表达式查找所有图片链接 - 包括GitHub和外部链接
+            echo "👀 开始查找所有图片链接..."
+            ALL_IMAGES=$(grep -oE '!\[[^]]*\]\([^)]+\)|!\[\]\([^)]+\)' "$FILE" || echo "")
             
-            echo "👀 找到外部图片链接数量: $(echo "$IMAGE_LINKS" | grep -c '^' || echo 0)"
-            echo "👀 图片链接详情:"
-            echo "$IMAGE_LINKS" | nl || echo "无外部图片链接"
+            echo "👀 找到图片链接数量: $(echo "$ALL_IMAGES" | grep -c '^' || echo 0)"
             
-            if [[ -n "$IMAGE_LINKS" ]]; then
-              echo "🖼️ 发现外部图片链接，开始处理..."
+            # 分离GitHub链接和外部链接
+            GITHUB_IMAGES=$(echo "$ALL_IMAGES" | grep 'github.com\|githubusercontent.com' || echo "")
+            EXTERNAL_IMAGES=$(echo "$ALL_IMAGES" | grep -v 'github.com\|githubusercontent.com' || echo "")
+            
+            echo "👀 GitHub图片链接数: $(echo "$GITHUB_IMAGES" | grep -c '^' || echo 0)"
+            echo "👀 外部图片链接数: $(echo "$EXTERNAL_IMAGES" | grep -c '^' || echo 0)"
+            
+            # 处理已有的GitHub图片链接 - 下载到本地
+            if [[ -n "$GITHUB_IMAGES" ]]; then
+              echo "🖼️ 处理现有GitHub图片链接..."
               
-              # 依次处理每个图片链接
-              echo "$IMAGE_LINKS" | while read -r IMG_LINK; do
+              echo "$GITHUB_IMAGES" | while read -r IMG_LINK; do
+                # 提取链接部分
+                IMG_URL=$(echo "$IMG_LINK" | grep -oE 'https://[^)]+')
+                
+                if [[ -n "$IMG_URL" ]]; then
+                  echo "📥 下载GitHub图片: $IMG_URL"
+                  
+                  # 获取文件名
+                  IMG_FILENAME=$(basename "$IMG_URL")
+                  
+                  # 创建临时图片文件
+                  IMG_TMP=$(mktemp)
+                  
+                  # 下载图片
+                  curl -L "$IMG_URL" -o "$IMG_TMP"
+                  
+                  if [[ -f "$IMG_TMP" && -s "$IMG_TMP" ]]; then
+                    # 复制到图片目录
+                    cp "$IMG_TMP" "$IMG_DIR/$IMG_FILENAME"
+                    echo "👀 保存GitHub图片到: $IMG_DIR/$IMG_FILENAME"
+                    
+                    # 生成新的GitHub格式图片URL
+                    REPO_URL="https://raw.githubusercontent.com/$GITHUB_REPOSITORY"
+                    BRANCH="${GITHUB_REF#refs/heads/}"
+                    if [[ -z "$BRANCH" ]]; then
+                      BRANCH="main"
+                    fi
+                    NEW_IMG_URL="$REPO_URL/$BRANCH/assets/images/$FILE_DIR_NAME/$IMG_FILENAME"
+                    
+                    # 创建新的图片Markdown链接
+                    if [[ "$IMG_LINK" =~ !\[\] ]]; then
+                      NEW_IMG_LINK="![Image]($NEW_IMG_URL)"
+                    else
+                      ALT_TEXT=$(echo "$IMG_LINK" | sed -E 's/!\[([^]]*)\].*/\1/')
+                      NEW_IMG_LINK="![$ALT_TEXT]($NEW_IMG_URL)"
+                    fi
+                    
+                    # 替换原始链接
+                    perl -i -pe "s/\Q$IMG_LINK\E/$NEW_IMG_LINK/g" "$TMP_FILE" || {
+                      FILE_CONTENT=$(<"$TMP_FILE")
+                      echo "${FILE_CONTENT//"$IMG_LINK"/"$NEW_IMG_LINK"}" > "$TMP_FILE"
+                    }
+                  fi
+                  
+                  # 删除临时图片文件
+                  rm -f "$IMG_TMP"
+                fi
+              done
+            fi
+            
+            # 处理外部图片链接
+            if [[ -n "$EXTERNAL_IMAGES" ]]; then
+              echo "🖼️ 处理外部图片链接..."
+              
+              # 依次处理每个外部图片链接
+              echo "$EXTERNAL_IMAGES" | while read -r IMG_LINK; do
                 echo "👀 处理图片链接: $IMG_LINK"
                 
                 # 提取图片URL
@@ -285,7 +363,7 @@ jobs:
                     echo "👀 MIME类型: $MIME_TYPE"
                     
                     # 为上传的图片生成一个唯一名称
-                    # 使用MD5哈希文件内容作为文件名的一部分以确保唯一性并避免重复上传
+                    # 使用MD5哈希文件内容作为文件名，保证唯一性
                     FILE_HASH=$(md5sum "$IMG_TMP" | cut -d ' ' -f 1)
                     FILENAME="img_${FILE_HASH:0:10}"
                     
@@ -310,25 +388,23 @@ jobs:
                     FILENAME="${FILENAME}${EXT}"
                     echo "👀 生成文件名: $FILENAME"
                     
-                    # 复制图片到assets目录
-                    cp "$IMG_TMP" "assets/images/$FILENAME"
-                    echo "👀 复制图片到: assets/images/$FILENAME"
-                    
-                    # 标记图片为使用中
-                    touch "$USED_IMAGES_DIR/$FILENAME"
+                    # 将图片存入该文件专属的目录
+                    IMAGE_PATH="$IMG_DIR/$FILENAME"
+                    cp "$IMG_TMP" "$IMAGE_PATH"
+                    echo "👀 复制图片到: $IMAGE_PATH"
                     
                     # 添加图片到Git
                     echo "👀 添加图片到Git..."
-                    git add "assets/images/$FILENAME"
+                    git add "$IMAGE_PATH"
                     
                     # 生成GitHub格式的图片URL
-                    # 使用仓库的原始内容链接，避免转换为Blob页面
+                    # 使用仓库的原始内容链接
                     REPO_URL="https://raw.githubusercontent.com/$GITHUB_REPOSITORY"
                     BRANCH="${GITHUB_REF#refs/heads/}"
                     if [[ -z "$BRANCH" ]]; then
                       BRANCH="main"  # 默认分支
                     fi
-                    GITHUB_IMG_URL="$REPO_URL/$BRANCH/assets/images/$FILENAME"
+                    GITHUB_IMG_URL="$REPO_URL/$BRANCH/assets/images/$FILE_DIR_NAME/$FILENAME"
                     echo "👀 生成GitHub图片URL: $GITHUB_IMG_URL"
                     
                     # 创建新的图片Markdown语法
@@ -368,36 +444,26 @@ jobs:
                   echo "⚠️ 无法从链接提取URL: $IMG_LINK"
                 fi
               done
-              
-              # 使用处理后的内容替换原始文件
-              echo "👀 更新原始文件..."
-              cp "$TMP_FILE" "$FILE"
-              echo "👀 更新后的文件大小: $(wc -c < "$FILE") 字节"
-              
-              echo "✅ 图片链接处理完成: $FILE"
             else
-              echo "ℹ️ 没有找到外部图片链接，无需处理"
+              echo "ℹ️ 没有找到外部图片链接"
             fi
+            
+            # 使用处理后的内容替换原始文件
+            echo "👀 更新原始文件..."
+            cp "$TMP_FILE" "$FILE"
+            echo "👀 更新后的文件大小: $(wc -c < "$FILE") 字节"
+            
+            # 添加整个图片目录到Git
+            if [[ -d "$IMG_DIR" ]]; then
+              echo "👀 添加图片目录到Git: $IMG_DIR"
+              git add "$IMG_DIR"
+            fi
+            
+            echo "✅ 图片处理完成: $FILE"
             
             # 删除临时文件
             rm -f "$TMP_FILE"
           done < "${{ env.ISSUES_FILES_LIST }}"
-          
-          # 清理不再使用的图片
-          echo "🧹 检查未使用的图片..."
-          if [[ -d "assets/images" ]]; then
-            find "assets/images" -type f | while read -r IMAGE_FILE; do
-              FILENAME=$(basename "$IMAGE_FILE")
-              
-              # 检查图片是否在使用中
-              if [[ ! -f "$USED_IMAGES_DIR/$FILENAME" ]]; then
-                echo "🗑️ 删除未使用的图片: $IMAGE_FILE"
-                git rm "$IMAGE_FILE"
-              else
-                echo "✅ 保留使用中的图片: $IMAGE_FILE"
-              fi
-            done
-          fi
           
           # 如果有图片变动，提交并推送
           if git status --porcelain | grep -q "assets/images/"; then
@@ -409,11 +475,6 @@ jobs:
           else
             echo "ℹ️ 没有图片需要提交"
           fi
-          
-          # 清理临时目录
-          rm -rf "$USED_IMAGES_DIR"
-          
-          echo "🎉 所有文件的图片链接处理完成"
 
       - name: 📄 处理每个md文件
         id: process_files

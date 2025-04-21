@@ -14,7 +14,6 @@
 ## **linux，乌班图，德班系统是在什么系统架构上运行的？**
 
 
-
 > Linux、Ubuntu 和 Debian 操作系统可以运行在多种系统架构上，主要包括：  
 > **x86（i386）**：32 位架构，适用于较旧的计算机系统。  
 > **x86_64（amd64）**：64 位架构，广泛应用于现代桌面和服务器处理器。  
@@ -39,5 +38,5 @@ dpkg --print-architecture
 > **s390x**：IBM大型机系统的架构。  
 > **ppc64le**：IBM Power处理器的架构。
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMzc2NTczMDIxXX0=
+eyJoaXN0b3J5IjpbMTMxODU3OTQzOV19
 -->

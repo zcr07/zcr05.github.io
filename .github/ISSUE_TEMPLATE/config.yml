@@ -1,0 +1,14 @@
+---
+name: Custom issue template
+about: Describe this issue template's purpose here.
+title: ''
+labels: help wanted
+assignees: ''
+
+---
+
+blank_issues_enabled: false
+contact_links:
+  - name: 关于Issue创建说明
+    url: https://github.com/${{ github.repository }}
+    about: 本仓库的Issue通过特定工作流由仓库所有者自动创建，不接受手动创建的Issue。如需讨论内容，请通过其他方式与仓库所有者联系。

@@ -17,6 +17,8 @@ permissions:
 
 jobs:
   issue-publisher:
+    # 添加条件：只有仓库所有者的提交才会执行此工作流
+    if: github.actor == github.repository_owner
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

@@ -1,0 +1,29 @@
+name: Close Unauthorized Issues
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  close-issue:
+    runs-on: ubuntu-latest
+    # 如果创建Issue的不是仓库所有者，则执行关闭
+    if: github.event.issue.user.login != github.repository_owner
+    steps:
+      - uses: actions/github-script@v6
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '此仓库的Issue由所有者通过特定工作流创建管理，不接受手动创建的Issue。此Issue将被自动关闭。如有建议，请通过其他渠道联系仓库所有者。'
+            });
+            
+            await github.rest.issues.update({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'closed'
+            });

@@ -1,4 +1,5 @@
-## 安装软件介绍2
+
+## 安装软件介绍
 
 ⭐
 
@@ -204,7 +205,7 @@ docker-compose --version
 
 ### apk安装后会有弹出画面，点击Settings设置SSH服务端口映射
 
-![](http://www.kdocs.cn/api/v3/office/copy/ajR1Y0NCd1I2cWkyR08wNlRVNlV0bE5jZHdBZVdPWFNlQjFoZG84VWJyL2FaNlUzNGFNVjJ4R2IxeGd3QktHZW5rZnkyVDJMK1dvWXNmN1phYTJOaVcwendXYnNLd0JCbDR5S3hob0JoaWEzVkQ2MGxlTFk1QjdmcFp1dXRqU2hiWEo2UW95alNJQXVJYWV4Y3ViRjZJc1ZhL2M3WnJHa09lV0pBbURObjdoaFVqdGNXa2pCZG1GL1IrZkovaFBpeVVtb2wxWkhSeWdGc0ViYjh1UWh0UktIK0piNlROY3BMY1B5VlIyemhUQXlWcjJZWi9KdmdUOTN6WDduT1RlZXl0ZmNLbmRqaEtjPQ==/attach/object/HJEDEXI7ABQGO?)
+![](http://www.kdocs.cn/api/v3/office/copy/RGFzMEkxT0VSa0ErVFNEbmlxTmxXTll5bTRTTjNpd0pXb2paTzJGbnQvVFBKT1ZGZFZaaGtXdzVZaXdaK0IvNXNvemUyUGxDZm5jRXlvNHdVRnlEelBRa2ZmeGw0V0xWLzVqV2VKbFBuQ2M5MFJGM2h6SUxsZWZ4bVBhTGVyMmZ2TFVubXJGOE9zRzE4Uk1XM2ZxRHR3MG5TVFJPRmdLUVR5bytTYjVPT2JJNDRPQi9uZllUOWllVms1Ym91eTVERXZLdDk4ejZ4QXgwS1BIOEVleVd1Y2d0S3JUNkUwUEtaaUdnaEpjSE9lUDNVWjcrcVk1Qi9LZStxMDgvT0dIcXh3TE5ybUpORDdVPQ==/attach/object/HJEDEXI7ABQGO?)
 
 ```
 tcp:2022:22
@@ -302,7 +303,7 @@ Git网址：[https://github.com/CypherpunkArmory/UserLAnd](https://github.com/Cy
 
 [https://distro.ibiblio.org/tinycorelinux/downloads.html](https://distro.ibiblio.org/tinycorelinux/downloads.html)
 
-![](http://www.kdocs.cn/api/v3/office/copy/ajR1Y0NCd1I2cWkyR08wNlRVNlV0bE5jZHdBZVdPWFNlQjFoZG84VWJyL2FaNlUzNGFNVjJ4R2IxeGd3QktHZW5rZnkyVDJMK1dvWXNmN1phYTJOaVcwendXYnNLd0JCbDR5S3hob0JoaWEzVkQ2MGxlTFk1QjdmcFp1dXRqU2hiWEo2UW95alNJQXVJYWV4Y3ViRjZJc1ZhL2M3WnJHa09lV0pBbURObjdoaFVqdGNXa2pCZG1GL1IrZkovaFBpeVVtb2wxWkhSeWdGc0ViYjh1UWh0UktIK0piNlROY3BMY1B5VlIyemhUQXlWcjJZWi9KdmdUOTN6WDduT1RlZXl0ZmNLbmRqaEtjPQ==/attach/object/3ZFAKTY7AAQAG?)
+![](http://www.kdocs.cn/api/v3/office/copy/RGFzMEkxT0VSa0ErVFNEbmlxTmxXTll5bTRTTjNpd0pXb2paTzJGbnQvVFBKT1ZGZFZaaGtXdzVZaXdaK0IvNXNvemUyUGxDZm5jRXlvNHdVRnlEelBRa2ZmeGw0V0xWLzVqV2VKbFBuQ2M5MFJGM2h6SUxsZWZ4bVBhTGVyMmZ2TFVubXJGOE9zRzE4Uk1XM2ZxRHR3MG5TVFJPRmdLUVR5bytTYjVPT2JJNDRPQi9uZllUOWllVms1Ym91eTVERXZLdDk4ejZ4QXgwS1BIOEVleVd1Y2d0S3JUNkUwUEtaaUdnaEpjSE9lUDNVWjcrcVk1Qi9LZStxMDgvT0dIcXh3TE5ybUpORDdVPQ==/attach/object/3ZFAKTY7AAQAG?)
 
 如何切换Root([来自官网的提示](https://detailed.wordpress.com/2017/08/10/tiny-core-linux/))
 
@@ -487,5 +488,5 @@ docker run -d --restart=always -v /data/alist:/opt/alist/data -p 1744:5244 --nam
 
 docker run hello-world
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTIwMjM5NDc4MTIsLTEyNTA2MzA5OF19
+eyJoaXN0b3J5IjpbODg2MDkyMDE0LC0xMjUwNjMwOThdfQ==
 -->

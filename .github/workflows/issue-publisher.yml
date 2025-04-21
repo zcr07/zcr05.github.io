@@ -84,7 +84,32 @@ jobs:
               else
                 echo "⚠️ 未找到与'$TITLE'对应的issue，无需删除"
               fi
+              
+              # 处理图片目录
+              # 获取文件名（不含扩展名）作为目录名
+              FILE_BASE=$(basename "$FILE" .md)
+              # 保留原始文件名，但替换不安全的字符为下划线
+              FILE_DIR_NAME=$(echo "$FILE_BASE" | sed 's/[\/\?<>\\:\*\|":]/_/g')
+              IMG_DIR="assets/images/$FILE_DIR_NAME"
+              
+              if [[ -d "$IMG_DIR" ]]; then
+                echo "🗑️ 删除图片目录: $IMG_DIR"
+                git rm -rf "$IMG_DIR" || echo "⚠️ 删除目录失败: $IMG_DIR"
+              else
+                echo "👀 图片目录不存在: $IMG_DIR"
+              fi
             done < <(echo "$DELETED_MD_FILES")
+            
+            # 如果有图片变动，提交并推送
+            if git status --porcelain | grep -q "assets/images/"; then
+              echo "🚀 提交图片删除更改..."
+              git commit -m "🗑️ 删除不再使用的图片 [skip ci]"
+              
+              echo "🚀 推送到GitHub..."
+              git push || echo "无法推送到GitHub，但继续执行"
+            else
+              echo "ℹ️ 没有图片需要删除"
+            fi
           else
             echo "✅ 没有删除任何md文件"
           fi
@@ -203,7 +228,8 @@ jobs:
                 
                 # 获取文件名（不含扩展名）作为目录名
                 FILE_BASE=$(basename "$FILE" .md)
-                FILE_DIR_NAME=$(echo "$FILE_BASE" | tr -c '[:alnum:]' '_' | tr '[:upper:]' '[:lower:]')
+                # 保留原始文件名，但替换不安全的字符为下划线
+                FILE_DIR_NAME=$(echo "$FILE_BASE" | sed 's/[\/\?<>\\:\*\|":]/_/g')
                 IMG_DIR="assets/images/$FILE_DIR_NAME"
                 
                 if [[ -d "$IMG_DIR" ]]; then
@@ -238,8 +264,9 @@ jobs:
             
             # 获取文件名（不含扩展名）作为目录名
             FILE_BASE=$(basename "$FILE" .md)
-            FILE_DIR_NAME=$(echo "$FILE_BASE" | tr -c '[:alnum:]' '_' | tr '[:upper:]' '[:lower:]')
-            echo "👀 为文件创建图片目录: $FILE_DIR_NAME"
+            # 保留原始文件名，但替换不安全的字符为下划线
+            FILE_DIR_NAME=$(echo "$FILE_BASE" | sed 's/[\/\?<>\\:\*\|":]/_/g')
+            echo "👀 为文件创建图片目录: $FILE_DIR_NAME (源自: $FILE_BASE)"
             
             # 创建/清空图片目录 - 实现全量更新
             IMG_DIR="assets/images/$FILE_DIR_NAME"

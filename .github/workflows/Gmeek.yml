@@ -12,13 +12,6 @@ on:
       - completed
     branches:
       - main  # 只在主分支上触发
-  push:
-    paths-ignore:
-      - 'README.md'
-      - 'issues/*.md'
-      - '.github/workflows/**'
-      - 'assets/images/**'  # 假设图片保存在这个目录下
-      - 'imgs/**'
 
 # 添加并发控制，确保同一时间只运行一个实例
 concurrency:

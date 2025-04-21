@@ -292,18 +292,20 @@ jobs:
             
             echo "👀 找到图片链接数量: $(echo "$ALL_IMAGES" | grep -c '^' || echo 0)"
             
-            # 分离GitHub链接和外部链接
+            # 分离GitHub链接和其他链接
             GITHUB_IMAGES=$(echo "$ALL_IMAGES" | grep 'github.com\|githubusercontent.com' || echo "")
-            EXTERNAL_IMAGES=$(echo "$ALL_IMAGES" | grep -v 'github.com\|githubusercontent.com' || echo "")
+            OTHER_IMAGES=$(echo "$ALL_IMAGES" | grep -v 'github.com\|githubusercontent.com' || echo "")
             
             echo "👀 GitHub图片链接数: $(echo "$GITHUB_IMAGES" | grep -c '^' || echo 0)"
-            echo "👀 外部图片链接数: $(echo "$EXTERNAL_IMAGES" | grep -c '^' || echo 0)"
+            echo "👀 其他图片链接数: $(echo "$OTHER_IMAGES" | grep -c '^' || echo 0)"
             
-            # 处理已有的GitHub图片链接 - 下载到本地
+            # 处理已有的GitHub链接 - 下载到本地
             if [[ -n "$GITHUB_IMAGES" ]]; then
-              echo "🖼️ 处理现有GitHub图片链接..."
+              echo "🖼️ 处理已有的GitHub图片链接..."
               
               echo "$GITHUB_IMAGES" | while read -r IMG_LINK; do
+                echo "👀 处理GitHub图片链接: $IMG_LINK"
+                
                 # 提取链接部分
                 IMG_URL=$(echo "$IMG_LINK" | grep -oE 'https://[^)]+')
                 
@@ -345,27 +347,32 @@ jobs:
                       FILE_CONTENT=$(<"$TMP_FILE")
                       echo "${FILE_CONTENT//"$IMG_LINK"/"$NEW_IMG_LINK"}" > "$TMP_FILE"
                     }
+                  else
+                    echo "❌ GitHub图片下载失败，保留原始链接"
                   fi
                   
                   # 删除临时图片文件
                   rm -f "$IMG_TMP"
+                else
+                  echo "⚠️ 无法从GitHub链接提取URL: $IMG_LINK"
                 fi
               done
             fi
             
-            # 处理外部图片链接
-            if [[ -n "$EXTERNAL_IMAGES" ]]; then
-              echo "🖼️ 处理外部图片链接..."
+            # 处理其他图片链接（外部链接、相对路径等）
+            if [[ -n "$OTHER_IMAGES" ]]; then
+              echo "🖼️ 处理其他图片链接..."
               
-              # 依次处理每个外部图片链接
-              echo "$EXTERNAL_IMAGES" | while read -r IMG_LINK; do
+              echo "$OTHER_IMAGES" | while read -r IMG_LINK; do
                 echo "👀 处理图片链接: $IMG_LINK"
                 
-                # 提取图片URL
-                IMG_URL=$(echo "$IMG_LINK" | grep -oE 'http[^)]+' || echo "")
+                # 提取图片URL部分
+                URL_PART=$(echo "$IMG_LINK" | sed -E 's/!\[[^]]*\]\(([^)]+)\)/\1/')
                 
-                if [[ -n "$IMG_URL" ]]; then
-                  echo "📥 下载图片: $IMG_URL"
+                # 判断链接类型
+                if [[ "$URL_PART" =~ ^http[s]?:// ]]; then
+                  # 类型1: 外部HTTP链接
+                  echo "🌐 检测到外部HTTP链接: $URL_PART"
                   
                   # 创建临时图片文件
                   IMG_TMP=$(mktemp)
@@ -378,7 +385,7 @@ jobs:
                     -H "Accept: image/webp,image/apng,image/*,*/*;q=0.8" \
                     -H "Accept-Language: en-US,en;q=0.9" \
                     -H "Referer: https://www.kdocs.cn/" \
-                    "$IMG_URL" -o "$IMG_TMP" 2>&1 | grep -E "^>" || echo "curl详细输出获取失败"
+                    "$URL_PART" -o "$IMG_TMP" 2>&1 | grep -E "^>" || echo "curl详细输出获取失败"
                   
                   if [[ -f "$IMG_TMP" && -s "$IMG_TMP" ]]; then
                     echo "👀 图片下载成功，文件大小: $(wc -c < "$IMG_TMP") 字节"
@@ -390,7 +397,6 @@ jobs:
                     echo "👀 MIME类型: $MIME_TYPE"
                     
                     # 为上传的图片生成一个唯一名称
-                    # 使用MD5哈希文件内容作为文件名，保证唯一性
                     FILE_HASH=$(md5sum "$IMG_TMP" | cut -d ' ' -f 1)
                     FILENAME="img_${FILE_HASH:0:10}"
                     
@@ -425,7 +431,6 @@ jobs:
                     git add "$IMAGE_PATH"
                     
                     # 生成GitHub格式的图片URL
-                    # 使用仓库的原始内容链接
                     REPO_URL="https://raw.githubusercontent.com/$GITHUB_REPOSITORY"
                     BRANCH="${GITHUB_REF#refs/heads/}"
                     if [[ -z "$BRANCH" ]]; then
@@ -445,34 +450,60 @@ jobs:
                     
                     echo "👀 新的图片链接: $NEW_IMG_LINK"
                     
-                    # 使用直接替换的方式替换文件内容
-                    echo "👀 执行替换..."
-                    # 使用perl替代sed，处理特殊字符更可靠
+                    # 替换文件内容
                     perl -i -pe "s/\Q$IMG_LINK\E/$NEW_IMG_LINK/g" "$TMP_FILE" || {
                       echo "⚠️ Perl替换失败，尝试更简单的方法"
-                      # 将文件内容读入变量并替换
                       FILE_CONTENT=$(<"$TMP_FILE")
                       echo "${FILE_CONTENT//"$IMG_LINK"/"$NEW_IMG_LINK"}" > "$TMP_FILE"
                     }
                     
                     echo "👀 替换后的文件大小: $(wc -c < "$TMP_FILE") 字节"
                   else
-                    echo "❌ 图片下载失败或文件为空"
-                    if [[ -f "$IMG_TMP" ]]; then
-                      echo "👀 文件存在但可能为空，大小: $(wc -c < "$IMG_TMP") 字节"
-                    else
-                      echo "👀 文件不存在"
-                    fi
+                    echo "❌ 图片下载失败或文件为空，保留原始链接"
                   fi
                   
                   # 删除临时图片文件
                   rm -f "$IMG_TMP"
+                  
+                elif [[ "$URL_PART" =~ ^/ ]]; then
+                  # 类型3: 相对路径，转换为完整的GitHub raw路径
+                  echo "🔄 检测到相对路径: $URL_PART"
+                  
+                  # 生成完整的GitHub raw URL
+                  REPO_URL="https://raw.githubusercontent.com/$GITHUB_REPOSITORY"
+                  BRANCH="${GITHUB_REF#refs/heads/}"
+                  if [[ -z "$BRANCH" ]]; then
+                    BRANCH="main"  # 默认分支
+                  fi
+                  GITHUB_IMG_URL="$REPO_URL/$BRANCH$URL_PART"
+                  echo "👀 转换为GitHub raw URL: $GITHUB_IMG_URL"
+                  
+                  # 创建新的图片Markdown语法
+                  if [[ "$IMG_LINK" =~ !\[\] ]]; then
+                    NEW_IMG_LINK="![Image]($GITHUB_IMG_URL)"
+                  else
+                    # 提取原始Alt Text
+                    ALT_TEXT=$(echo "$IMG_LINK" | sed -E 's/!\[([^]]*)\].*/\1/')
+                    NEW_IMG_LINK="![$ALT_TEXT]($GITHUB_IMG_URL)"
+                  fi
+                  
+                  echo "👀 新的图片链接: $NEW_IMG_LINK"
+                  
+                  # 替换文件内容
+                  perl -i -pe "s/\Q$IMG_LINK\E/$NEW_IMG_LINK/g" "$TMP_FILE" || {
+                    echo "⚠️ Perl替换失败，尝试更简单的方法"
+                    FILE_CONTENT=$(<"$TMP_FILE")
+                    echo "${FILE_CONTENT//"$IMG_LINK"/"$NEW_IMG_LINK"}" > "$TMP_FILE"
+                  }
+                  
+                  echo "👀 替换后的文件大小: $(wc -c < "$TMP_FILE") 字节"
                 else
-                  echo "⚠️ 无法从链接提取URL: $IMG_LINK"
+                  # 类型2: 无法解析的链接，保持原样
+                  echo "⚠️ 无法解析的链接，保持原样: $URL_PART"
                 fi
               done
             else
-              echo "ℹ️ 没有找到外部图片链接"
+              echo "ℹ️ 没有找到图片链接"
             fi
             
             # 使用处理后的内容替换原始文件

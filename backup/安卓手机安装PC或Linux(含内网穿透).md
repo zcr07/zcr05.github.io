@@ -8,8 +8,8 @@
 一些手机可以在【关于手机-->硬件信息中查看】
 
 其他还是用第三方软件(如DevCheck[https://wwvj.lanzoum.com/b0065zsiaj](https://wwvj.lanzoum.com/b0065zsiaj)密码:cp5o)查看
-
-![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/安卓手机安装PC或Linux(含内网穿透)/img_92d8ba81cd.jpg)
+![输入图片说明](/imgs/2025-04-21/3FYke9HgcxrdFiJD.png)
+![输入图片说明](/imgs/2025-04-21/ZRqkMeDoNDOEU66j.png)![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/安卓手机安装PC或Linux(含内网穿透)/img_1ae1eae448.png)
 
 ## **linux，乌班图，德班系统是在什么系统架构上运行的？**
 
@@ -37,5 +37,5 @@ dpkg --print-architecture
 > **s390x**：IBM大型机系统的架构。  
 > **ppc64le**：IBM Power处理器的架构。
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE4OTAwMjYwMDFdfQ==
+eyJoaXN0b3J5IjpbNTAxNDgzNzE0XX0=
 -->

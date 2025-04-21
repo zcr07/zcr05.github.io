@@ -90,7 +90,7 @@
 2.  推送更改到GitHub
 3.  系统会自动关闭对应的Issue
 
-#### **4. 图片处理**：
+#### **4. 图片处理**
 
 -   文章中的图片会被自动下载并存储在`assets/images/文章名称/`目录下
 -   图片链接会被自动更新为指向仓库中的图片
@@ -109,5 +109,6 @@
 
 ![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Gmeek个人博客(增强版)/img_f36b7b7ec3.png)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNTk2MDc0ODA0LC0xMjIwMzQ0NDkwXX0=
+eyJoaXN0b3J5IjpbLTIxNDU4NTY1NjIsLTEyMjAzNDQ0OTBdfQ
+==
 -->

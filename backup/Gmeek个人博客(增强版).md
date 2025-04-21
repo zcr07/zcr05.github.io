@@ -7,11 +7,11 @@
 
 # [Gmeek](https://github.com/Meekdai/Gmeek)的原理流程
 
-![](http://www.kdocs.cn/api/v3/office/copy/UU1tUGpQN3ptcU1IUGVvV21SOVFNZm9UVmIvN0VkVEo4elJmSmVldGVUOWFWWFQza0tRMlQ3bkxsenBPdnNtcE9GYkphNVlCRFAxOUw4MGZkYjh1bG9XSHJjQnZ3SHdYWXAraTlvK250OVBuS1l1SFk1WGVjWHFJV3NtQmdVWDNJK3FlTjd2ZDBTckV6ZEVBcjlaYmt4eTFPd214ajd5Y0JSc0pnN0t0RU9HM1JXb0dLV3pEakQrUkNmSWJnRE9IMVhhSHo0RkRpSGtmd3NScFZnY2tBOXh3QjdOOGpBUE5qblg1ZThsV09tTUxKL2lER21Md0sydnAzVmo0cWU3bVdBaUs3cENBdmc4PQ==/attach/object/EUUTS6I7ADQAK? "po_bheegdgbihhhba")
+![](http://www.kdocs.cn/api/v3/office/copy/WFA1WjRFY2JlZ2w2dlFDazJ4M1drR08zcVRMYU5ab3NjaGRWV1FqcjZyQngyN2VYK0FrYW9ZbzcwQ1kxcG9qeFRlNTZCSEdKdllxRkdFU3FxK0xHU3ZWY3p4UHBoeXhmMlk5VXprSFQydDRUcGtOd1Z0TzlCeHZVMlRQTlN4dWRISWcxZko0bjlpU3Znb0dNRWVVNTUySlRrQXZpdHdjN2ZSK1dqUXV4eE9XVkViaEcvaXp3Z01VNitrOEtNVmtqdVo0MEtMU3d2ME1WQm9HcDNZRHcvekw5T1Mzc0lUZHR2d2F4cUN6SkdHTjkvckw1V2hlZTNjNWZYZzFWcE9mYXpSRGJSdnZ6MU93PQ==/attach/object/EUUTS6I7ADQAK? "po_bheegdgbihhhba")
 
 # [Gmeek增强](https://github.com/MyMaskKing/MyMaskKing.github.io.git)的原理流程
 
-![](http://www.kdocs.cn/api/v3/office/copy/UU1tUGpQN3ptcU1IUGVvV21SOVFNZm9UVmIvN0VkVEo4elJmSmVldGVUOWFWWFQza0tRMlQ3bkxsenBPdnNtcE9GYkphNVlCRFAxOUw4MGZkYjh1bG9XSHJjQnZ3SHdYWXAraTlvK250OVBuS1l1SFk1WGVjWHFJV3NtQmdVWDNJK3FlTjd2ZDBTckV6ZEVBcjlaYmt4eTFPd214ajd5Y0JSc0pnN0t0RU9HM1JXb0dLV3pEakQrUkNmSWJnRE9IMVhhSHo0RkRpSGtmd3NScFZnY2tBOXh3QjdOOGpBUE5qblg1ZThsV09tTUxKL2lER21Md0sydnAzVmo0cWU3bVdBaUs3cENBdmc4PQ==/attach/object/JXQUS6I7AAAFU? "po_bheegdhaijjcja")
+![](http://www.kdocs.cn/api/v3/office/copy/WFA1WjRFY2JlZ2w2dlFDazJ4M1drR08zcVRMYU5ab3NjaGRWV1FqcjZyQngyN2VYK0FrYW9ZbzcwQ1kxcG9qeFRlNTZCSEdKdllxRkdFU3FxK0xHU3ZWY3p4UHBoeXhmMlk5VXprSFQydDRUcGtOd1Z0TzlCeHZVMlRQTlN4dWRISWcxZko0bjlpU3Znb0dNRWVVNTUySlRrQXZpdHdjN2ZSK1dqUXV4eE9XVkViaEcvaXp3Z01VNitrOEtNVmtqdVo0MEtMU3d2ME1WQm9HcDNZRHcvekw5T1Mzc0lUZHR2d2F4cUN6SkdHTjkvckw1V2hlZTNjNWZYZzFWcE9mYXpSRGJSdnZ6MU93PQ==/attach/object/E5VBXHI7AAQFC? "po_bheegdhaijjcja")
 
 ----------
 
@@ -20,6 +20,7 @@
 ### **功能特点**
 
 -   **监控文件变化**：自动检测 `issues/*.md` 文件的新增、修改和删除
+-   **图片资源自动处理**：自动下载文章中的图片并转存到仓库，确保图片链接永久有效(防止第三方图片链接失效)
 -   **双向同步**：
 
 -   新增/修改文件 → 创建/更新对应的 GitHub Issue
@@ -61,7 +62,7 @@
 1.  点击[Gmeek增强版Template](https://github.com/new?template_name=gmeek_enhanced&template_owner=MyMaskKing)把仓库下载到自己的Github
 2.  在仓库根目录创建`issues`文件夹(如不存在)
 
-#### 2. 创建文章
+#### 2. 编写文章
 
 > [!NOTE]  
 > 可以通过[StackEdit](https://stackedit.cn/)将Github的指定目录进行关联（可通过[我的博客](https://blog.mymaskking.dpdns.org/)找到具体方法,博客内有我的B站，抖音，油管等视频平台也可以找到相关视频）
@@ -70,24 +71,30 @@
 2.  文件名将自动成为Issue的标题
 3.  在文件开头可以定义标签：
 
+> 如果未指定标签，将使用默认标签**"文档"**
+
 ```
 
 这里开始是文章正文内容...
 ```
 
-1.  保存文件并推送到GitHub
-
-#### 3. 更新文章
+##### 更新文章
 
 1.  修改`issues/`目录下的Markdown文件
 2.  保存并推送到GitHub
 3.  系统会自动更新对应的Issue
 
-#### 4. 删除文章
+##### 删除文章
 
 1.  从`issues/`目录删除Markdown文件
 2.  推送更改到GitHub
 3.  系统会自动关闭对应的Issue
+
+#### **4. 图片处理**：
+
+-   文章中的图片会被自动下载并存储在`assets/images/文章名称/`目录下
+-   图片链接会被自动更新为指向仓库中的图片
+-   支持外部http链接图片、GitHub图片和相对路径图片
 
 # 内置Gmeek官方UI和Gmeek增强版UI
 
@@ -100,7 +107,7 @@
 
 ### Gmeek增强版UI
 
-![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Gmeek个人博客(增强版)/img_2e4d9ed912.png)
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Gmeek个人博客(增强版)/img_f36b7b7ec3.png)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEyMjAzNDQ0OTBdfQ==
+eyJoaXN0b3J5IjpbNTk2MDc0ODA0LC0xMjIwMzQ0NDkwXX0=
 -->

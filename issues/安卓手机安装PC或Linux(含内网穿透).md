@@ -1,5 +1,5 @@
 
-# 先要知道的一些内容
+# 先要知道的一些内容2
 
 ## **手机的系统架构是什么？如何看？**
 
@@ -37,5 +37,5 @@ dpkg --print-architecture
 > **s390x**：IBM大型机系统的架构。  
 > **ppc64le**：IBM Power处理器的架构。
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE4OTAwMjYwMDFdfQ==
+eyJoaXN0b3J5IjpbMjM0MjQzMjkxXX0=
 -->

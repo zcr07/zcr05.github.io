@@ -124,7 +124,7 @@ jobs:
             # 如果有图片变动，提交并推送
             if git status --porcelain | grep -q "assets/images/"; then
               echo "🚀 提交图片删除更改..."
-              git commit -m "🗑️ 删除不再使用的图片 [skip ci]"
+              git commit -m "🗑️ 删除不再使用的图片 [skip ci] [skip gmeek]"
               
               echo "🚀 准备推送到GitHub..."
               # 尝试推送，如果失败则先拉取再推送
@@ -135,7 +135,7 @@ jobs:
                 if [[ -n "$(git status --porcelain)" ]]; then
                   echo "检测到未提交的更改，先进行临时提交..."
                   git add -A
-                  git commit -m "临时提交未保存的更改 [skip ci]"
+                  git commit -m "临时提交未保存的更改 [skip ci] [skip gmeek]"
                 fi
                 
                 # 现在可以安全地拉取
@@ -283,7 +283,7 @@ jobs:
               # 如果有图片变动，提交并推送
               if git status --porcelain | grep -q "assets/images/"; then
                 echo "🚀 提交图片删除更改..."
-                git commit -m "🗑️ 删除不再使用的图片 [skip ci]"
+                git commit -m "🗑️ 删除不再使用的图片 [skip ci] [skip gmeek]"
                 
                 echo "🚀 准备推送到GitHub..."
                 # 尝试推送，如果失败则先拉取再推送
@@ -294,7 +294,7 @@ jobs:
                   if [[ -n "$(git status --porcelain)" ]]; then
                     echo "检测到未提交的更改，先进行临时提交..."
                     git add -A
-                    git commit -m "临时提交未保存的更改 [skip ci]"
+                    git commit -m "临时提交未保存的更改 [skip ci] [skip gmeek]"
                   fi
                   
                   # 现在可以安全地拉取
@@ -585,7 +585,7 @@ jobs:
           # 如果有图片变动，提交并推送
           if git status --porcelain | grep -q "assets/images/"; then
             echo "🚀 提交图片更改..."
-            git commit -m "📝 更新图片资源 [skip ci]"
+            git commit -m "📝 更新图片资源 [skip ci] [skip gmeek]"
             
             echo "🚀 准备推送到GitHub..."
             # 尝试推送，如果失败则先拉取再推送
@@ -596,7 +596,7 @@ jobs:
               if [[ -n "$(git status --porcelain)" ]]; then
                 echo "检测到未提交的更改，先进行临时提交..."
                 git add -A
-                git commit -m "临时提交未保存的更改 [skip ci]"
+                git commit -m "临时提交未保存的更改 [skip ci] [skip gmeek]"
               fi
               
               # 现在可以安全地拉取
@@ -651,7 +651,7 @@ jobs:
             # 如果有图片变动，提交并推送
             if git status --porcelain | grep -q "assets/images/"; then
               echo "🚀 提交图片文件夹清理更改..."
-              git commit -m "🧹 清理未使用的图片文件夹 [skip ci]"
+              git commit -m "🧹 清理未使用的图片文件夹 [skip ci] [skip gmeek]"
               
               echo "🚀 准备推送到GitHub..."
               # 尝试推送，如果失败则先拉取再推送
@@ -662,7 +662,7 @@ jobs:
                 if [[ -n "$(git status --porcelain)" ]]; then
                   echo "检测到未提交的更改，先进行临时提交..."
                   git add -A
-                  git commit -m "临时提交未保存的更改 [skip ci]"
+                  git commit -m "临时提交未保存的更改 [skip ci] [skip gmeek]"
                 fi
                 
                 # 现在可以安全地拉取

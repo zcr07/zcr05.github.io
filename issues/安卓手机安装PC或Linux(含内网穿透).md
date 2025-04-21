@@ -8,8 +8,9 @@
 一些手机可以在【关于手机-->硬件信息中查看】
 
 其他还是用第三方软件(如DevCheck[https://wwvj.lanzoum.com/b0065zsiaj](https://wwvj.lanzoum.com/b0065zsiaj)密码:cp5o)查看
-![输入图片说明](/imgs/2025-04-21/3FYke9HgcxrdFiJD.png)
-![输入图片说明](/imgs/2025-04-21/ZRqkMeDoNDOEU66j.png)![](http://www.kdocs.cn/api/v3/office/copy/dDQwOXhUeXF3Z0x1a2gxM3J6Vnp5ejBQOVZGZWVzR1U2QXdoSEhSU1g1aWN0a1BoaUk2N2h3d1QzT0dPRXBrNXlzYVZWeTc2RXJ2K0xxc1B1QWZMbUxPUzcrZ0RCb0dzQ2EvY3pNYXArenE3VGpuSnRYc2xpNFUwS1cwU01MWXdPWk81ZElGS1FzZ1JGN21Ra1A0R3pXcDUwUkFuNTlydWxPNWlOUDF6VmVsMWtJaUpQKzVQTXNhRmVaZkVTWmVGdFliMk5ZTS84dWhlbENKc25obWlyVTRCQ2JCTW5pMkppWldTL3UwUjlQVUxIZTc5T05nN0w3c053R3p4N3VSTVMzOFptUStJMWhFPQ==/attach/object/37FR4WA7AAQBG?)
+![](http://www.kdocs.cn/api/v3/office/copy/eFJCbDJ2T013anliL3NET2JQTms3cVh6VmNsSHpicFkzNVRzTGNwUDIvQkJFdEF5RTJPNkE2MmpMMWozQTVBVFQ3eWhZeFJVWFNJeitUdkwrY2M2cXVPZjJJQWFCTGlXcThuYlRsTS9YQlFPTE5PUzlQZm1OTnNocTdLd3FjSkRJdE1oTkIxTHJYNzRRVFlJZFgrVDhGeW80YlhnN2FqbkQ5R2JGU25kY2ZycjBmUjA0Tld4NW5WZ0ZLdHpybnVybUVWanhITTV1b1lIa00xME5rcmkzUDl4REZadjZyMGN6U2JXWlB6Q2l6TjVwTXpLa2tjRTRRVFFObllEVi92M2EzYWc4aDd6YlJnPQ==/attach/object/37FR4WA7AAQBG?)
+
+在**cloudflare中配置公共主机名**的时候，一定**不要设置路径**，**否则可能会造成js,css无法正常返回**
 
 ## **linux，乌班图，德班系统是在什么系统架构上运行的？**
 
@@ -37,5 +38,5 @@ dpkg --print-architecture
 > **s390x**：IBM大型机系统的架构。  
 > **ppc64le**：IBM Power处理器的架构。
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNTAxNDgzNzE0XX0=
+eyJoaXN0b3J5IjpbMTM3NzMzODg5Nl19
 -->

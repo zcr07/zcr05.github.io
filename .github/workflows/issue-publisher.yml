@@ -20,13 +20,17 @@ jobs:
           fetch-depth: 2  # 确保获取足够的历史记录比较变更
           token: ${{ secrets.GITHUB_TOKEN }}  # 使用带写权限的token
 
-      - name: 📂 获取本次提交变更的 issues/*.md 文件
+      - name: 🔍 获取本次提交变更的 issues/*.md 文件
         id: get_changed_files
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           echo "🔍 当前 GITHUB_SHA: $GITHUB_SHA"
-
+          
+          # 设置Git身份，确保所有操作都有正确的身份
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
           # 获取前一次提交的SHA
           PREVIOUS_SHA=$(git rev-parse HEAD~1)
           echo "🔧 前一次提交 SHA: $PREVIOUS_SHA"
@@ -105,8 +109,14 @@ jobs:
               echo "🚀 提交图片删除更改..."
               git commit -m "🗑️ 删除不再使用的图片 [skip ci]"
               
-              echo "🚀 推送到GitHub..."
-              git push || echo "无法推送到GitHub，但继续执行"
+              echo "🚀 准备推送到GitHub..."
+              # 尝试推送，如果失败则先拉取再推送
+              if ! git push; then
+                echo "⚠️ 推送失败，尝试先拉取最新更改..."
+                git pull --rebase
+                echo "🔄 再次尝试推送..."
+                git push || echo "❌ 推送失败，但继续执行流程"
+              fi
             else
               echo "ℹ️ 没有图片需要删除"
             fi
@@ -211,9 +221,9 @@ jobs:
           gh auth status || echo "⚠️ 无法获取权限状态"
 
           # 确保Git配置正确
-          echo "👀 配置Git用户..."
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          echo "👀 检查Git用户配置..."
+          git config --get user.name || echo "⚠️ 未设置Git用户名"
+          git config --get user.email || echo "⚠️ 未设置Git邮箱"
           
           # 检查是否只处理删除
           if [[ "${{ env.ONLY_HANDLE_DELETIONS }}" == "true" ]]; then
@@ -245,8 +255,14 @@ jobs:
                 echo "🚀 提交图片删除更改..."
                 git commit -m "🗑️ 删除不再使用的图片 [skip ci]"
                 
-                echo "🚀 推送到GitHub..."
-                git push || echo "无法推送到GitHub，但继续执行"
+                echo "🚀 准备推送到GitHub..."
+                # 尝试推送，如果失败则先拉取再推送
+                if ! git push; then
+                  echo "⚠️ 推送失败，尝试先拉取最新更改..."
+                  git pull --rebase
+                  echo "🔄 再次尝试推送..."
+                  git push || echo "❌ 推送失败，但继续执行流程"
+                fi
               else
                 echo "ℹ️ 没有图片需要删除"
               fi
@@ -528,8 +544,14 @@ jobs:
             echo "🚀 提交图片更改..."
             git commit -m "📝 更新图片资源 [skip ci]"
             
-            echo "🚀 推送到GitHub..."
-            git push || echo "无法推送到GitHub，但继续执行"
+            echo "🚀 准备推送到GitHub..."
+            # 尝试推送，如果失败则先拉取再推送
+            if ! git push; then
+              echo "⚠️ 推送失败，尝试先拉取最新更改..."
+              git pull --rebase
+              echo "🔄 再次尝试推送..."
+              git push || echo "❌ 推送失败，但继续执行流程"
+            fi
           else
             echo "ℹ️ 没有图片需要提交"
           fi
@@ -575,8 +597,14 @@ jobs:
               echo "🚀 提交图片文件夹清理更改..."
               git commit -m "🧹 清理未使用的图片文件夹 [skip ci]"
               
-              echo "🚀 推送到GitHub..."
-              git push || echo "无法推送到GitHub，但继续执行"
+              echo "🚀 准备推送到GitHub..."
+              # 尝试推送，如果失败则先拉取再推送
+              if ! git push; then
+                echo "⚠️ 推送失败，尝试先拉取最新更改..."
+                git pull --rebase
+                echo "🔄 再次尝试推送..."
+                git push || echo "❌ 推送失败，但继续执行流程"
+              fi
             else
               echo "ℹ️ 没有未使用的图片文件夹需要清理"
             fi

@@ -101,7 +101,7 @@
 
 POST_TITLE: windows11的语音识别和Edge卡顿问题
 
-POST_CATEGORIES: 百宝箱
+POST_CATEGORIES: 踩坑心得
 
 POST_TAGS: 宝藏目录,windows
 
@@ -109,5 +109,5 @@ POST_STICKY:
 
 POST_COVER:
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTgwNjE2NDUwMV19
+eyJoaXN0b3J5IjpbMTIxMTU3NjU0M119
 -->

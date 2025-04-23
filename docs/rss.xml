@@ -1,2 +1,888 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>爱捣鼓的小木水的博客</title><link>https://blog.mymaskking.dpdns.org/</link><description>一个等着裁员的java程序猿，每天无所事事，只想搞钱，喜欢钻研各种实用的技能，讨厌天天做工作上的项目，对自己毫无实用价值。&lt;BR/&gt;&lt;div class='listLabels'&gt;&lt;span class='Label LabelName'style='background-color:#efe1e1'&gt;&lt;object&gt;&lt;a style='color:#000000'href='https://v.douyin.com/UFXv95UxBbQ/'data-click-setup='true'&gt;抖音&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#a2eeef'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://kdocs.cn/l/clf4xOs5a3Q1'data-click-setup='true'&gt;WPS万能文档&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#ff0c0c'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://www.youtube.com/channel/UCeHFivb01FfFIL7kciY6KFg'data-click-setup='true'&gt;YouTobe&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelTime'style='background-color:#ff4f9a'&gt;&lt;a style='color:#fff'href='https://b23.tv/rGe89DU' data-click-setup='true'&gt;哔哩哔哩&lt;/a&gt;&lt;/span&gt;&lt;/div&gt;</description><copyright>爱捣鼓的小木水的博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/41733240?v=4</url><title>avatar</title><link>https://blog.mymaskking.dpdns.org/</link></image><lastBuildDate>Wed, 23 Apr 2025 08:38:28 +0000</lastBuildDate><managingEditor>爱捣鼓的小木水的博客</managingEditor><ttl>60</ttl><webMaster>爱捣鼓的小木水的博客</webMaster></channel></rss>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>爱捣鼓的小木水的博客</title><link>https://blog.mymaskking.dpdns.org/</link><description>一个等着裁员的java程序猿，每天无所事事，只想搞钱，喜欢钻研各种实用的技能，讨厌天天做工作上的项目，对自己毫无实用价值。&lt;BR/&gt;&lt;div class='listLabels'&gt;&lt;span class='Label LabelName'style='background-color:#efe1e1'&gt;&lt;object&gt;&lt;a style='color:#000000'href='https://v.douyin.com/UFXv95UxBbQ/'data-click-setup='true'&gt;抖音&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#a2eeef'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://kdocs.cn/l/clf4xOs5a3Q1'data-click-setup='true'&gt;WPS万能文档&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#ff0c0c'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://www.youtube.com/channel/UCeHFivb01FfFIL7kciY6KFg'data-click-setup='true'&gt;YouTobe&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelTime'style='background-color:#ff4f9a'&gt;&lt;a style='color:#fff'href='https://b23.tv/rGe89DU' data-click-setup='true'&gt;哔哩哔哩&lt;/a&gt;&lt;/span&gt;&lt;/div&gt;</description><copyright>爱捣鼓的小木水的博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/41733240?v=4</url><title>avatar</title><link>https://blog.mymaskking.dpdns.org/</link></image><lastBuildDate>Wed, 23 Apr 2025 09:08:40 +0000</lastBuildDate><managingEditor>爱捣鼓的小木水的博客</managingEditor><ttl>60</ttl><webMaster>爱捣鼓的小木水的博客</webMaster><item><title>Linux网络基础，教你打开新的世界~</title><link>https://blog.mymaskking.dpdns.org//post/Linux-wang-luo-ji-chu-%EF%BC%8C-jiao-ni-da-kai-xin-de-shi-jie-~.html</link><description># Wan/Lan
+
+路由器--&gt;交换机
+
+网络设备的架构：一对一，一对多，**多对多(星状集群)**
+
+# 网络模型
+
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Linux网络基础，教你打开新的世界~/img_0a3857acb4.png)
+
+💡
+
+**网络层常见的协议：IP协议、ICMP协议和ARP协议等**
+
+**ARP协议：**就是把ip地址解析为mac地址
+
+arm -a
+
+----------
+
+**ICMP协议：**例（ping命令）
+
+----------
+
+四层协议：TCP/UPD
+
+七层协议：Http/Https
+
+### **数据发送**
+
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Linux网络基础，教你打开新的世界~/img_d7f91e0dc8.png)
+
+### **数据接收**
+
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Linux网络基础，教你打开新的世界~/img_9359f6a767.png)
+
+### 协议数据单元
+
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Linux网络基础，教你打开新的世界~/img_08c51acaa0.png)
+
+### 设备与层的对应关系
+
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Linux网络基础，教你打开新的世界~/img_93864646bf.png)
+
+# IP地址
+
+**平常的****IP4****地址192.168.1.1，子网掩码：255.255.255.0是十进制，****IP6****是16进制**
+
+👋
+
+**IP类别优先看子网掩码，例：192.168.25.1/16是****B类地址**
+
+子网掩码
+
+A类/8（255.0.0.0）
+
+B类/16(255.255.0.0)
+
+C类/24(255.255.255.0)
+
+&gt; **其中8是因为255的2进制是8个1，****下面的D，E类IP主要用于政府和医院等机构**
+
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Linux网络基础，教你打开新的世界~/img_f4167725c6.png)
+
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Linux网络基础，教你打开新的世界~/img_6db80274cb.png)
+
+## 私网IP段
+
+🔔
+
+平常的家庭网络和公司都是私有网络，公网是全球唯一的
+
+⭐网关使用的IP一般是xx.xx.xx.1或者xx.xx.xx.254,.**255是不能使用的，只作为广播使用**
+
+简单记法:**10-10,****172.16-172.31****,****192.168-192.168**
+
+10.0.0.0 - 10.**255.255.255**  
+172.16.0.0 - 172.31.**255.255**  
+192.168.0.0 - 192.168.**255.255**
+
+# 交换机
+
+## 转发原理
+
+1.  初始化
+2.  各个PC的MAC地址学习
+
+👋
+
+交换机自主学习老化时间300s更新一次
+
+1.  广播未知数据帧
+2.  PC回应
+3.  交换机实现单薄通信
+
+## 常用命令
+
+enable 进入管理员模式
+
+configure terminal 进入全局配置模式
+
+interface fastEthernet 0/1 进入端口 fastEthernet：端口类型
+
+show mac address-table 查看各个PC的Mac地址
+
+## vlan(虚拟局域网)
+
+&gt; 交换机和PC之间通过默认的vlan1进行静态交互，但是**在同一台交换机内****有****不同网段****PC的情况，通过在交换机内配置****vlan名(或ID)，****根据vlan找到其他交换机的****同名vlan内****的PC设备实现通信****目的：减少交互(广播)，减少因广播带来的延迟**
+
+### vlan种类
+
+💡
+
+**（****静态****）基于端口，（****动态****）基于 MAC，基于 IP**
+
+**相关命令**
+
+```
+#管理员模式
+#创建Vlan第一种方法
+swich#configure terminal
+Switch(config)#vlan 5
+Switch(config-vlan)#name 5hhh
+#创建Vlan第二种方法
+swich#vlan database 
+Switch(vlan)#vlan 17 name 17v
+#查看Vlan
+swich#show vlan brief
+swich#show vlan id 5
+#把端口加到vlan中
+Switch(config-if)#switchport access vlan 5
+Switch(config)#interface range fastEthernet 0/2-10
+Switch(config-if-range)#switchport access vlan 17
+#删除vlan 方法1
+swich#no vlan 5
+#删除vlan 方法2,database下删除
+switch(vlan)#no vlan 17
+```
+
+### **trunk(交换机之间互通)**
+
+🔔
+
+由于n个vlan，交换机之间不**会配置n个端口**，所以通过**trunk对数据包进行标识来**实现不同网段PC在多个交换机内的通信。</description><guid isPermaLink="true">https://blog.mymaskking.dpdns.org//post/Linux-wang-luo-ji-chu-%EF%BC%8C-jiao-ni-da-kai-xin-de-shi-jie-~.html</guid><pubDate>Wed, 23 Apr 2025 09:07:54 +0000</pubDate></item><item><title>搭好Linux基础，一些知识你得知道</title><link>https://blog.mymaskking.dpdns.org//post/da-hao-Linux-ji-chu-%EF%BC%8C-yi-xie-zhi-shi-ni-de-zhi-dao.html</link><description>## 基础知识
+
+💡
+
+1.  ps &gt; File1时**优先执行管道符，管道符是先删除文件后再重新新建**
+
+-   ls a.txt xxx.txt &gt;&gt; #标准输出
+
+-   ls a.txt xxx.txt 2&gt;&gt; #异常输出
+
+-   ls a.txt xxx.txt &amp;&gt; #标准和异常都输出
+
+-   ls a.txt xxx.txt &gt; a.log 2&gt;&amp;1 #**2&gt;&amp;1把异常改写成标准输出**
+
+1.  **cd - 返回进入此目录之前所在的目录**
+
+1.  systemctl enable httpd --now **#启动服务并设置开机自启**
+
+1.  nohup **#告诉系统即使终端关闭也不要停止这个命令**
+
+&gt; 发展史：unix(19700101)-&gt;linux(1991)
+
+### 云计算机
+
+👋
+
+Iaas 提供基础网络储存等，类似于毛胚房
+
+Paas 可以直接进行开发测试，类似于公寓，只需要做自己想做的就好
+
+Saas 所有软件都已经安装好，可以直接用，无需关注其他
+
+### 系统层面
+
+uname #查看内核名字
+
+-   -r 显示内核版本
+
+lscpu #查看Cpu信息
+
+hostname #查看主机名 hostnamectl set-hostname aaa
+
+alias 别名=真实命令 #设置临时别名
+
+-   unalias 别名 #取消临时别名
+
+poweroff #关机
+
+```
+/etc/shells #查看系统支持的shell解析器
+/ect/rocky-release #查看系统版本（仅限rocky Linux）
+```
+
+
+
+
+&lt;!--stackedit_data:
+eyJoaXN0b3J5IjpbMTkwNzA2MzcyOF19
+--&gt;
+。</description><guid isPermaLink="true">https://blog.mymaskking.dpdns.org//post/da-hao-Linux-ji-chu-%EF%BC%8C-yi-xie-zhi-shi-ni-de-zhi-dao.html</guid><pubDate>Wed, 23 Apr 2025 09:07:52 +0000</pubDate></item><item><title>Gmeek个人博客markdown编辑困难,教你如何解决</title><link>https://blog.mymaskking.dpdns.org//post/Gmeek-ge-ren-bo-ke-markdown-bian-ji-kun-nan-%2C-jiao-ni-ru-he-jie-jue.html</link><description># **基于** [**Gmeek**](https://github.com/Meekdai/Gmeek)**的个人博客做了很多改善**
+
+## UI改善
+
+## 增加了其他Markdown编辑的功能
+
+# [Gmeek](https://github.com/Meekdai/Gmeek)的原理流程
+
+![](http://www.kdocs.cn/api/v3/office/copy/SmhZaUhIVTFHaGE4U0xvZ0I4Z3plWEhaMWN5WU5BNWN4ZExBcnd0UXg3dFJxWnd3S0hFcyt4UjBuTjFubkUrcUs3dmRUeGJOVm1lVnpuZ01PU2dLOU9LMjFVbVpoSmkvamV1cGt0RFhHL3QxbTNJZ1ZGcm9uWThnYnY3bndsZ3Uwd2gxc1Q0MHJ3Ync3R0tWbCtDNkZCTWtBNlR4VVhrQTZCa3dFckZlS3lDT3RTcjhaa0pEa2hIZVBXOHdHcER2NHlPYndCaWhJdWNocGs1UnQ5UzloTVlaanptbnZ3cnVpZVlRRnRkcUtMWUoyaStBMkxNenlVcTBUOHVMbFRjdldaZmFaZ1hyWSt3PQ==/attach/object/EUUTS6I7ADQAK? 'po_bheegdgbihhhba')
+
+# [Gmeek增强](https://github.com/MyMaskKing/MyMaskKing.github.io.git)的原理流程
+
+![](http://www.kdocs.cn/api/v3/office/copy/SmhZaUhIVTFHaGE4U0xvZ0I4Z3plWEhaMWN5WU5BNWN4ZExBcnd0UXg3dFJxWnd3S0hFcyt4UjBuTjFubkUrcUs3dmRUeGJOVm1lVnpuZ01PU2dLOU9LMjFVbVpoSmkvamV1cGt0RFhHL3QxbTNJZ1ZGcm9uWThnYnY3bndsZ3Uwd2gxc1Q0MHJ3Ync3R0tWbCtDNkZCTWtBNlR4VVhrQTZCa3dFckZlS3lDT3RTcjhaa0pEa2hIZVBXOHdHcER2NHlPYndCaWhJdWNocGs1UnQ5UzloTVlaanptbnZ3cnVpZVlRRnRkcUtMWUoyaStBMkxNenlVcTBUOHVMbFRjdldaZmFaZ1hyWSt3PQ==/attach/object/E5VBXHI7AAQFC? 'po_bheegdhaijjcja')
+
+----------
+
+这个仓库使用 GitHub Action 工作流（`issue-publisher.yml`）将 Markdown 文件自动同步为 GitHub Issues。</description><guid isPermaLink="true">https://blog.mymaskking.dpdns.org//post/Gmeek-ge-ren-bo-ke-markdown-bian-ji-kun-nan-%2C-jiao-ni-ru-he-jie-jue.html</guid><pubDate>Wed, 23 Apr 2025 09:07:49 +0000</pubDate></item><item><title>万能目录，你能在这里找到所有答案！</title><link>https://blog.mymaskking.dpdns.org//post/wan-neng-mu-lu-%EF%BC%8C-ni-neng-zai-zhe-li-zhao-dao-suo-you-da-an-%EF%BC%81.html</link><description>
+**😆****重要信息!!!作者不易，**[**🎵抖音**](https://v.douyin.com/UFXv95UxBbQ/)**|**[**📕小红书**](https://www.xiaohongshu.com/user/profile/678317b6000000000801c02f)**|**[**📽️B站**](https://b23.tv/rGe89DU)**|**[**📺Youtubu**](https://www.youtube.com/channel/UCeHFivb01FfFIL7kciY6KFg)**|**[**📖博客**](https://blog.mymaskking.dpdns.org/)**请点点关注点点赞啊！！！**
+
+# 文档导航（🥰快速找到你想看的）
+
+## 教程
+
+### [**🔥🔥🔥CURSOR使用和下载|疑难杂症**](https://kdocs.cn/l/clf4xOs5a3Q1?linkname=lH7b8NF0ft)
+
+### [在旧手机上搭建docker服务器，加上内网穿透就变成了云服务器，爽歪歪！](https://kdocs.cn/l/cheRD9wHnLXd)
+
+### [**世界那么大想去看看，教你如何上☄️魔法网络！**](https://kdocs.cn/l/clf4xOs5a3Q1?linkname=QIspwDZC7w)
+
+### [搭建📄个人博客Gmeek，原版有点难用，不过我在此基础上做了很多增强！](https://kdocs.cn/l/cuU1c4F0zYK2?linkname=v0VnkNkV9C)
+
+### [☄️魔法上网后一些好玩的网站合集](https://kdocs.cn/l/cbFDMudDad5B)
+
+## 副业（赚钱方式分享）
+
+### [🔥🔥🔥流量卡自用购买|当代理商赚钱](https://kdocs.cn/l/clf4xOs5a3Q1?linkname=Y7Syn6EUFv)
+
+### [**🔥🔥外卖返现|当个代理赚饭钱（苍蝇腿🤣）**](https://kdocs.cn/l/clf4xOs5a3Q1?linkname=xL10iUZBCf)
+
+### [**当up，发视频赚钱，有点难~**](https://kdocs.cn/l/clf4xOs5a3Q1?linkname=naCd2QZF8s)
+
+## 自研软件/网站
+
+### [抖音自动化获取粉丝|关注粉丝|粉丝互动](https://kdocs.cn/l/clf4xOs5a3Q1?linkname=LTHjU9IoNh)
+
+### [图文批量生产工具（PPT数据写入--&gt;切割PPT--&gt;自定义图片）](https://kdocs.cn/l/clf4xOs5a3Q1?linkname=qqTJ0S74Zw)
+
+# AI网站合集
+
+⭐
+
+1.  comfyui
+
+[https://ai-bot.cn/](https://ai-bot.cn/)
+
+# 🔥抖音自动化工具
+
+[**点我回到👉文档导航**](https://kdocs.cn/l/clf4xOs5a3Q1?linkname=MTuzCk7OTP)
+
+⭐
+
+**大致内容（Git地址：**[**https://github.com/MyMaskKing/douyin_auto_xifen.git**](https://github.com/MyMaskKing/douyin_auto_xifen.git)**）**
+
+-   **目前进度已完成，可以使用了**
+
+-   **WEB上的关注和粉丝只识别抖音的（抖音火山版的不识别）**
+
+1.  视频任务
+
+-   第一步：执行视频评论和提取用户任务
+
+-   第二步：执行关注视频评论者任务
+
+1.  关注列表任务
+
+-   第三步：执行取关任务
+
+-   第四步：执行检查关注列表任务
+
+1.  粉丝列表任务
+
+-   第五步：执行检查粉丝列表任务
+
+-   第六步：执行回关任务
+
+-   第七步：执行粉丝私信互动任务
+
+# 图文批量生产工具
+
+[**点我回到👉文档导航**](https://kdocs.cn/l/clf4xOs5a3Q1?linkname=MTuzCk7OTP)
+
+⭐
+
+**大致内容（Git地址：**[**https://github.com/MyMaskKing/redbook_imagetext_auto.git**](https://github.com/MyMaskKing/redbook_imagetext_auto.git)**）**
+
+1.  excel模板中导入数据
+
+1.  把excel的数据写入ppt
+
+1.  把ppt自动生成图片
+
+# 🔥🔥🔥CURSOR使用和下载|疑难杂症
+
+[**点我回到👉文档导航**](https://kdocs.cn/l/clf4xOs5a3Q1?linkname=MTuzCk7OTP)
+
+## 重要提示
+
+⭐
+
+**2025/04/19（最新更新）**
+
+**目前****2529无限邮箱****是可以用的，请继续参照下方的**[**无限邮箱白嫖cursor**](https://kdocs.cn/l/clf4xOs5a3Q1?linkname=iDBAMgsEVF)
+
+### 解决日志（已不能使用的方式）
+
+#### 2025/04/19
+
+⭐
+
+目前解决方案，使用**临时邮箱**[**https://temp-mail.org/zh**](https://temp-mail.org/zh)**（注意每次打开都要使用隐私模式）**
+
+**2025/03/19**
+
+1.  **最新的办法**，使用**Telegram**上面的**MeMailerBot**可以获取临时邮箱（测试了两个可以使用）
+
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/万能目录，你能在这里找到所有答案！/img_d98a4a2ba7.png)
+
+其他办法，否则使用**字节的Trae**代替
+
+-   就是使用正常的邮箱：谷歌，微软，163等等
+
+1.  **第二个办法：**B站一位小伙伴提到的注册机方式
+
+-   Git地址：[https://github.com/yeongpin/cursor-free-vip.git](https://github.com/yeongpin/cursor-free-vip.git)
+
+-   **先关闭cursor**，然后**powershell管理员**执行(一键复制在下面的Shell代码框)
+
+`irm` [`https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/scripts/install.ps1`](https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/scripts/install.ps1) `| iex`
+
+```
+irm https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/scripts/install.ps1 | iex
+```
+
+#### 2025/03/17
+
+⭐
+
+**临时邮箱如果不行请****打开隐私模式获取新的邮箱，多试几个邮箱****，如果还不行****请按下面步骤处理**
+
+1.  重装最新版cursor
+
+1.  执行下方的mac地址命令（power shell管理员执行，）
+
+1.  使用提供的临时邮箱地址多试几个新的邮箱（一般能解决**“****unauthorized request****”**）
+
+1.  最终方法：重启电脑看是否解决
+
+2025/03/16
+
+1.  发现google无限邮箱会自动**使用真实的邮箱**，此方案不行
+
+1.  **并且每个账号只有50次免费机会**
+
+**目前2925邮箱注册的用户无法使用cursor，会出现****“****unauthorized request****”错误。</description><guid isPermaLink="true">https://blog.mymaskking.dpdns.org//post/wan-neng-mu-lu-%EF%BC%8C-ni-neng-zai-zhe-li-zhao-dao-suo-you-da-an-%EF%BC%81.html</guid><pubDate>Wed, 23 Apr 2025 09:07:48 +0000</pubDate></item><item><title>手机服务器搭建：第二章（手机服务器做内网穿透）</title><link>https://blog.mymaskking.dpdns.org//post/shou-ji-fu-wu-qi-da-jian-%EF%BC%9A-di-er-zhang-%EF%BC%88-shou-ji-fu-wu-qi-zuo-nei-wang-chuan-tou-%EF%BC%89.html</link><description>## 网络穿透教程
+
+⭐
+
+1.  下载cloudflare的安装包
+
+`curl -L` [`https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64`](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64) `-o /usr/local/bin/cloudflared`
+
+1.  赋予执行权限
+
+`chmod +x /usr/local/bin/cloudflared`
+
+1.  确认是否安装成功
+
+`cloudflared version`
+
+1.  执行
+
+`cloudflared service install 你的密钥`
+
+**卸载命令**：`cloudflared service uninstall`
+
+**Docker版看这里**
+
+**参考这个链接**：[点我](https://sspai.com/post/79278)
+
+**docker的附加参数：**
+
+-   --link alist:alist #容器间相互通信
+
+-   --network host #容器内的应用就能直接访问宿主机的 localhost
+
+`docker run --link alist:alist cloudflare/cloudflared:latest tunnel --no-autoupdate run --token 你的token`
+
+已废弃部分
+
+⭐
+
+1.  下载cloudflare的ubuntu文件
+
+`curl -L --output cloudflared.deb` [`https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb`](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb)
+
+注意：这里curl可能会碰到https无法下载的问题，建议把文件放到http（**AList**）下面
+
+1.  sudo dpkg -i cloudflared.deb
+
+注意：这里可能会报错package architecture (amd64) does not match system (arm64)
+
+解决：sudo dpkg -i --force-architecture cloudflared.deb （[点击参考](https://github.com/kubernetes/minikube/issues/10001)）
+
+1.  sudo cloudflared service install 你的密钥
+
+成功会显示：`Illegal instruction`
+
+## 网页版SSH内网穿透
+
+⭐
+
+1.  **将服务器连接到 Cloudflare：**
+
+-   **创建 Cloudflare Tunnel：** 登录到 Cloudflare Zero Trust 仪表板，导航至“Networks” &gt; “Tunnels”，点击“Create a tunnel”。</description><guid isPermaLink="true">https://blog.mymaskking.dpdns.org//post/shou-ji-fu-wu-qi-da-jian-%EF%BC%9A-di-er-zhang-%EF%BC%88-shou-ji-fu-wu-qi-zuo-nei-wang-chuan-tou-%EF%BC%89.html</guid><pubDate>Wed, 23 Apr 2025 09:07:33 +0000</pubDate></item><item><title>手机服务器搭建：第一章（手机安装Alpine服务器）</title><link>https://blog.mymaskking.dpdns.org//post/shou-ji-fu-wu-qi-da-jian-%EF%BC%9A-di-yi-zhang-%EF%BC%88-shou-ji-an-zhuang-Alpine-fu-wu-qi-%EF%BC%89.html</link><description>## 安装软件介绍
+
+⭐
+
+**目前网上****(含ChatGPT)**给出的最优方案就是使用**Termux(**[去官网点我](https://github.com/termux/termux-app)**)+QEMU**
+
+----------
+
+**正在使用的方案(魔改后的Termux)：**
+
+A：已经内置了**alpine系统的Termux(**[去官网点我](https://github.com/FakeRajbhx/alpine-term)**)(****配置过低时使用)**
+
+原博客使用教程：[点我](https://www.cnblogs.com/yanqb/p/17367504.html)
+
+直接查看使用教程：[点我](https://kdocs.cn/l/cheRD9wHnLXd?linkname=zvWJTuBssB)
+
+优点：
+
+-   内置docker，sshd，Nginx
+
+-   apk大小为606M
+
+-   可以在更低配置上运行(高配置手机可能无法运行)
+
+缺点：
+
+-   基于QEMU，每次重启都要重新设置映射端口(命令如下)
+
+`hostfwd_add tcp::2222-:22`
+
+B：内置了**alpine系统的Termux增强版(****🌟****优先推荐使用)**
+
+原博客使用教程：[点我](https://blog.csdn.net/LJZxiaolongbao/article/details/139145986)
+
+直接查看使用教程：[点我](https://www.cnblogs.com/yanqb/p/17367504.html)
+
+直接下载APK：[点我](https://d.icdown.club/repository/main/Alpine_Termux.apk)
+
+优点：
+
+-   魔改了QEMU，端口映射一次设置就可以了
+
+-   apk大小为126M
+
+缺点：
+
+-   没有内置docker，sshd，需要手动安装
+
+-   无法在低配置上运行(高配置手机可以运行)
+
+**测试的安卓配置：**
+
+1.  `CPU：1.3GHz晓龙450八核`
+
+1.  `4G运行内存+32G储存空间`
+
+1.  `Android7.1.2`
+
+----------
+
+国外大佬使用原版**Termux**的视频（[点我](https://www.youtube.com/watch?v=xiMJpaWi5Nk)）
+
+## A：内置了**alpine系统的Termux使用教程**
+
+&gt; APK源和DNS更换这一步，如果**没有魔法网络**请**务必提前做了**，否则都会从国外的镜像来下载软件
+
+### apk安装完成后左滑，在**弹出画面中选择****QEMU****，输入下面****端口映射命令(SSH连接使用)**
+
+```
+hostfwd_add tcp::2222-:22 
+```
+
+注意：正常情况输入完成回车是没有任何打印内容的
+
+### 左滑弹出画面选择**[2]/dev/ttyS0****，等待alpine系统启动完成后****切换到root**
+
+&gt; 登录用户 `alpine` 密码: `alpine`  
+&gt; 切换到`root`账户，输入`sudo -s` 密码：`alpine`
+
+### 修改sshd的配置文件
+
+```
+方式1：
+sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+sed -i 's/PermitRootLogin no/PermitRootLogin yes/g' /etc/ssh/sshd_config
+service sshd restart
+```
+
+```
+#方式2：
+apt install vim #可能需要安装vim
+vim /etc/ssh/sshd_config
+#修改下面内容为yes：
+PasswordAuthentication yes
+PermitRootLogin yes
+#重启sshd服务
+service sshd restart
+```
+
+### 设置内置Docker服务为开机自启
+
+```
+rc-update add docker
+service docker start
+
+#后台启动
+setsid containerd
+setsid dockerd
+# 测试
+docker info
+```
+
+### 修改docker的镜像源
+
+&gt; vi /etc/docker/daemon.json  
+&gt; 把下面内容复制进去
+
+```
+{
+    'registry-mirrors': [
+    'https://docker.1panelproxy.com',
+    'https://2a6bf1988cb6428c877f723ec7530dbc.mirror.swr.myhuaweicloud.com',
+    'https://docker.m.daocloud.io',
+    'https://hub-mirror.c.163.com',
+    'https://mirror.baidubce.com',
+    'https://your_preferred_mirror',
+    'https://dockerhub.icu',
+    'https://docker.registry.cyou',
+    'https://docker-cf.registry.cyou',
+    'https://dockercf.jsdelivr.fyi',
+    'https://docker.jsdelivr.fyi',
+    'https://dockertest.jsdelivr.fyi',
+    'https://mirror.aliyuncs.com',
+    'https://dockerproxy.com',
+    'https://mirror.baidubce.com',
+    'https://docker.m.daocloud.io',
+    'https://docker.nju.edu.cn',
+    'https://docker.mirrors.sjtug.sjtu.edu.cn',
+    'https://docker.mirrors.ustc.edu.cn',
+    'https://mirror.iscas.ac.cn',
+    'https://docker.rainbond.cc'
+    ]
+}
+```
+
+**检测镜像源是否被使用**
+
+```
+docker info
+```
+
+### (国内使用必须配置)APK源和DNS更换，时区修改
+
+&gt; 更换阿里云+DNSPOD 的DNS
+
+```
+sed -i '/^#/! s/^/#/' /etc/apk/repositories
+echo 'https://mirrors.aliyun.com/alpine/v3.9/main' &gt;&gt; /etc/apk/repositories
+echo 'https://mirrors.aliyun.com/alpine/v3.9/community' &gt;&gt; /etc/apk/repositories
+
+sed -i '/^#/! s/^/#/' /etc/resolv.conf
+echo 'nameserver 223.5.5.5' &gt;&gt; /etc/resolv.conf
+echo 'nameserver 223.6.6.6' &gt;&gt; /etc/resolv.conf
+
+apk update
+```
+
+&gt; 时区修改
+
+```
+setup-timezone
+等到提示Which timezone are you in? ('?' for list) [UTC]，然后输入
+Asia/Shanghai
+```
+
+### (补充)安装Docker Compose
+
+&gt; 1.检查最新版本号：
+
+```
+DOCKER_COMPOSE_VERSION=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | jq -r .tag_name)
+```
+
+⭐
+
+遇到mksh: adk: inaccessible or not found
+
+请执行`apk update;apk add curl;apk add jq`
+
+&gt; 2.下载并安装 Docker Compose:
+
+```
+curl -L 'https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)' -o /usr/local/bin/docker-compose
+```
+
+&gt; 3.给 Docker Compose 添加执行权限并检查版本
+
+```
+chmod +x /usr/local/bin/docker-compose
+docker-compose --version
+```
+
+## B：内置alpine系统的Termux增强版**使用教程**
+
+### apk安装后会有弹出画面，点击Settings设置SSH服务端口映射
+
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/手机服务器搭建：第一章（手机安装Alpine服务器）/img_3b839af132.png)
+
+```
+tcp:2022:22
+#端口：2022是你用XShell连接时用的
+#端口：22是alpinex系统的默认端口
+```
+
+### 系统启动完成后直接输入root免密登录
+
+&gt; APK源和DNS更换这一步，如果**没有魔法网络**请**务必提前做了**，否则都会从国外的镜像来下载软件  
+&gt; [**点我**](https://kdocs.cn/l/cheRD9wHnLXd?linkname=R3mSsqR6Oa)**去看修改APK源和DNS方法**
+
+### 安装SSH服务
+
+```
+apk update
+#安装ssh
+apk add openssh
+#启动ssh
+rc-service sshd start
+# 设置开机启动
+rc-update add sshd
+```
+
+&gt; 修改ssd_config的配置文件，并且设置root密码，运行root登录
+
+```
+sed -i 's/PermitRootLogin no/PermitRootLogin yes/g' /etc/ssh/sshd_config
+passwd abc123456 #设置root密码
+```
+
+### 安装docker服务
+
+```
+#安装docker
+apk add docker
+#启动docker
+service docker start
+docker version
+#开机自启
+rc-update add docker boot
+```
+
+&gt; 修改Docker镜像源：[**点我**](https://kdocs.cn/l/cheRD9wHnLXd?linkname=hxebueOkWr)
+
+&gt; 安装Docker Compose ：[**点我**](https://kdocs.cn/l/cheRD9wHnLXd?linkname=No8HoMRicO)
+
+## 补充资料
+
+### 安卓APK(linux系统)
+
+&gt; 这是我在找**安卓**上的**linux系统apk**的时候找到的软件，下面的软件都支持linux系统，**最好用的是****userLand****，谷歌商店评分4.7。</description><guid isPermaLink="true">https://blog.mymaskking.dpdns.org//post/shou-ji-fu-wu-qi-da-jian-%EF%BC%9A-di-yi-zhang-%EF%BC%88-shou-ji-an-zhuang-Alpine-fu-wu-qi-%EF%BC%89.html</guid><pubDate>Wed, 23 Apr 2025 09:07:22 +0000</pubDate></item><item><title>关于魔法网络的书签目录</title><link>https://blog.mymaskking.dpdns.org//post/guan-yu-mo-fa-wang-luo-de-shu-qian-mu-lu.html</link><description>
+# 免费域名注册
+
+⭐
+
+**可挂载Cloudflare**
+
+[ggff.net](https://ggff.net/)域名：[https://customer.l53.net/](https://customer.l53.net/)
+
+DPDNS.ORG域名：[https://dash.domain.digitalplat.org/panel/main](https://dash.domain.digitalplat.org/panel/main)
+
+[ip-ddns.com](https://ip-ddns.com/)域名：[https://www.cloudns.net/main/dashboard/dns/](https://www.cloudns.net/main/dashboard/dns/)
+
+**未来可挂载Cloudflare**
+
+zone.id域名：[https://my.zone.id/subdomains](https://my.zone.id/subdomains)
+
+**低价域名可挂载Cloudflare**
+
+[https://www.youtube.com/watch?v=5XKcLBFBIog&amp;t=2s](https://www.youtube.com/watch?v=5XKcLBFBIog&amp;t=2s)
+
+# 域名解析检测
+
+## Ping查询_专业精准的IP库服务商_IPIP
+
+&gt; [https://tools.ipip.net/ping.php](https://tools.ipip.net/ping.php)
+
+## **域名的DNS检测**：
+
+&gt; [https://myssl.com/dns_check.html#dns_check](https://myssl.com/dns_check.html#dns_check)
+
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/关于魔法网络的书签目录/img_5f5f810086.png)
+
+## **在线Tcping(网站测试)**
+
+&gt; [https://www.itdog.cn/tcping/hello.mymaskking.ggff.net](https://www.itdog.cn/tcping/hello.mymaskking.ggff.net)
+
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/关于魔法网络的书签目录/img_51ebe8f302.png)
+
+## **虚拟信息生成器**
+
+⭐
+
+-   **虚拟信息生成器1：**[https://www.meiguodizhi.com/jp-address](https://www.meiguodizhi.com/jp-address)
+
+-   **虚拟信息生成器2：**[https://www.shenfendaquan.com/](https://www.shenfendaquan.com/)
+
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/关于魔法网络的书签目录/img_dab73be8d7.png)
+
+## **我的IP信息：**[https://www.ipaddress.my/?lang=zh_CN](https://www.ipaddress.my/?lang=zh_CN)
+
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/关于魔法网络的书签目录/img_8870d3bf12.png)
+
+# 域名解析平台
+
+⭐
+
+-   **cloudflare域名解析**：[https://dash.cloudflare.com/login](https://dash.cloudflare.com/login)
+
+-   [**He.net**](https://he.net/) **DNS域名解析：**[https://ipv6.he.net/certification/login.php?redir=%2Fcertification%2Fcert-main.php](https://ipv6.he.net/certification/login.php?redir=%2Fcertification%2Fcert-main.php)
+
+-   **华为云国际版域名解析**：[https://console-intl.huaweicloud.com/dns/?agencyId=7c10feef2ef147f6b06149e7b0e6a172&amp;region=ap-southeast-1&amp;locale=zh-cn#/dns/publiczones](https://console-intl.huaweicloud.com/dns/?agencyId=7c10feef2ef147f6b06149e7b0e6a172&amp;region=ap-southeast-1&amp;locale=zh-cn#/dns/publiczones)
+
+# 接码平台
+
+⭐
+
+-   **SMS_MAN(接码平台)：**[https://sms-man.com/cn](https://sms-man.com/cn)
+
+-   **老牌接码平台：**[https://sms-activate.org/cn#](https://sms-activate.org/cn#)
+
+# Cloudflare节点优选
+
+⭐
+
+-   **CloudFlare 公共 Cname 域名：**[https://www.wetest.vip/page/cloudflare/cname.html](https://www.wetest.vip/page/cloudflare/cname.html)
+
+-   **CloudFlare公共优选Cname域名地址1：**[点我](https://www.wetest.vip/)
+
+-   **CloudFlare公共优选Cname域名地址2：**[点](https://www.wetest.vip/)[我](https://blog.nbvil.com/nat/saasip/)
+
+-   **CloudFlare优质IP：**[点我](https://stock.hostmonit.com/CloudFlareYes)
+
+# 🌟🌟🌟Google无限邮箱规则
+
+⭐
+
+-   **在用户名中添加点号（**`**.**`**）**
+
+-   Gmail 会忽略用户名中的点号，因此以下地址都指向同一个邮箱：
+
+-   [`username@gmail.com`](mailto:username@gmail.com)
+
+-   [`user.name@gmail.com`](mailto:user.name@gmail.com)
+
+-   [`u.s.e.r.n.a.m.e@gmail.com`](mailto:u.s.e.r.n.a.m.e@gmail.com)
+
+-   您可以根据需要自由添加点号，邮件仍会发送到您的主邮箱。</description><guid isPermaLink="true">https://blog.mymaskking.dpdns.org//post/guan-yu-mo-fa-wang-luo-de-shu-qian-mu-lu.html</guid><pubDate>Wed, 23 Apr 2025 09:07:20 +0000</pubDate></item><item><title>手机服务器搭建：基础篇（先知道的一些内容）</title><link>https://blog.mymaskking.dpdns.org//post/shou-ji-fu-wu-qi-da-jian-%EF%BC%9A-ji-chu-pian-%EF%BC%88-xian-zhi-dao-de-yi-xie-nei-rong-%EF%BC%89.html</link><description># 先要知道的一些内容
+
+## **手机的系统架构是什么？如何看？**
+
+&gt; 手机的 CPU 通常使用 ARM 架构（如 ARMv7, ARMv8）或较少见的 x86 架构。</description><guid isPermaLink="true">https://blog.mymaskking.dpdns.org//post/shou-ji-fu-wu-qi-da-jian-%EF%BC%9A-ji-chu-pian-%EF%BC%88-xian-zhi-dao-de-yi-xie-nei-rong-%EF%BC%89.html</guid><pubDate>Wed, 23 Apr 2025 09:07:14 +0000</pubDate></item><item><title>Linux知识之磁盘管理</title><link>https://blog.mymaskking.dpdns.org//post/Linux-zhi-shi-zhi-ci-pan-guan-li.html</link><description>#### 磁盘管理
+
+👋
+
+#### **MBR(主启动记录模式)**
+
+**最多4个主分区，1个扩展分区(无法储存数据，只能在创建逻辑分区保存数据)**
+
+1.  先分区
+
+fdisk /dev/sdb
+
+-   n新建分区
+
+-   p打印分区信息
+
+1.  格式化分区
+
+mkfs -t xfs /dev/sdb1
+
+修改分区类型 mkfs.xfs -f /dev/sdb1
+
+1.  挂载分区
+
+mount /dev/sdb1 /data #临时修改
+
+vi /etc/fstdb #永久修改
+
+mount -a #读取mount(/etc/fstdb)的内容
+
+#### **GPT分区（推荐）**
+
+**无限分区**
+
+1.  先分区
+
+parted /dev/sdb
+
+(parted)mktable gpt
+
+(parted)mkpart
+
+(parted)print
+
+1.  格式化和挂载
+
+#### 逻辑分区 （底层的空间单位为PE,默认4M）
+
+**如果不指定PE单位的话，例如设置lv=9M，就会给3个PE=12M，浪费了3M无法使用**
+
+**工作中通常不指定PE，lvm会自动指定PE来提高分区效率的**
+
+vgcreate 物理卷组 /dev/sdc1
+
+vgcreate -s 1M 物理卷组 /dev/sdc2 **#1M这个物理卷组分配单位是1M，而不是默认的4M**
+
+vgextend 物理卷组 /dev/sdc2 **#扩容物理卷组**
+
+vgs
+
+pvdisplay vgdisplay lvdisplay #查看详细信息
+
+lvcreate -L 1G -n 逻辑卷名 物理卷组
+
+lvcreate -l 40 -n 逻辑卷名 物理卷组 **#划分40M逻辑磁盘**
+
+mkfs.xfs /dev/ansible/nginx #格式化
+
+lvextend -L +200M /dev/ansible/nginx
+
+xfs_growfs /dev/ansible/nginx **#格式化扩容空间(仅适用于xfs)**
+
+resize2fs /dev/ansible/nginx **#格式化****扩容或缩小****空间(仅适用于ext系列**
+
+#### 逻辑分区删除
+
+lvremove /dev/ansbile/nginx
+
+vgremove /物理卷组
+
+pvremove /dev/sdc1
+
+**补充**
+
+跨系统格式：exFAT
+
+XFS:大量的小文件或非常大的文件，并且需要高性能和可扩展性
+
+EXT4:需要稳定性和广泛支持的通用应用，或者需要经常调整文件系统大小的场景
+
+lsblk -f #查看所有的磁盘信息(**已格式化的会显示磁盘类型**)
+
+**blkid 设**
+
+**/etc/fstdb的内容格式：**
+
+硬盘路径(/dev/sab) 挂载点(/test) xfs 挂载选项(**defaults**) 是否备份(0) 检查文件系统的顺序(0)
+
+----------
+
+📌**对象存储：**非DB类的结构化(图片视频)数据存储系统**(磁盘内容访问次数收费)**，例如百度云盘WEB
+
+**块存储：**类似于使用主机内置**硬盘**(**硬盘使用时长收费**)。</description><guid isPermaLink="true">https://blog.mymaskking.dpdns.org//post/Linux-zhi-shi-zhi-ci-pan-guan-li.html</guid><pubDate>Wed, 23 Apr 2025 09:07:05 +0000</pubDate></item></channel></rss>

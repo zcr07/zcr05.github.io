@@ -1,4 +1,4 @@
-⭐
+⭐⭐
 
 **AList的docker****安装可以参考：**[**点我**](https://blog.csdn.net/2202_75326331/article/details/139613342)
 
@@ -63,5 +63,5 @@ POST_STICKY:
 
 POST_COVER:
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMzkyOTQwNTIzXX0=
+eyJoaXN0b3J5IjpbMjE0MTYxNDMzNV19
 -->

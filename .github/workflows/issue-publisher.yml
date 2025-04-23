@@ -698,23 +698,33 @@ jobs:
             TITLE="${FILENAME%.md}"
             echo "📋 从文件名提取标题：$TITLE"
             
-            # 从文件内容获取标签
-            LABELS=$(grep -E '^ISSUE_LABELS:' "$FILE" | sed 's/^ISSUE_LABELS:[[:space:]]*//' || echo "文档")
-            
-            # 如果没有找到标签，使用默认标签
-            if [[ -z "$LABELS" ]]; then
-              LABELS="文档"
-            fi
-            echo "📋 提取标签：$LABELS"
-            
-            # 处理标签，将逗号分隔的标签转换为数组
+            # 初始化标签数组
             LABEL_ARRAY=()
-            IFS=',' read -ra TEMP_ARRAY <<< "$LABELS"
-            for label in "${TEMP_ARRAY[@]}"; do
-              # 去除标签两端的空格
-              LABEL_ARRAY+=("$(echo "$label" | xargs)")
-            done
-            echo "📋 解析的标签：${LABEL_ARRAY[*]}"
+            
+            # 从文件内容获取标签 - 只使用POST_TAGS
+            POST_TAGS=$(grep -E '^POST_TAGS:' "$FILE" | sed 's/^POST_TAGS:[[:space:]]*//' || echo "")
+            if [[ -n "$POST_TAGS" ]]; then
+              echo "📋 提取到POST_TAGS: $POST_TAGS"
+              
+              # 处理POST_TAGS中的标签
+              IFS=',' read -ra TAG_ARRAY <<< "$POST_TAGS"
+              for tag in "${TAG_ARRAY[@]}"; do
+                # 去除标签两端的空格，替换中文逗号
+                CLEAN_TAG=$(echo "$tag" | xargs | sed 's/，/,/g')
+                if [[ -n "$CLEAN_TAG" ]]; then
+                  LABEL_ARRAY+=("$CLEAN_TAG")
+                  echo "🏷️ 添加标签: $CLEAN_TAG"
+                fi
+              done
+            fi
+            
+            # 如果没有任何标签，使用默认标签
+            if [ ${#LABEL_ARRAY[@]} -eq 0 ]; then
+              LABEL_ARRAY+=("文章")
+              echo "📋 未找到标签定义，使用默认标签: Blog"
+            fi
+            
+            echo "📋 最终标签列表：${LABEL_ARRAY[*]}"
             
             # 确保标签在仓库中存在
             for label in "${LABEL_ARRAY[@]}"; do
@@ -729,11 +739,11 @@ jobs:
               fi
             done
             
-            # 从文件中提取正文内容（跳过标签行）
+            # 从文件中提取正文内容（跳过所有自定义标记行）
             # 将内容保存到临时文件，避免Shell命令注入和特殊字符问题
-            grep -v '^ISSUE_LABELS:' "$FILE" > /tmp/issue_body.md
+            awk '!/^(POST_TITLE:|POST_CATEGORIES:|POST_TAGS:|POST_STICKY:|POST_COVER:)/' "$FILE" > /tmp/issue_body.md
             echo "📋 提取正文内容长度：$(wc -c < /tmp/issue_body.md) 字节"
-
+            
             # 检查是否已有同名 issue
             ISSUE_NUMBER=$(gh issue list --state all --search "$TITLE in:title" --json number,title,state | jq -r ".[] | select(.title==\"$TITLE\") | .number")
             

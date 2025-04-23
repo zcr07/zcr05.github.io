@@ -38,8 +38,10 @@ jobs:
           
           echo "🔍 当前 GITHUB_SHA: $GITHUB_SHA"
           
-          # 获取触发此工作流的提交SHA
-          TRIGGER_SHA="${{ github.event.before }}"
+          # 获取触发此工作流的提交SHA - 保留原始值
+          ORIGINAL_TRIGGER_SHA="${{ github.event.before }}"
+          TRIGGER_SHA="$ORIGINAL_TRIGGER_SHA"
+          
           if [[ -z "$TRIGGER_SHA" || "$TRIGGER_SHA" == "0000000000000000000000000000000000000000" ]]; then
             # 如果before为空或者是初始提交，使用HEAD~1
             TRIGGER_SHA=$(git rev-parse HEAD~1)
@@ -47,14 +49,54 @@ jobs:
           echo "🔧 触发此工作流的提交 SHA: $TRIGGER_SHA"
           echo "🔧 当前提交 SHA: $GITHUB_SHA"
           
-          # 从触发提交中直接获取变更文件，而不依赖之前的提交
+          # 从触发提交中获取变更文件
           echo "📋 获取本次触发提交中变更的文件..."
           echo "$ git diff --name-status $TRIGGER_SHA $GITHUB_SHA"
-          CHANGED_FILES=$(git diff --name-status $TRIGGER_SHA $GITHUB_SHA)
+          
+          # 先尝试直接获取差异
+          if ! git diff --name-status $TRIGGER_SHA $GITHUB_SHA > /tmp/diff_output.txt 2>/tmp/diff_error.txt; then
+            # 如果出错了，可能是提交SHA无效
+            echo "⚠️ 使用原始SHA获取差异失败，错误信息:"
+            cat /tmp/diff_error.txt
+            
+            # 尝试拉取最新代码解决问题
+            echo "🔄 尝试拉取最新的远程仓库内容..."
+            git pull --no-rebase
+            
+            # 再次尝试使用原始SHA
+            if ! git diff --name-status $TRIGGER_SHA $GITHUB_SHA > /tmp/diff_output.txt 2>/tmp/diff_error.txt; then
+              echo "⚠️ 拉取后使用原始SHA仍然失败，尝试使用HEAD~1作为基准"
+              TRIGGER_SHA=$(git rev-parse HEAD~1)
+              
+              # 尝试使用HEAD~1
+              if ! git diff --name-status $TRIGGER_SHA $GITHUB_SHA > /tmp/diff_output.txt 2>/tmp/diff_error.txt; then
+                echo "⚠️ 使用HEAD~1也失败，将处理当前目录下的所有MD文件"
+                # 列出当前所有的issues/*.md文件
+                find issues -name "*.md" > /tmp/current_md_files.txt
+                if [[ -s "/tmp/current_md_files.txt" ]]; then
+                  echo "📄 找到以下MD文件:"
+                  cat /tmp/current_md_files.txt
+                  cp /tmp/current_md_files.txt /tmp/final_md_files.txt
+                  echo "ISSUES_FILES_LIST=/tmp/final_md_files.txt" >> $GITHUB_ENV
+                  echo "HAS_MD_FILES=true" >> $GITHUB_ENV
+                  # 跳过git diff
+                  echo "⏩ 跳过git diff，直接处理所有MD文件"
+                  exit 0
+                else
+                  echo "⚠️ 没有找到MD文件，将终止工作流"
+                  echo "HAS_MD_FILES=false" >> $GITHUB_ENV
+                  exit 0
+                fi
+              fi
+            fi
+          fi
+          
+          # 如果成功获取差异，读取输出
+          CHANGED_FILES=$(cat /tmp/diff_output.txt)
           echo "变更文件列表："
           echo "$CHANGED_FILES"
           
-          # 处理删除的文件 - 使用文件状态信息来分类
+          # 处理删除的文件
           echo "📋 获取删除的文件..."
           echo "$CHANGED_FILES" | grep "^D" | awk '{print $2}' | while read -r file; do
             echo "检查删除文件: $file"
@@ -372,8 +414,31 @@ jobs:
                   # 创建临时图片文件
                   IMG_TMP=$(mktemp)
                   
-                  # 下载图片
-                  curl -L "$IMG_URL" -o "$IMG_TMP"
+                  # 尝试下载图片 - 使用wget和curl组合方式提高成功率
+                  # 将URL保存到临时文件，避免命令行长度和特殊字符问题
+                  URL_FILE=$(mktemp)
+                  echo "$IMG_URL" > "$URL_FILE"
+                  
+                  echo "👀 尝试使用wget下载图片..."
+                  wget -q -O "$IMG_TMP" --user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36" \
+                    --header="Accept: image/webp,image/apng,image/*,*/*;q=0.8" \
+                    --header="Accept-Language: en-US,en;q=0.9" \
+                    --header="Referer: https://www.kdocs.cn/" \
+                    --tries=3 --timeout=30 \
+                    "$(cat "$URL_FILE")" || {
+                    
+                    # 如果wget失败，尝试使用curl
+                    echo "⚠️ wget下载失败，尝试使用curl下载..."
+                    curl -v -L -o "$IMG_TMP" \
+                      -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36" \
+                      -H "Accept: image/webp,image/apng,image/*,*/*;q=0.8" \
+                      -H "Accept-Language: en-US,en;q=0.9" \
+                      -H "Referer: https://www.kdocs.cn/" \
+                      "@$URL_FILE" 2>&1 | grep -E "^>" || echo "curl详细输出获取失败"
+                  }
+                  
+                  # 清理URL临时文件
+                  rm -f "$URL_FILE"
                   
                   if [[ -f "$IMG_TMP" && -s "$IMG_TMP" ]]; then
                     # 复制到图片目录
@@ -432,14 +497,31 @@ jobs:
                   IMG_TMP=$(mktemp)
                   echo "👀 临时图片文件: $IMG_TMP"
                   
-                  # 尝试下载图片，添加一些额外的HTTP头
-                  echo "👀 尝试下载图片(使用额外的HTTP头)..."
-                  curl -v -L \
-                    -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36" \
-                    -H "Accept: image/webp,image/apng,image/*,*/*;q=0.8" \
-                    -H "Accept-Language: en-US,en;q=0.9" \
-                    -H "Referer: https://www.kdocs.cn/" \
-                    "$URL_PART" -o "$IMG_TMP" 2>&1 | grep -E "^>" || echo "curl详细输出获取失败"
+                  # 尝试下载图片 - 使用wget和curl组合方式提高成功率
+                  # 将URL保存到临时文件，避免命令行长度和特殊字符问题
+                  URL_FILE=$(mktemp)
+                  echo "$URL_PART" > "$URL_FILE"
+                  
+                  echo "👀 尝试使用wget下载图片..."
+                  wget -q -O "$IMG_TMP" --user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36" \
+                    --header="Accept: image/webp,image/apng,image/*,*/*;q=0.8" \
+                    --header="Accept-Language: en-US,en;q=0.9" \
+                    --header="Referer: https://www.kdocs.cn/" \
+                    --tries=3 --timeout=30 \
+                    "$(cat "$URL_FILE")" || {
+                    
+                    # 如果wget失败，尝试使用curl
+                    echo "⚠️ wget下载失败，尝试使用curl下载..."
+                    curl -v -L -o "$IMG_TMP" \
+                      -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36" \
+                      -H "Accept: image/webp,image/apng,image/*,*/*;q=0.8" \
+                      -H "Accept-Language: en-US,en;q=0.9" \
+                      -H "Referer: https://www.kdocs.cn/" \
+                      "@$URL_FILE" 2>&1 | grep -E "^>" || echo "curl详细输出获取失败"
+                  }
+                  
+                  # 清理URL临时文件
+                  rm -f "$URL_FILE"
                   
                   if [[ -f "$IMG_TMP" && -s "$IMG_TMP" ]]; then
                     echo "👀 图片下载成功，文件大小: $(wc -c < "$IMG_TMP") 字节"

@@ -5,7 +5,7 @@
 
 > **1. 发布到github需要把你的仓库设置成public****2. 进入自己的仓库做一些设置：settings-->pages-->Source(Deploy from a branch)-->Branch(gh-pages)**
 
-![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Hexo博客搭建：第二章（Hexo博客的githubpages和cf发布）/img_4f7b18de36.png)
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Hexo博客搭建：第二章（Hexo博客的GithubPages和CF发布）/img_4f7b18de36.png)
 
 ### 正常的操作可以参考其他人的做法（要做以下设置）
 
@@ -30,11 +30,11 @@ hexo clean && hexo generate && hexo deploy
 
 ### 点击`Workers和Pages`,然后使用Pages,连接到自己的git
 
-![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Hexo博客搭建：第二章（Hexo博客的githubpages和cf发布）/img_7141b27b11.png)
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Hexo博客搭建：第二章（Hexo博客的GithubPages和CF发布）/img_7141b27b11.png)
 
 ### 选择gh-pages分支，然后一路next等着部署成功就好了
 
-![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Hexo博客搭建：第二章（Hexo博客的githubpages和cf发布）/img_d946079f0d.png)
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Hexo博客搭建：第二章（Hexo博客的GithubPages和CF发布）/img_d946079f0d.png)
 
 ## 方式2：直接使用git的main分支,在cloudflare上实现编译发布
 
@@ -44,19 +44,19 @@ hexo clean && hexo generate && hexo deploy
 > 构建命令：chmod +x build.sh && ./build.sh  
 > 输出目录：publish
 
-![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Hexo博客搭建：第二章（Hexo博客的githubpages和cf发布）/img_334a47a6e6.png)
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Hexo博客搭建：第二章（Hexo博客的GithubPages和CF发布）/img_334a47a6e6.png)
 
 ### 部署成功的日志，确认都是`对号`
 
-![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Hexo博客搭建：第二章（Hexo博客的githubpages和cf发布）/img_bce5423461.png)
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Hexo博客搭建：第二章（Hexo博客的GithubPages和CF发布）/img_bce5423461.png)
 
 ### 查看cloudflare给你的博客的网站，然后去访问
 
-![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Hexo博客搭建：第二章（Hexo博客的githubpages和cf发布）/img_fc19cbeafa.png)
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Hexo博客搭建：第二章（Hexo博客的GithubPages和CF发布）/img_fc19cbeafa.png)
 
 
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTM4NDgzNTEzOV19
+eyJoaXN0b3J5IjpbLTQxODg3MDY0M119
 -->

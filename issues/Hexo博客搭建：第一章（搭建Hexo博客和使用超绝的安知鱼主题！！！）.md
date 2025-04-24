@@ -1,9 +1,10 @@
+
 > 最开始搭建的Gmeek博客（基于github的issues），后来发现自己git的issues是所有人都可以新建的，这就丧失了个人博客的意义，遂放弃转战其他！  
 > ps:自己还拿着cursor吭哧吭哧的做了个性化，各种js注入插件...
 
 # 温馨提示
 
-> **自己的博客发布流程：****WPS云文档-->复制粘贴到stackedit-->自动发布博客（**[**📖博客A**](https://blog.mymaskking.dpdns.org/)**|**[**📖博客B**](https://hexo-blog.mymaskking.dpdns.org/)**）**[**📖博客A**](https://blog.mymaskking.dpdns.org/)**：基于Jmeek（已做UI个性化）**[**📖博客B**](https://hexo-blog.mymaskking.dpdns.org/)**：基于Hexo和anzhiyu主题**
+> **自己的博客发布流程：****WPS云文档-->复制粘贴到stackedit-->自动发布博客（**[**📖博客A**](https://blog.mymaskking.dpdns.org/)**|**[**📖博客B**](https://hexo-blog.mymaskking.dpdns.org/)**）**[**📖博客A**](https://blog.mymaskking.dpdns.org/)**：基于Gmeek（已做UI个性化）**[**📖博客B**](https://hexo-blog.mymaskking.dpdns.org/)**：基于Hexo和anzhiyu主题**
 
 # 官方文档
 
@@ -202,7 +203,7 @@ jobs:
           echo "$ git diff --name-status $TRIGGER_SHA $GITHUB_SHA"
           
           # 先尝试直接获取差异
-          if ! git diff --name-status $TRIGGER_SHA $GITHUB_SHA > /tmp/diff_output.txt 2>/tmp/diff_error.txt; then
+          if ! git diff --name-status "$TRIGGER_SHA" "$GITHUB_SHA" > /tmp/diff_output.txt 2>/tmp/diff_error.txt; then
             # 如果出错了，可能是提交SHA无效
             echo "⚠️ 使用原始SHA获取差异失败，错误信息:"
             cat /tmp/diff_error.txt
@@ -212,12 +213,12 @@ jobs:
             git pull --no-rebase
             
             # 再次尝试使用原始SHA
-            if ! git diff --name-status $TRIGGER_SHA $GITHUB_SHA > /tmp/diff_output.txt 2>/tmp/diff_error.txt; then
+            if ! git diff --name-status "$TRIGGER_SHA" "$GITHUB_SHA" > /tmp/diff_output.txt 2>/tmp/diff_error.txt; then
               echo "⚠️ 拉取后使用原始SHA仍然失败，尝试使用HEAD~1作为基准"
               TRIGGER_SHA=$(git rev-parse HEAD~1)
               
               # 尝试使用HEAD~1
-              if ! git diff --name-status $TRIGGER_SHA $GITHUB_SHA > /tmp/diff_output.txt 2>/tmp/diff_error.txt; then
+              if ! git diff --name-status "$TRIGGER_SHA" "$GITHUB_SHA" > /tmp/diff_output.txt 2>/tmp/diff_error.txt; then
                 echo "⚠️ 使用HEAD~1也失败，将处理当前目录下的所有MD文件"
                 # 列出当前所有的issues/*.md文件
                 find issues -name "*.md" > /tmp/current_md_files.txt
@@ -246,7 +247,12 @@ jobs:
           
           # 处理删除的文件
           echo "📋 获取删除的文件..."
-          echo "$CHANGED_FILES" | grep "^D" | awk '{print $2}' | while read -r file; do
+          # 使用NF保留所有字段，避免awk默认分割空格导致文件名被截断
+          # 先提取所有删除的文件到临时文件，避免在管道中创建子shell
+          echo "$CHANGED_FILES" | grep "^D" | sed -E 's/^D[[:space:]]+//' > /tmp/deleted_files_temp.txt
+
+          # 在主shell中处理删除文件，确保git操作在同一个shell环境中
+          while IFS= read -r file; do
             echo "检查删除文件: $file"
             # 移除可能的引号
             file=$(echo "$file" | sed 's/^"//;s/"$//')
@@ -259,27 +265,58 @@ jobs:
               echo "🗑️ 检测到删除的md文件: $decoded_file"
               # 获取文件名（不含扩展名）
               FILENAME=$(basename "$decoded_file" .md)
-              # 检查source/_posts中是否存在对应文件
+              echo "🔍 提取文件名: $FILENAME"
+
               if [[ -f "source/_posts/${FILENAME}.md" ]]; then
-                echo "🗑️ 删除source/_posts中的对应文件: ${FILENAME}.md"
+                echo "🗑️ 删除精确匹配的文件: ${FILENAME}.md"
                 git rm -f "source/_posts/${FILENAME}.md"
+              fi
+            # 获取文件名（不含扩展名）作为目录名
+            FILE_BASE=$(basename "$FILENAME" .md)
+            # 保留原始文件名，但替换不安全的字符为下划线
+            FILE_DIR_NAME=$(echo "$FILE_BASE" | sed 's/[\/\?<>\\:\*\|":]/_/g')
+            echo "👀 为文件创建图片目录: $FILE_DIR_NAME (源自: $FILE_BASE)"
+            
+            IMG_DIR="source/images/$FILE_DIR_NAME"
+              if [[ -d "$IMG_DIR" ]]; then
+                echo "🗑️ 删除对应的图片目录: $IMG_DIR"
+                git rm -rf "$IMG_DIR"
+              else
+                echo "⚠️ 未找到相关的图片目录"
               fi
               
               # 保存到删除文件列表
               echo "$decoded_file" >> /tmp/deleted_md_files.txt
             fi
-          done
+          done < /tmp/deleted_files_temp.txt
           
           # 如果删除文件列表存在，读取它
-          DELETED_MD_FILES=""
-          if [[ -f "/tmp/deleted_md_files.txt" ]]; then
-            DELETED_MD_FILES=$(cat /tmp/deleted_md_files.txt)
+          if [[ -f "/tmp/deleted_md_files.txt" && -s "/tmp/deleted_md_files.txt" ]]; then
+            echo "📂 删除的md文件列表已创建，包含以下文件:"
+            cat "/tmp/deleted_md_files.txt"
+
+            # 如果有文件被删除，立即提交并推送更改
+            if git status --porcelain | grep -q "^D\|^A\|^M"; then
+              echo "🚀 发现变更，立即提交删除操作..."
+              git commit -m "🗑️ 删除博客文章和对应资源"
+              
+              echo "🚀 推送删除操作到GitHub..."
+              # 拉取最新代码以避免冲突
+              git pull --no-rebase
+              git push || {
+                echo "⚠️ 推送失败，尝试强制推送..."
+                git push --force || echo "⚠️ 强制推送也失败，可能需要手动处理冲突"
+              }
+            fi
+          else
+            echo "📂 没有找到需要删除的md文件"
+            touch "/tmp/deleted_md_files.txt"  # 确保文件存在，即使为空
           fi
-          echo "📂 删除的md文件: $DELETED_MD_FILES"
           
           # 获取本次提交中新增或修改的文件
           echo "📋 获取新增或修改的文件..."
-          echo "$CHANGED_FILES" | grep -E "^[AM]" | awk '{print $2}' | while read -r file; do
+          # 先匹配A或M开头的行，再用sed提取文件名部分，保留完整文件名
+          echo "$CHANGED_FILES" | grep -E "^[AM]" | sed -E 's/^[AM][[:space:]]+//' | while read -r file; do
             echo "检查新增/修改文件: $file"
             
             # 移除可能的引号
@@ -297,14 +334,16 @@ jobs:
           done
           
           # 如果修改文件列表存在，读取它
-          MODIFIED_MD_FILES=""
-          if [[ -f "/tmp/modified_md_files.txt" ]]; then
-            MODIFIED_MD_FILES=$(cat /tmp/modified_md_files.txt)
+          if [[ -f "/tmp/modified_md_files.txt" && -s "/tmp/modified_md_files.txt" ]]; then
+            echo "📂 新增或修改的md文件列表："
+            cat "/tmp/modified_md_files.txt"
+          else
+            echo "📂 没有找到需要新增或修改的md文件"
+            touch "/tmp/modified_md_files.txt"  # 确保文件存在，即使为空
           fi
-          echo "📂 新增或修改的md文件: $MODIFIED_MD_FILES"
           
           # 如果没有需要处理的文件，则中止程序
-          if [[ -z "$DELETED_MD_FILES" && -z "$MODIFIED_MD_FILES" ]]; then
+          if [[ ! -s "/tmp/deleted_md_files.txt" && ! -s "/tmp/modified_md_files.txt" ]]; then
             echo "✅ 本次提交没有新增、修改或删除的md文件，中止程序"
             echo "HAS_MD_FILES=false" >> $GITHUB_ENV
             exit 0
@@ -312,20 +351,25 @@ jobs:
           
           # 确保source/_posts目录存在
           if [[ ! -d "source/_posts" ]]; then
-            echo "📁 创建source/_posts目录"
-            mkdir -p source/_posts
+            echo "📁 创建source/_posts目录" 
+            mkdir -p "source/_posts"
           fi
           
           # 将新增或修改的md文件写入文件列表 - 确保文件真实存在
           > /tmp/final_md_files.txt
-          while IFS= read -r file; do
-            if [[ -f "$file" ]]; then
-              echo "$file" >> /tmp/final_md_files.txt
-              echo "✅ 确认文件存在: $file"
-            else
-              echo "⚠️ 文件不存在，跳过: $file"
-            fi
-          done < <(echo "$MODIFIED_MD_FILES")
+          if [[ -f "/tmp/modified_md_files.txt" && -s "/tmp/modified_md_files.txt" ]]; then
+            # 为了正确处理带空格的文件名路径，使用换行符作为分隔符逐行处理
+            while IFS= read -r file; do
+              if [[ -n "$file" && -f "$file" ]]; then
+                echo "$file" >> /tmp/final_md_files.txt
+                echo "✅ 确认文件存在: $file"
+              elif [[ -n "$file" ]]; then
+                echo "⚠️ 文件不存在，跳过: $file"
+              fi
+            done < "/tmp/modified_md_files.txt"
+          else
+            echo "📋 没有找到需要处理的文件列表或文件列表为空"
+          fi
           
           # 检查最终文件列表是否为空
           if [[ ! -s "/tmp/final_md_files.txt" ]]; then
@@ -414,7 +458,7 @@ jobs:
             IMG_DIR="source/images/$FILE_DIR_NAME"
             if [[ -d "$IMG_DIR" ]]; then
               echo "🧹 清空现有图片目录，准备全量更新: $IMG_DIR"
-              rm -rf "$IMG_DIR"/*
+              rm -rf "${IMG_DIR:?}"/*
             fi
             
             # 确保图片目录存在
@@ -681,18 +725,18 @@ jobs:
             
             # 构建Hexo文章
             echo "---" > "source/_posts/${POST_TITLE}.md"
-            echo "title: ${CUSTOM_TITLE}" >> "source/_posts/${POST_TITLE}.md"
-            echo "date: ${POST_DATE}" >> "source/_posts/${POST_TITLE}.md"
-            echo "updated: ${CURRENT_TIME}" >> "source/_posts/${POST_TITLE}.md"
+            echo "title: \"${CUSTOM_TITLE}\"" >> "source/_posts/${POST_TITLE}.md"
+            echo "date: \"${POST_DATE}\"" >> "source/_posts/${POST_TITLE}.md"
+            echo "updated: \"${CURRENT_TIME}\"" >> "source/_posts/${POST_TITLE}.md"
             
             # 只有在sticky有值且不为空时才添加
             if [[ -n "$CUSTOM_STICKY" && "$CUSTOM_STICKY" != "null" && "$CUSTOM_STICKY" != "undefined" ]]; then
-                echo "sticky: ${CUSTOM_STICKY}" >> "source/_posts/${POST_TITLE}.md"
+                echo "sticky: \"${CUSTOM_STICKY}\"" >> "source/_posts/${POST_TITLE}.md"
             fi
             
             # 只有在cover有值且不为空时才添加
             if [[ -n "$CUSTOM_COVER" && "$CUSTOM_COVER" != "null" && "$CUSTOM_COVER" != "undefined" ]]; then
-                echo "cover: ${CUSTOM_COVER}" >> "source/_posts/${POST_TITLE}.md"
+                echo "cover: \"${CUSTOM_COVER}\"" >> "source/_posts/${POST_TITLE}.md"
             fi
             
             # 处理分类
@@ -701,7 +745,7 @@ jobs:
                 IFS=',' read -ra CATEGORY_ARRAY <<< "$CUSTOM_CATEGORIES"
                 for category in "${CATEGORY_ARRAY[@]}"; do
                     CATEGORY_TRIM=$(echo "$category" | xargs)
-                    echo "  - ${CATEGORY_TRIM}" >> "source/_posts/${POST_TITLE}.md"
+                    echo "  - \"${CATEGORY_TRIM}\"" >> "source/_posts/${POST_TITLE}.md"
                 done
             fi
             
@@ -711,7 +755,7 @@ jobs:
                 IFS=',' read -ra TAG_ARRAY <<< "$CUSTOM_TAGS"
                 for tag in "${TAG_ARRAY[@]}"; do
                     TAG_TRIM=$(echo "$tag" | xargs)
-                    echo "  - ${TAG_TRIM}" >> "source/_posts/${POST_TITLE}.md"
+                    echo "  - \"${TAG_TRIM}\"" >> "source/_posts/${POST_TITLE}.md"
                 done
             fi
             
@@ -765,7 +809,7 @@ git clone -b main https://github.com/anzhiyu-c/hexo-theme-anzhiyu.git themes/anz
 
 **注意：这个是在你的hexo的目录里面执行**
 
-![](http://www.kdocs.cn/api/v3/office/copy/NWVxUlJCRnFSNGdJRnNITW9DR2kveGRkRmYrVmN2UWh2YXJXc2s1ZjRkM0JudHVRajlVQnNWNWpzMXF6NDlDSEQ0anFraHhWR2NQMldjcUdyd1BtaEZGR05rVlBHRVZkMVFLK0FGRWp2VW96ODl3WlllNXRybXlyNFkyNUVQTU9lL0NyTE1JQnU1alBkZmVRaTZYUEF1ek5pTlBGbEYxRHJFR05wRDVXOG9maUlNcVlNTGJvR1ZJM1kxRW9rM0NVbW5TQkpONjBzd3Q1TDdFUDV4bWZ4bFhBUXJwalgrblpvdkw0dllFMzQ2NklUcU8vdjlIL1ZGdldoeVljV1VBbytFTWc5UHRGZ1dJPQ==/attach/object/KXVSLKQ7AAAH4?)
+![](http://www.kdocs.cn/api/v3/office/copy/NG9OSEs5bVROazhMVUZUcWloUE5ERCthR3JsRUE2RnlLOXkybVp0MnNiTWhDSzNuY3VvQ3NHbmNjaGdwUWdNbTVnR1hQWE9JSDhDNHdaaXhuR2wwdHlreUxMMXBCekJIK29rcDhjYS94TldFTUlLNm96dVg3bzlKTGZsdFllamJRYjBRbnpidW52aC9IUTRPYTV0TXJHZXJ0bEFiNzJ4NC9wUlgwenhrYWh1VnhnV2hFalVBOWQrL1BxVUNsajV2cU8vS05qWmlOcUZUWWFKa29BUFk4bnFyVkJGMSt6bm1WdjBZdHZtZy9hMHNrV0pFK1o0Qm5Vci9kazFEUExoV0NEUVZ5cHRMTWFJPQ==/attach/object/KXVSLKQ7AAAH4?)
 
 **下载一些必须的插件**
 
@@ -775,11 +819,11 @@ npm install hexo-renderer-pug hexo-renderer-stylus --save
 
 ## 删除anzhiyu的git，否则VS会自动使用anzhiyu的git
 
-![](http://www.kdocs.cn/api/v3/office/copy/NWVxUlJCRnFSNGdJRnNITW9DR2kveGRkRmYrVmN2UWh2YXJXc2s1ZjRkM0JudHVRajlVQnNWNWpzMXF6NDlDSEQ0anFraHhWR2NQMldjcUdyd1BtaEZGR05rVlBHRVZkMVFLK0FGRWp2VW96ODl3WlllNXRybXlyNFkyNUVQTU9lL0NyTE1JQnU1alBkZmVRaTZYUEF1ek5pTlBGbEYxRHJFR05wRDVXOG9maUlNcVlNTGJvR1ZJM1kxRW9rM0NVbW5TQkpONjBzd3Q1TDdFUDV4bWZ4bFhBUXJwalgrblpvdkw0dllFMzQ2NklUcU8vdjlIL1ZGdldoeVljV1VBbytFTWc5UHRGZ1dJPQ==/attach/object/DNKSPKQ7AAAHY?)
+![](http://www.kdocs.cn/api/v3/office/copy/NG9OSEs5bVROazhMVUZUcWloUE5ERCthR3JsRUE2RnlLOXkybVp0MnNiTWhDSzNuY3VvQ3NHbmNjaGdwUWdNbTVnR1hQWE9JSDhDNHdaaXhuR2wwdHlreUxMMXBCekJIK29rcDhjYS94TldFTUlLNm96dVg3bzlKTGZsdFllamJRYjBRbnpidW52aC9IUTRPYTV0TXJHZXJ0bEFiNzJ4NC9wUlgwenhrYWh1VnhnV2hFalVBOWQrL1BxVUNsajV2cU8vS05qWmlOcUZUWWFKa29BUFk4bnFyVkJGMSt6bm1WdjBZdHZtZy9hMHNrV0pFK1o0Qm5Vci9kazFEUExoV0NEUVZ5cHRMTWFJPQ==/attach/object/DNKSPKQ7AAAHY?)
 
 ## 把anzhiyu的主题文件复制换个名字放到hexo的目录下
 
-![](http://www.kdocs.cn/api/v3/office/copy/NWVxUlJCRnFSNGdJRnNITW9DR2kveGRkRmYrVmN2UWh2YXJXc2s1ZjRkM0JudHVRajlVQnNWNWpzMXF6NDlDSEQ0anFraHhWR2NQMldjcUdyd1BtaEZGR05rVlBHRVZkMVFLK0FGRWp2VW96ODl3WlllNXRybXlyNFkyNUVQTU9lL0NyTE1JQnU1alBkZmVRaTZYUEF1ek5pTlBGbEYxRHJFR05wRDVXOG9maUlNcVlNTGJvR1ZJM1kxRW9rM0NVbW5TQkpONjBzd3Q1TDdFUDV4bWZ4bFhBUXJwalgrblpvdkw0dllFMzQ2NklUcU8vdjlIL1ZGdldoeVljV1VBbytFTWc5UHRGZ1dJPQ==/attach/object/6SMCVKQ7ADAGG?)
+![](http://www.kdocs.cn/api/v3/office/copy/NG9OSEs5bVROazhMVUZUcWloUE5ERCthR3JsRUE2RnlLOXkybVp0MnNiTWhDSzNuY3VvQ3NHbmNjaGdwUWdNbTVnR1hQWE9JSDhDNHdaaXhuR2wwdHlreUxMMXBCekJIK29rcDhjYS94TldFTUlLNm96dVg3bzlKTGZsdFllamJRYjBRbnpidW52aC9IUTRPYTV0TXJHZXJ0bEFiNzJ4NC9wUlgwenhrYWh1VnhnV2hFalVBOWQrL1BxVUNsajV2cU8vS05qWmlOcUZUWWFKa29BUFk4bnFyVkJGMSt6bm1WdjBZdHZtZy9hMHNrV0pFK1o0Qm5Vci9kazFEUExoV0NEUVZ5cHRMTWFJPQ==/attach/object/6SMCVKQ7ADAGG?)
 
 ## 把hexo的`_config.yml`里面设置为使用`_config.anzhiyu.yml`
 
@@ -2154,5 +2198,5 @@ POST_TAGS: 博客,教程
 
 POST_STICKY:
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTQ0Njk3MDgzNF19
+eyJoaXN0b3J5IjpbLTE5OTA4NjQwMjNdfQ==
 -->

@@ -1,5 +1,66 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>爱捣鼓的小木水的博客</title><link>https://blog.mymaskking.dpdns.org/</link><description>一个等着裁员的java程序猿，每天无所事事，只想搞钱，喜欢钻研各种实用的技能，讨厌天天做工作上的项目，对自己毫无实用价值。&lt;BR/&gt;&lt;div class='listLabels'&gt;&lt;span class='Label LabelName'style='background-color:#efe1e1'&gt;&lt;object&gt;&lt;a style='color:#000000'href='https://v.douyin.com/UFXv95UxBbQ/'data-click-setup='true'&gt;抖音&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#a2eeef'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://kdocs.cn/l/clf4xOs5a3Q1'data-click-setup='true'&gt;WPS万能文档&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#ff0c0c'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://www.youtube.com/channel/UCeHFivb01FfFIL7kciY6KFg'data-click-setup='true'&gt;YouTobe&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelTime'style='background-color:#ff4f9a'&gt;&lt;a style='color:#fff'href='https://b23.tv/rGe89DU' data-click-setup='true'&gt;哔哩哔哩&lt;/a&gt;&lt;/span&gt;&lt;/div&gt;</description><copyright>爱捣鼓的小木水的博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/41733240?v=4</url><title>avatar</title><link>https://blog.mymaskking.dpdns.org/</link></image><lastBuildDate>Thu, 24 Apr 2025 04:55:30 +0000</lastBuildDate><managingEditor>爱捣鼓的小木水的博客</managingEditor><ttl>60</ttl><webMaster>爱捣鼓的小木水的博客</webMaster><item><title>Gmeek博客搭建：快速搭建更自动化的个人博客</title><link>https://blog.mymaskking.dpdns.org//post/Gmeek-bo-ke-da-jian-%EF%BC%9A-kuai-su-da-jian-geng-zi-dong-hua-de-ge-ren-bo-ke.html</link><description>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>爱捣鼓的小木水的博客</title><link>https://blog.mymaskking.dpdns.org/</link><description>一个等着裁员的java程序猿，每天无所事事，只想搞钱，喜欢钻研各种实用的技能，讨厌天天做工作上的项目，对自己毫无实用价值。&lt;BR/&gt;&lt;div class='listLabels'&gt;&lt;span class='Label LabelName'style='background-color:#efe1e1'&gt;&lt;object&gt;&lt;a style='color:#000000'href='https://v.douyin.com/UFXv95UxBbQ/'data-click-setup='true'&gt;抖音&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#a2eeef'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://kdocs.cn/l/clf4xOs5a3Q1'data-click-setup='true'&gt;WPS万能文档&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#ff0c0c'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://www.youtube.com/channel/UCeHFivb01FfFIL7kciY6KFg'data-click-setup='true'&gt;YouTobe&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelTime'style='background-color:#ff4f9a'&gt;&lt;a style='color:#fff'href='https://b23.tv/rGe89DU' data-click-setup='true'&gt;哔哩哔哩&lt;/a&gt;&lt;/span&gt;&lt;/div&gt;</description><copyright>爱捣鼓的小木水的博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/41733240?v=4</url><title>avatar</title><link>https://blog.mymaskking.dpdns.org/</link></image><lastBuildDate>Thu, 24 Apr 2025 05:18:29 +0000</lastBuildDate><managingEditor>爱捣鼓的小木水的博客</managingEditor><ttl>60</ttl><webMaster>爱捣鼓的小木水的博客</webMaster><item><title>Hexo博客搭建：第二章（Hexo博客的github pages和cf发布）</title><link>https://blog.mymaskking.dpdns.org//post/Hexo-bo-ke-da-jian-%EF%BC%9A-di-er-zhang-%EF%BC%88Hexo-bo-ke-de-github%20pages-he-cf-fa-bu-%EF%BC%89.html</link><description># 博客发布到GitHub Pages,需公开你的git仓库（方式1）
+
+### 自己用workflow后实现了自动发布
+
+&gt; **1. 发布到github需要把你的仓库设置成public****2. 进入自己的仓库做一些设置：settings--&gt;pages--&gt;Source(Deploy from a branch)--&gt;Branch(gh-pages)**
+
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Hexo博客搭建：第二章（Hexo博客的github pages和cf发布）/img_4f7b18de36.png)
+
+### 正常的操作可以参考其他人的做法（要做以下设置）
+
+```
+// Git BASH终端
+hexo clean &amp;&amp; hexo generate &amp;&amp; hexo deploy  
+```
+
+# 博客发布到Cloudflare,你的git仓库是隐私的（方式2）
+
+&gt; Cloudflare你必须要了解的知识  
+&gt; worker：适合放一些API之类的服务  
+&gt; pages：放一些静态网站
+
+----------
+
+&gt; 发布到Cloudflare我也做了两种方式  
+&gt; 方式1：直接使用git的gh-pages分支  
+&gt; 方式2：直接使用git的main分支,在cloudflare上实现编译发布
+
+## 方式1:直接使用git的gh-pages分支
+
+### 点击`Workers和Pages`,然后使用Pages,连接到自己的git
+
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Hexo博客搭建：第二章（Hexo博客的github pages和cf发布）/img_7141b27b11.png)
+
+### 选择gh-pages分支，然后一路next等着部署成功就好了
+
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Hexo博客搭建：第二章（Hexo博客的github pages和cf发布）/img_d946079f0d.png)
+
+## 方式2：直接使用git的main分支,在cloudflare上实现编译发布
+
+### 前面的步骤请参考`方式1`，区别是使用main分支，需要设置`构建命令`
+
+&gt; 生成分支：main  
+&gt; 构建命令：chmod +x build.sh &amp;&amp; ./build.sh  
+&gt; 输出目录：publish
+
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Hexo博客搭建：第二章（Hexo博客的github pages和cf发布）/img_334a47a6e6.png)
+
+### 部署成功的日志，确认都是`对号`
+
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Hexo博客搭建：第二章（Hexo博客的github pages和cf发布）/img_bce5423461.png)
+
+### 查看cloudflare给你的博客的网站，然后去访问
+
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Hexo博客搭建：第二章（Hexo博客的github pages和cf发布）/img_fc19cbeafa.png)
+
+
+
+
+&lt;!--stackedit_data:
+eyJoaXN0b3J5IjpbLTEwOTM1MjA1MjddfQ==
+--&gt;
+。</description><guid isPermaLink="true">https://blog.mymaskking.dpdns.org//post/Hexo-bo-ke-da-jian-%EF%BC%9A-di-er-zhang-%EF%BC%88Hexo-bo-ke-de-github%20pages-he-cf-fa-bu-%EF%BC%89.html</guid><pubDate>Thu, 24 Apr 2025 04:30:22 +0000</pubDate></item><item><title>Gmeek博客搭建：快速搭建更自动化的个人博客</title><link>https://blog.mymaskking.dpdns.org//post/Gmeek-bo-ke-da-jian-%EF%BC%9A-kuai-su-da-jian-geng-zi-dong-hua-de-ge-ren-bo-ke.html</link><description>
 # **基于** [**Gmeek**](https://github.com/Meekdai/Gmeek)**的个人博客做了很多改善**
 
 ## UI改善

@@ -1,3 +1,4 @@
+
 # **基于** [**Gmeek**](https://github.com/Meekdai/Gmeek)**的个人博客做了很多改善**
 
 ## UI改善
@@ -6,11 +7,11 @@
 
 # [Gmeek](https://github.com/Meekdai/Gmeek)的原理流程
 
-![](http://www.kdocs.cn/api/v3/office/copy/SmhZaUhIVTFHaGE4U0xvZ0I4Z3plWEhaMWN5WU5BNWN4ZExBcnd0UXg3dFJxWnd3S0hFcyt4UjBuTjFubkUrcUs3dmRUeGJOVm1lVnpuZ01PU2dLOU9LMjFVbVpoSmkvamV1cGt0RFhHL3QxbTNJZ1ZGcm9uWThnYnY3bndsZ3Uwd2gxc1Q0MHJ3Ync3R0tWbCtDNkZCTWtBNlR4VVhrQTZCa3dFckZlS3lDT3RTcjhaa0pEa2hIZVBXOHdHcER2NHlPYndCaWhJdWNocGs1UnQ5UzloTVlaanptbnZ3cnVpZVlRRnRkcUtMWUoyaStBMkxNenlVcTBUOHVMbFRjdldaZmFaZ1hyWSt3PQ==/attach/object/EUUTS6I7ADQAK? "po_bheegdgbihhhba")
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Gmeek博客搭建：快速搭建更自动化的个人博客/img_2b46848a80.png)
 
 # [Gmeek增强](https://github.com/MyMaskKing/MyMaskKing.github.io.git)的原理流程
 
-![](http://www.kdocs.cn/api/v3/office/copy/SmhZaUhIVTFHaGE4U0xvZ0I4Z3plWEhaMWN5WU5BNWN4ZExBcnd0UXg3dFJxWnd3S0hFcyt4UjBuTjFubkUrcUs3dmRUeGJOVm1lVnpuZ01PU2dLOU9LMjFVbVpoSmkvamV1cGt0RFhHL3QxbTNJZ1ZGcm9uWThnYnY3bndsZ3Uwd2gxc1Q0MHJ3Ync3R0tWbCtDNkZCTWtBNlR4VVhrQTZCa3dFckZlS3lDT3RTcjhaa0pEa2hIZVBXOHdHcER2NHlPYndCaWhJdWNocGs1UnQ5UzloTVlaanptbnZ3cnVpZVlRRnRkcUtMWUoyaStBMkxNenlVcTBUOHVMbFRjdldaZmFaZ1hyWSt3PQ==/attach/object/E5VBXHI7AAQFC? "po_bheegdhaijjcja")
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Gmeek博客搭建：快速搭建更自动化的个人博客/img_2780839ab1.png)
 
 ----------
 
@@ -103,15 +104,89 @@ ISSUE_LABELS: 技术, 教程, 心得
 
 ## Gmeek官方UI
 
-![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Gmeek个人博客markdown编辑困难,教你如何解决/img_5f7c6e923c.png)
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Gmeek博客搭建：快速搭建更自动化的个人博客/img_5f7c6e923c.png)
 
 ### Gmeek增强版UI
 
-![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Gmeek个人博客markdown编辑困难,教你如何解决/img_f36b7b7ec3.png)
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Gmeek博客搭建：快速搭建更自动化的个人博客/img_f36b7b7ec3.png)
+
+# 重要提醒
+
+> **自己仓库的Issues是所有人都可以创建的的**
+
+## 解决办法
+
+### 使用GitHub的workflow自动监控issues，非自己创建的自动关闭
+
+**源码：**
+
+```
+name: Close Unauthorized Issues
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write  # 添加issues的写入权限
+
+jobs:
+  close-issue:
+    runs-on: ubuntu-latest
+    # 添加允许列表，只有不在允许列表中且不是仓库所有者的用户创建的Issue才会被关闭
+    # 注意：这里使用的是GitHub用户名（username），不是邮箱
+    # 例如：https://github.com/username 中的 username 就是用户名
+    # 添加其他用户的例子：
+    #  github.event.issue.user.login != 'MyFriend' &&
+    #  github.event.issue.user.login != 'Collaborator123'
+    if: |
+      github.event.issue.user.login != github.repository_owner
+    steps:
+      - uses: actions/github-script@v6
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '此仓库的Issue由所有者通过特定工作流创建管理，不接受未授权用户创建的Issue。此Issue将被自动关闭。如有建议，请通过其他渠道联系仓库所有者。'
+            });
+            
+            await github.rest.issues.update({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'closed'
+            });
+```
+
+### 使用Issues的Template，在别人创建的时候进行提醒，不允许创建issues
+
+**源码：**
+
+**路径：仓库名\.github\ISSUE_TEMPLATE\温馨提示.md**
+
+```
+---
+name: 温馨提示
+about: 未经允许的Issues将会被自动关闭
+title: ''
+labels: ''
+assignees: ''
+
+---
+
+blank_issues_enabled: false
+contact_links:
+  - name: 关于Issue创建说明
+    url: https://blog.mymaskking.dpdns.org/
+    about: 本仓库的Issue通过特定工作流由仓库所有者自动创建，不接受手动创建的Issue。如需讨论内容，请通过其他邮件与仓库所有者mymask139@163.com联系。
+```
 
 
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNTQwOTYyMTY1XX0=
+eyJoaXN0b3J5IjpbLTE2OTQ5NjY2NzZdfQ==
 -->

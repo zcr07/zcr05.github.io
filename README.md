@@ -1,4 +1,4 @@
-# 爱捣鼓的小水木的知识库 :link: https://blog.mymaskking.dpdns.org/ 
+# 爱捣鼓的小水木的博客 :link: https://blog.mymaskking.dpdns.org/ 
 ### :page_facing_up: [18](https://blog.mymaskking.dpdns.org//tag.html) 
 ### :speech_balloon: 0 
 ### :hibiscus: 125898 

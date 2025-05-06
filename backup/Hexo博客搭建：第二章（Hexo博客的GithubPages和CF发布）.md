@@ -3,7 +3,8 @@
 
 ### 自己用workflow后实现了自动发布
 
-> **1. 发布到github需要把你的仓库设置成public****2. 进入自己的仓库做一些设置：settings-->pages-->Source(Deploy from a branch)-->Branch(gh-pages)**
+> **1. 发布到github需要把你的仓库设置成public**。  
+> **2. 进入自己的仓库做一些设置：settings-->pages-->Source(Deploy from a branch)-->Branch(gh-pages)**
 
 ![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Hexo博客搭建：第二章（Hexo博客的GithubPages和CF发布）/img_4f7b18de36.png)
 
@@ -58,5 +59,5 @@ hexo clean && hexo generate && hexo deploy
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTQxODg3MDY0M119
+eyJoaXN0b3J5IjpbLTI5MDUzNDYzOSwtNDE4ODcwNjQzXX0=
 -->

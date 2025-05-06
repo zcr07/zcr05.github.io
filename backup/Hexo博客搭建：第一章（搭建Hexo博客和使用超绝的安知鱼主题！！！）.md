@@ -4,7 +4,10 @@
 
 # 温馨提示
 
-> **自己的博客发布流程：****WPS云文档-->复制粘贴到stackedit-->自动发布博客（**[**📖博客A**](https://blog.mymaskking.dpdns.org/)**|**[**📖博客B**](https://hexo-blog.mymaskking.dpdns.org/)**）**[**📖博客A**](https://blog.mymaskking.dpdns.org/)**：基于Gmeek（已做UI个性化）**[**📖博客B**](https://hexo-blog.mymaskking.dpdns.org/)**：基于Hexo和anzhiyu主题**
+> **自己的博客发布流程**：  
+> **WPS云文档-->复制粘贴到stackedit-->自动发布博客（**[**📖博客A**](https://blog.mymaskking.dpdns.org/)**|**[**📖博客B**](https://hexo-blog.mymaskking.dpdns.org/)）  
+> [**📖博客A**](https://blog.mymaskking.dpdns.org/)：基于Gmeek（已做UI个性化）  
+> [**📖博客B**](https://hexo-blog.mymaskking.dpdns.org/)：基于Hexo和anzhiyu主题
 
 # 官方文档
 
@@ -29,7 +32,7 @@ cd blog-demo
 npm i
 ```
 
-> **hexo文件夹介绍：****node_modules**：依赖包  
+> **hexo**文件夹介绍：**node_modules**：依赖包  
 > **scaffolds**：生成文章的一些模板  
 > **source**：用来存放你的文章  
 > **themes**：主题  
@@ -49,11 +52,16 @@ hexo clean ; hexo start
 
 ## workflow自动发布到gh-pages分支（我的优化）
 
-> **原理：****1.提交代码后github的workflow自动触发****2.github的page上执行**`**hexo clean;hexo generate**`**3.生成的**`**public**`**自动发布到**`gh-pages`
+> **原理**：  
+> **1.提交代码后github的workflow自动触发**。  
+> **2.github的page上执行**`hexo clean;hexo generate`。  
+> **3.生成的**`public`**自动发布到**`gh-pages`
 
 ----------
 
-> **如何使用：**`**gh-pages分支的选择请在Settings-->GitHub Pages-->Build and deployment-->Deploy from branch-->gh-pages分支**`使用gh-pages分支而不是main分支有几个重要原因：  
+> **如何使用：**  
+> `gh-pages分支的选择请在Settings-->GitHub Pages-->Build and deployment-->Deploy from branch-->gh-pages分支`。  
+> 使用gh-pages分支而不是main分支有几个重要原因：  
 > 1.代码分离：将源代码（Hexo博客的原始文件）和生成的静态网站分开存储，使仓库结构更加清晰  
 > 2.简化版本控制：您只需要跟踪和管理源代码的变化，而不需要关心每次生成的静态文件的变化  
 > 3.自动化部署流程：使用GitHub Actions自动构建和部署到单独的分支，减少了手动操作  
@@ -133,8 +141,8 @@ jobs:
 ----------
 
 > **使用方法：**  
-> **1.在仓库建一个issues的文件夹（为啥叫issues，请看我的Gmeek的惨痛经历）**  
-> **2.GitHub的workflow将会监控issues文件夹**  
+> **1.在仓库建一个issues的文件夹（为啥叫issues，请看我的Gmeek的惨痛经历**）  
+> **2.GitHub的workflow将会监控issues文件夹**。  
 > **3.workflow把issues文件夹提交的md文件先做一些操作然后放到source/_posts中**  
 > - md文件中的关键字(标题，类型，便签，置顶序号)提取置换- md文件中的图片链接下载到source/images/文件名（图片持久化，防止第三方链接丢失）
 
@@ -726,7 +734,7 @@ jobs:
             # 构建Hexo文章
             echo "---" > "source/_posts/${POST_TITLE}.md"
             echo "title: \"${CUSTOM_TITLE}\"" >> "source/_posts/${POST_TITLE}.md"
-            echo "date: \"${POST_DATE}\"" >> "source/_posts/${POST_TITLE}.md"
+            echo "date: ${POST_DATE}" >> "source/_posts/${POST_TITLE}.md"
             echo "updated: \"${CURRENT_TIME}\"" >> "source/_posts/${POST_TITLE}.md"
             
             # 只有在sticky有值且不为空时才添加
@@ -2190,9 +2198,41 @@ CDN:
     # accesskey_js:
 ```
 
+# 博客评论功能的配置
+
+> 使用的**giscus**作为评论系统，基于github的**discussion** 完全免费
+
+----------
+
+> **giscus链接**：https://giscus.app/  
+> 可以参照官方链接配置
+
+```
+# giscus
+# https://giscus.app/
+giscus:
+  repo: MyMaskKing/hexo-blog-comments # GitHub repository name
+  repo_id: R_kgDOOd_riA # GitHub repository id，从Giscus网站获取
+  category_id: DIC_kwDOOd_riM4CpW8o # GitHub repository category id，从Giscus网站获取
+  theme:
+    light: light
+    dark: dark
+  option: # options
+    data-lang: zh-CN
+    data-mapping: pathname # 使用页面路径作为讨论定位依据，避免中文URL问题
+    data-reactions-enabled: 1 # 是否启用reactions
+    data-emit-metadata: 0
+    data-input-position: bottom # 评论框位置
+    data-category: Announcements # 确保分类正确传递
+```
+
+### **QA：需要注意的内容**
+
+> data-mapping: pathname # 使用页面路径作为讨论定位依据，避免中文URL问题
+
 
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE5OTA4NjQwMjNdfQ==
+eyJoaXN0b3J5IjpbNDM1MDMzOTUzLC0xOTkwODY0MDIzXX0=
 -->

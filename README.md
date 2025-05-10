@@ -1,4 +1,4 @@
-# 爱捣鼓的小水木 :link: https://blog.mymaskking.dpdns.org/ 
+# 木水物语 MokuAI :link: https://blog.mymaskking.dpdns.org/ 
 ### :page_facing_up: [24](https://blog.mymaskking.dpdns.org//tag.html) 
 ### :speech_balloon: 0 
 ### :hibiscus: 134401 

@@ -1,4 +1,4 @@
-# 木水物语 MokuAI :link: https://blog.10023456.xyz/ 
+# 木水物语 Moku :link: https://blog.10023456.xyz/ 
 ### :page_facing_up: [25](https://blog.10023456.xyz//tag.html) 
 ### :speech_balloon: 0 
 ### :hibiscus: 138512 

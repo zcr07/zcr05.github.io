@@ -15,9 +15,9 @@ npm uninstall hexo-generator-topindex
 
 **效果如下：**
 
-![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Hexo博客搭建：QA章（Hexo博客搭建和发布上踩的坑）/img_8928346466.png)
+![](http://www.kdocs.cn/api/v3/office/copy/NWVxUlJCRnFSNGdJRnNITW9DR2kveGRkRmYrVmN2UWh2YXJXc2s1ZjRkM0JudHVRajlVQnNWNWpzMXF6NDlDSEQ0anFraHhWR2NQMldjcUdyd1BtaEZGR05rVlBHRVZkMVFLK0FGRWp2VW96ODl3WlllNXRybXlyNFkyNUVQTU9lL0NyTE1JQnU1alBkZmVRaTZYUEF1ek5pTlBGbEYxRHJFR05wRDVXOG9maUlNcVlNTGJvR1ZJM1kxRW9rM0NVbW5TQkpONjBzd3Q1TDdFUDV4bWZ4bFhBUXJwalgrblpvdkw0dllFMzQ2NklUcU8vdjlIL1ZGdldoeVljV1VBbytFTWc5UHRGZ1dJPQ==/attach/object/EDXIDJY7AAAB2?)
 
-![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Hexo博客搭建：QA章（Hexo博客搭建和发布上踩的坑）/img_cc9ba96561.png)
+![](http://www.kdocs.cn/api/v3/office/copy/NWVxUlJCRnFSNGdJRnNITW9DR2kveGRkRmYrVmN2UWh2YXJXc2s1ZjRkM0JudHVRajlVQnNWNWpzMXF6NDlDSEQ0anFraHhWR2NQMldjcUdyd1BtaEZGR05rVlBHRVZkMVFLK0FGRWp2VW96ODl3WlllNXRybXlyNFkyNUVQTU9lL0NyTE1JQnU1alBkZmVRaTZYUEF1ek5pTlBGbEYxRHJFR05wRDVXOG9maUlNcVlNTGJvR1ZJM1kxRW9rM0NVbW5TQkpONjBzd3Q1TDdFUDV4bWZ4bFhBUXJwalgrblpvdkw0dllFMzQ2NklUcU8vdjlIL1ZGdldoeVljV1VBbytFTWc5UHRGZ1dJPQ==/attach/object/36GIFJY7ADQFE?)
 
 **解决：**
 
@@ -53,7 +53,7 @@ default_top_img: "background: linear-gradient(45deg, rgba(16, 30, 67, 0.7) 0%, r
 > **解决办法：**  
 > **进入自己的pages-->设置-->分支控制(编辑)-->预览分支(设置成：无)**
 
-![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/Hexo博客搭建：QA章（Hexo博客搭建和发布上踩的坑）/img_2b3ccc85f2.png)
+![](http://www.kdocs.cn/api/v3/office/copy/NWVxUlJCRnFSNGdJRnNITW9DR2kveGRkRmYrVmN2UWh2YXJXc2s1ZjRkM0JudHVRajlVQnNWNWpzMXF6NDlDSEQ0anFraHhWR2NQMldjcUdyd1BtaEZGR05rVlBHRVZkMVFLK0FGRWp2VW96ODl3WlllNXRybXlyNFkyNUVQTU9lL0NyTE1JQnU1alBkZmVRaTZYUEF1ek5pTlBGbEYxRHJFR05wRDVXOG9maUlNcVlNTGJvR1ZJM1kxRW9rM0NVbW5TQkpONjBzd3Q1TDdFUDV4bWZ4bFhBUXJwalgrblpvdkw0dllFMzQ2NklUcU8vdjlIL1ZGdldoeVljV1VBbytFTWc5UHRGZ1dJPQ==/attach/object/QSDUZKQ7ACAHM?)
 
 
 

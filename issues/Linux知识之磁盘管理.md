@@ -127,9 +127,8 @@ lsblk -f #查看所有的磁盘信息(**已格式化的会显示磁盘类型**)
 -   showmount -e 192.168.71.11 **#(客户端配置)**
 
 -   vim /etc/fstdb **#(客户端配置)**
-
 192.168.71.11:/share /testNFS nfs4 defaults 0 0
-
+---
 POST_TITLE:  Linux知识之磁盘管理
 
 POST_CATEGORIES: 知识分享
@@ -138,6 +137,5 @@ POST_TAGS: Linux,学习
 
 POST_STICKY:
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE2MDUxMDcwNzEsLTE4NTc3NDc2OTVdfQ
-==
+eyJoaXN0b3J5IjpbNzk0MjExNDM4LC0xODU3NzQ3Njk1XX0=
 -->

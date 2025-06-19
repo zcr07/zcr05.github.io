@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>木水物语 Moku</title><link>https://blog.10023456.xyz/</link><description>一个等着裁员的java程序猿，每天无所事事，只想搞钱，喜欢钻研各种实用的技能，讨厌天天做工作上的项目，对自己毫无实用价值。&lt;BR/&gt;&lt;div class='listLabels'&gt;&lt;span class='Label LabelName'style='background-color:#efe1e1'&gt;&lt;object&gt;&lt;a style='color:#000000'href='https://v.douyin.com/UFXv95UxBbQ/'data-click-setup='true'&gt;抖音&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#a2eeef'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://kdocs.cn/l/clf4xOs5a3Q1'data-click-setup='true'&gt;WPS万能文档&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#ff0c0c'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://www.youtube.com/channel/UCeHFivb01FfFIL7kciY6KFg'data-click-setup='true'&gt;YouTobe&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelTime'style='background-color:#ff4f9a'&gt;&lt;a style='color:#fff'href='https://b23.tv/rGe89DU' data-click-setup='true'&gt;哔哩哔哩&lt;/a&gt;&lt;/span&gt;&lt;/div&gt;</description><copyright>木水物语 Moku</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/41733240?v=4</url><title>avatar</title><link>https://blog.10023456.xyz/</link></image><lastBuildDate>Sat, 14 Jun 2025 15:47:56 +0000</lastBuildDate><managingEditor>木水物语 Moku</managingEditor><ttl>60</ttl><webMaster>木水物语 Moku</webMaster><item><title>韩服DNF平板手机下载慢，教你解决</title><link>https://blog.10023456.xyz//post/han-fu-DNF-ping-ban-shou-ji-xia-zai-man-%EF%BC%8C-jiao-ni-jie-jue.html</link><description># 前情提要
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>木水物语 Moku</title><link>https://blog.10023456.xyz/</link><description>一个等着裁员的java程序猿，每天无所事事，只想搞钱，喜欢钻研各种实用的技能，讨厌天天做工作上的项目，对自己毫无实用价值。&lt;BR/&gt;&lt;div class='listLabels'&gt;&lt;span class='Label LabelName'style='background-color:#efe1e1'&gt;&lt;object&gt;&lt;a style='color:#000000'href='https://v.douyin.com/UFXv95UxBbQ/'data-click-setup='true'&gt;抖音&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#a2eeef'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://kdocs.cn/l/clf4xOs5a3Q1'data-click-setup='true'&gt;WPS万能文档&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelName'style='background-color:#ff0c0c'&gt;&lt;object&gt;&lt;a style='color:#fff'href='https://www.youtube.com/channel/UCeHFivb01FfFIL7kciY6KFg'data-click-setup='true'&gt;YouTobe&lt;/a&gt;&lt;/object&gt;&lt;/span&gt;&lt;span class='Label LabelTime'style='background-color:#ff4f9a'&gt;&lt;a style='color:#fff'href='https://b23.tv/rGe89DU' data-click-setup='true'&gt;哔哩哔哩&lt;/a&gt;&lt;/span&gt;&lt;/div&gt;</description><copyright>木水物语 Moku</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/41733240?v=4</url><title>avatar</title><link>https://blog.10023456.xyz/</link></image><lastBuildDate>Thu, 19 Jun 2025 11:51:46 +0000</lastBuildDate><managingEditor>木水物语 Moku</managingEditor><ttl>60</ttl><webMaster>木水物语 Moku</webMaster><item><title>韩服DNF平板手机下载慢，教你解决</title><link>https://blog.10023456.xyz//post/han-fu-DNF-ping-ban-shou-ji-xia-zai-man-%EF%BC%8C-jiao-ni-jie-jue.html</link><description># 前情提要
 
 &gt; 电脑上ourplay玩韩服DNF没法汉化，就想着在平板上玩，结果资源下载速度龟速
 
@@ -780,167 +780,150 @@ switch(vlan)#no vlan 17
 
 🔔
 
-由于n个vlan，交换机之间不**会配置n个端口**，所以通过**trunk对数据包进行标识来**实现不同网段PC在多个交换机内的通信。</description><guid isPermaLink="true">https://blog.10023456.xyz//post/Linux-wang-luo-ji-chu-%EF%BC%8C-jiao-ni-da-kai-xin-de-shi-jie-~.html</guid><pubDate>Wed, 23 Apr 2025 09:07:54 +0000</pubDate></item><item><title>搭好Linux基础，一些知识你得知道</title><link>https://blog.10023456.xyz//post/da-hao-Linux-ji-chu-%EF%BC%8C-yi-xie-zhi-shi-ni-de-zhi-dao.html</link><description>
-## 基础知识
+由于n个vlan，交换机之间不**会配置n个端口**，所以通过**trunk对数据包进行标识来**实现不同网段PC在多个交换机内的通信。</description><guid isPermaLink="true">https://blog.10023456.xyz//post/Linux-wang-luo-ji-chu-%EF%BC%8C-jiao-ni-da-kai-xin-de-shi-jie-~.html</guid><pubDate>Wed, 23 Apr 2025 09:07:54 +0000</pubDate></item><item><title>搭好Linux基础，一些知识你得知道</title><link>https://blog.10023456.xyz//post/da-hao-Linux-ji-chu-%EF%BC%8C-yi-xie-zhi-shi-ni-de-zhi-dao.html</link><description># Wan/Lan
+
+路由器--&gt;交换机
+
+网络设备的架构：一对一，一对多，**多对多(星状集群)**
+
+# 网络模型
+
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/搭好Linux基础，一些知识你得知道/img_0a3857acb4.png)
 
 💡
 
-1.  ps &gt; File1时**优先执行管道符，管道符是先删除文件后再重新新建**
+**网络层常见的协议：IP协议、ICMP协议和ARP协议等**
 
--   ls a.txt xxx.txt &gt;&gt; #标准输出
+**ARP协议：**就是把ip地址解析为mac地址
 
--   ls a.txt xxx.txt 2&gt;&gt; #异常输出
-
--   ls a.txt xxx.txt &amp;&gt; #标准和异常都输出
-
--   ls a.txt xxx.txt &gt; a.log 2&gt;&amp;1 #**2&gt;&amp;1把异常改写成标准输出**
-
-1.  **cd - 返回进入此目录之前所在的目录**
-
-1.  systemctl enable httpd --now **#启动服务并设置开机自启**
-
-1.  nohup **#告诉系统即使终端关闭也不要停止这个命令**
-
-&gt; 发展史：unix(19700101)-&gt;linux(1991)
-
-### 云计算机
-
-👋
-
-Iaas 提供基础网络储存等，类似于毛胚房
-
-Paas 可以直接进行开发测试，类似于公寓，只需要做自己想做的就好
-
-Saas 所有软件都已经安装好，可以直接用，无需关注其他
-
-### 系统层面
-
-uname #查看内核名字
-
--   -r 显示内核版本
-
-lscpu #查看Cpu信息
-
-hostname #查看主机名 hostnamectl set-hostname aaa
-
-alias 别名=真实命令 #设置临时别名
-
--   unalias 别名 #取消临时别名
-
-poweroff #关机
-
-```
-/etc/shells #查看系统支持的shell解析器
-/ect/rocky-release #查看系统版本（仅限rocky Linux）
-```
-
-
-
-
-
-#### 磁盘管理
-
-👋
-
-#### **MBR(主启动记录模式)**
-
-**最多4个主分区，1个扩展分区(无法储存数据，只能在创建逻辑分区保存数据)**
-
-1.  先分区
-
-fdisk /dev/sdb
-
--   n新建分区
-
--   p打印分区信息
-
-1.  格式化分区
-
-mkfs -t xfs /dev/sdb1
-
-修改分区类型 mkfs.xfs -f /dev/sdb1
-
-1.  挂载分区
-
-mount /dev/sdb1 /data #临时修改
-
-vi /etc/fstdb #永久修改
-
-mount -a #读取mount(/etc/fstdb)的内容
-
-#### **GPT分区（推荐）**
-
-**无限分区**
-
-1.  先分区
-
-parted /dev/sdb
-
-(parted)mktable gpt
-
-(parted)mkpart
-
-(parted)print
-
-1.  格式化和挂载
-
-#### 逻辑分区 （底层的空间单位为PE,默认4M）
-
-**如果不指定PE单位的话，例如设置lv=9M，就会给3个PE=12M，浪费了3M无法使用**
-
-**工作中通常不指定PE，lvm会自动指定PE来提高分区效率的**
-
-vgcreate 物理卷组 /dev/sdc1
-
-vgcreate -s 1M 物理卷组 /dev/sdc2 **#1M这个物理卷组分配单位是1M，而不是默认的4M**
-
-vgextend 物理卷组 /dev/sdc2 **#扩容物理卷组**
-
-vgs
-
-pvdisplay vgdisplay lvdisplay #查看详细信息
-
-lvcreate -L 1G -n 逻辑卷名 物理卷组
-
-lvcreate -l 40 -n 逻辑卷名 物理卷组 **#划分40M逻辑磁盘**
-
-mkfs.xfs /dev/ansible/nginx #格式化
-
-lvextend -L +200M /dev/ansible/nginx
-
-xfs_growfs /dev/ansible/nginx **#格式化扩容空间(仅适用于xfs)**
-
-resize2fs /dev/ansible/nginx **#格式化****扩容或缩小****空间(仅适用于ext系列**
-
-#### 逻辑分区删除
-
-lvremove /dev/ansbile/nginx
-
-vgremove /物理卷组
-
-pvremove /dev/sdc1
-
-**补充**
-
-跨系统格式：exFAT
-
-XFS:大量的小文件或非常大的文件，并且需要高性能和可扩展性
-
-EXT4:需要稳定性和广泛支持的通用应用，或者需要经常调整文件系统大小的场景
-
-lsblk -f #查看所有的磁盘信息(**已格式化的会显示磁盘类型**)
-
-**blkid 设**
-
-**/etc/fstdb的内容格式：**
-
-硬盘路径(/dev/sab) 挂载点(/test) xfs 挂载选项(**defaults**) 是否备份(0) 检查文件系统的顺序(0)
+arm -a
 
 ----------
 
-📌**对象存储：**非DB类的结构化(图片视频)数据存储系统**(磁盘内容访问次数收费)**，例如百度云盘WEB
+**ICMP协议：**例（ping命令）
 
-**块存储：**类似于使用主机内置**硬盘**(**硬盘使用时长收费**)。</description><guid isPermaLink="true">https://blog.10023456.xyz//post/da-hao-Linux-ji-chu-%EF%BC%8C-yi-xie-zhi-shi-ni-de-zhi-dao.html</guid><pubDate>Wed, 23 Apr 2025 09:07:52 +0000</pubDate></item><item><title>万能目录，你能在这里找到所有答案！</title><link>https://blog.10023456.xyz//post/wan-neng-mu-lu-%EF%BC%8C-ni-neng-zai-zhe-li-zhao-dao-suo-you-da-an-%EF%BC%81.html</link><description>
+----------
+
+四层协议：TCP/UPD
+
+七层协议：Http/Https
+
+### **数据发送**
+
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/搭好Linux基础，一些知识你得知道/img_d7f91e0dc8.png)
+
+### **数据接收**
+
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/搭好Linux基础，一些知识你得知道/img_9359f6a767.png)
+
+### 协议数据单元
+
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/搭好Linux基础，一些知识你得知道/img_08c51acaa0.png)
+
+### 设备与层的对应关系
+
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/搭好Linux基础，一些知识你得知道/img_93864646bf.png)
+
+# IP地址
+
+**平常的****IP4****地址192.168.1.1，子网掩码：255.255.255.0是十进制，****IP6****是16进制**
+
+👋
+
+**IP类别优先看子网掩码，例：192.168.25.1/16是****B类地址**
+
+子网掩码
+
+A类/8（255.0.0.0）
+
+B类/16(255.255.0.0)
+
+C类/24(255.255.255.0)
+
+&gt; **其中8是因为255的2进制是8个1，****下面的D，E类IP主要用于政府和医院等机构**
+
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/搭好Linux基础，一些知识你得知道/img_f4167725c6.png)
+
+![Image](https://raw.githubusercontent.com/MyMaskKing/MyMaskKing.github.io/main/assets/images/搭好Linux基础，一些知识你得知道/img_6db80274cb.png)
+
+## 私网IP段
+
+🔔
+
+平常的家庭网络和公司都是私有网络，公网是全球唯一的
+
+⭐网关使用的IP一般是xx.xx.xx.1或者xx.xx.xx.254,.**255是不能使用的，只作为广播使用**
+
+简单记法:**10-10,****172.16-172.31****,****192.168-192.168**
+
+10.0.0.0 - 10.**255.255.255**  
+172.16.0.0 - 172.31.**255.255**  
+192.168.0.0 - 192.168.**255.255**
+
+# 交换机
+
+## 转发原理
+
+1.  初始化
+2.  各个PC的MAC地址学习
+
+👋
+
+交换机自主学习老化时间300s更新一次
+
+1.  广播未知数据帧
+2.  PC回应
+3.  交换机实现单薄通信
+
+## 常用命令
+
+enable 进入管理员模式
+
+configure terminal 进入全局配置模式
+
+interface fastEthernet 0/1 进入端口 fastEthernet：端口类型
+
+show mac address-table 查看各个PC的Mac地址
+
+## vlan(虚拟局域网)
+
+&gt; 交换机和PC之间通过默认的vlan1进行静态交互，但是**在同一台交换机内****有****不同网段****PC的情况，通过在交换机内配置****vlan名(或ID)，****根据vlan找到其他交换机的****同名vlan内****的PC设备实现通信****目的：减少交互(广播)，减少因广播带来的延迟**
+
+### vlan种类
+
+💡
+
+**（****静态****）基于端口，（****动态****）基于 MAC，基于 IP**
+
+**相关命令**
+
+```
+#管理员模式
+#创建Vlan第一种方法
+swich#configure terminal
+Switch(config)#vlan 5
+Switch(config-vlan)#name 5hhh
+#创建Vlan第二种方法
+swich#vlan database 
+Switch(vlan)#vlan 17 name 17v
+#查看Vlan
+swich#show vlan brief
+swich#show vlan id 5
+#把端口加到vlan中
+Switch(config-if)#switchport access vlan 5
+Switch(config)#interface range fastEthernet 0/2-10
+Switch(config-if-range)#switchport access vlan 17
+#删除vlan 方法1
+swich#no vlan 5
+#删除vlan 方法2,database下删除
+switch(vlan)#no vlan 17
+```
+
+### **trunk(交换机之间互通)**
+
+🔔
+
+由于n个vlan，交换机之间不**会配置n个端口**，所以通过**trunk对数据包进行标识来**实现不同网段PC在多个交换机内的通信。</description><guid isPermaLink="true">https://blog.10023456.xyz//post/da-hao-Linux-ji-chu-%EF%BC%8C-yi-xie-zhi-shi-ni-de-zhi-dao.html</guid><pubDate>Wed, 23 Apr 2025 09:07:52 +0000</pubDate></item><item><title>万能目录，你能在这里找到所有答案！</title><link>https://blog.10023456.xyz//post/wan-neng-mu-lu-%EF%BC%8C-ni-neng-zai-zhe-li-zhao-dao-suo-you-da-an-%EF%BC%81.html</link><description>
 **😆****重要信息!!!作者不易，**[**🎵抖音**](https://v.douyin.com/UFXv95UxBbQ/)**|**[**📕小红书**](https://www.xiaohongshu.com/user/profile/678317b6000000000801c02f)**|**[**📽️B站**](https://b23.tv/rGe89DU)**|**[**📺Youtubu**](https://www.youtube.com/channel/UCeHFivb01FfFIL7kciY6KFg)**|**[**📖博客A**](https://blog.10023456.xyz/)**|**[**📖博客B**](https://www.10023456.xyz/)**请点点关注点点赞啊！！！**
 
 **重要提示！基于LibreTV 搭建了**[**家庭电影网站**](https://tv.10023456.xyz/)**，部署在cloudflare，仅限内部使用。</description><guid isPermaLink="true">https://blog.10023456.xyz//post/wan-neng-mu-lu-%EF%BC%8C-ni-neng-zai-zhe-li-zhao-dao-suo-you-da-an-%EF%BC%81.html</guid><pubDate>Wed, 23 Apr 2025 09:07:48 +0000</pubDate></item><item><title>手机服务器搭建：第二章（手机服务器做内网穿透）</title><link>https://blog.10023456.xyz//post/shou-ji-fu-wu-qi-da-jian-%EF%BC%9A-di-er-zhang-%EF%BC%88-shou-ji-fu-wu-qi-zuo-nei-wang-chuan-tou-%EF%BC%89.html</link><description>
